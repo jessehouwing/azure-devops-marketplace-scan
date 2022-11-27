@@ -1,0 +1,101 @@
+{
+    "deprecated": true,
+    "id": "2484dbc6-cdd4-4609-b57f-a08f2ccab63b",
+    "name": "OWASPDependencyCheck",
+    "friendlyName": "(DEPRECATED) OWASP Dependency Check",
+    "description": "(DEPRECATED) Checks your dependencies for known vulnerabilities.",
+    "helpMarkDown": "(DEPRECATED) Uses the OWASP dependency check cli tool to scan for known vulnerabilities. [View the extension on the marketplace](https://marketplace.visualstudio.com/items?itemName=InfoSupport.infosupport-owasp-dependecy-checker)",
+    "category": "Azure Pipelines",
+    "author": "Info Support",
+    "version": {
+        "Major": 0,
+        "Minor": 10,
+        "Patch": 6
+    },
+    "instanceNameFormat": "Execute OWASP Dependency Check",
+    "demands": ["java_home"],
+    "capabilities": ["owasp-dependency-check"],
+    "groups": [
+        {
+          "name": "cveMirror",
+          "displayName": "CVE Mirroring",    
+          "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "outputDirectory",
+            "type": "string",
+            "label": "Output directory",
+            "defaultValue": "$(Agent.TempDirectory)/dependency-scan-results",
+            "required": true,
+            "helpMarkDown": "The target directory for any output (ie reports)"
+        },
+        {
+            "name": "scanDirectory",
+            "type": "string",
+            "label": "Scan directory",
+            "defaultValue": "$(Build.SourcesDirectory)",
+            "required": true,
+            "helpMarkDown": "The directory that contains the dependencies that need to be scanned"
+        },
+        {
+            "name": "outputFormat",
+            "type": "pickList",
+            "label": "Output format",
+            "defaultValue": "ALL",
+            "required": true,
+            "helpMarkDown": "Output format. When using the SonarQube integration make sure to select 'All Report Types'",
+            "options": {
+                "ALL": "All Report Types",
+                "HTML": "HTML Report",
+                "XML": "XML Report",
+                "JSON": "JSON Report"
+            }
+        },
+        {
+            "name": "useSonarQubeIntegration",
+            "type": "boolean",
+            "label": "Enable SonarQube Integration",
+            "defaultValue": true,
+            "required": true,
+            "helpMarkDown": "Automatically configure the SonarQube scanner to reuse the scan reports. Make sure to include this task after the SonarQube 'Prepare Analysis Configuration' task, and before the 'Run Code Analysis' task. Also, you will need the [dependency-check-sonar-plugin](https://github.com/dependency-check/dependency-check-sonar-plugin) for your SonarQube instance."
+        },
+        {
+            "name": "additionalArguments",
+            "type": "string",
+            "label": "Additional arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Please see the dependency-check [documentation](https://jeremylong.github.io/DependencyCheck/dependency-check-cli/arguments.html) for additional command line arguments."
+        },
+        {
+            "name": "cveUrlBase",
+            "type": "string",
+            "label": "CVE Url Base",
+            "required": false,
+            "helpMarkDown": "Base URL for each year’s CVE JSON data feed, the %d will be replaced with the year. CVE Url Modified required if Base URL set.",
+            "groupName": "cveMirror"
+        },
+        {
+            "name": "cveUrlModified",
+            "type": "string",
+            "label": "CVE Url Modified",
+            "required": false,
+            "helpMarkDown": "URL for the modified CVE JSON data feed. When mirroring the NVD you must mirror the *.json.gz and the *.meta files. CVE Url Base required if Modified URL set.",
+            "groupName": "cveMirror"
+        },
+        {
+            "name": "owaspVersion",
+            "type": "string",
+            "label": "Use Owasp version",
+            "required": false,
+            "helpMarkDown": "The Owasp version the task should use."
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "task.js"
+        }
+    }
+}

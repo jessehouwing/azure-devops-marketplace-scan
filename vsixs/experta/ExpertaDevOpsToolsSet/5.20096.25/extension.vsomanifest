@@ -1,0 +1,53 @@
+{
+    "manifestVersion": 1,
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/expertasolutions/ExpertaDevOpsToolSet"
+    },
+    "badges": [
+        {
+            "href": "https://dev.azure.com/experta/Community/_build?definitionId=239&_a=summary",
+            "uri": "https://dev.azure.com/experta/Community/_apis/build/status/expertasolutions.ExpertaDevOpsToolSet?branchName=master",
+            "description": "master branch build"
+        },
+        {
+            "href": "https://dev.azure.com/experta/Community/_release?_a=releases&definitionId=5",
+            "uri": "https://vsrm.dev.azure.com/experta/_apis/public/Release/badge/97814487-b723-4a7d-a446-f599ab91ea2f/5/15",
+            "description": "Public"
+        }
+    ],
+    "contributions": [
+        {
+            "id": "custom-build-release-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "BuildVersionExtractor"
+            }
+        },
+        {
+            "id": "azappinsight-build-release-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "azureAppInsight"
+            }
+        },
+        {
+            "id": "filecontenttobase64-build-release-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "fileContentToBase64"
+            }
+        }
+    ],
+    "scopes": [],
+    "contributionTypes": []
+}
