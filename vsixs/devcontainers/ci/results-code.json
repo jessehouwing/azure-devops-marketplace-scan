@@ -1,0 +1,504 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "SnykCode",
+          "semanticVersion": "1.0.0",
+          "version": "1.0.0",
+          "rules": [
+            {
+              "id": "javascript/InsecureCipherNoIntegrity",
+              "name": "InsecureCipherNoIntegrity",
+              "shortDescription": {
+                "text": "Use of a Broken or Risky Cryptographic Algorithm"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "markdown": "\n## Details\n\nWhen sensitive information is transmitted with weak encryption, attackers are potentially able to intercept the information and decrypt it, with a wide range of negative consequences. This includes accessing code or content they are not authorized to view and changing or taking down a site or app, often with a demand for ransom. Every developer is aware of the risks of transmitting sensitive information in plain text. Yet many still use outdated or inferior cryptographic methods to protect information under their control. As cryptographic methods grow stronger with time, code must be updated to incorporate more modern and secure cryptography.\n\n### Best practices for prevention\n* Avoid using DES, and use AES (in a secure mode, such as Galois/Counter Mode) or another strong encryption algorithm instead.\n* Be aware of outdated hashes, such as MD5 and SHA1 (along with many others); recognize and implement current cryptographic standards instead.\n* Never use custom or DIY security and cryptographic methods; instead, use methods that are part of an accepted library or framework.\n* Ensure that code dealing with cryptographic methods is highly modular and can be easily replaced as security standards change.\n* Increase developer awareness of proper encryption key management and protection to ensure best practices throughout the application.",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [
+                  {
+                    "commitURL": "https://github.com/LiskHQ/lisk-sdk/commit/449cdeccc265272a04c51ac8ca724ff96a0aa783?diff=split#diff-99fd5e0e64f4951b94b5d68d25e95a87L104",
+                    "lines": [
+                      {
+                        "line": "const iv = crypto.randomBytes(16);",
+                        "lineNumber": 101,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "const passwordHash = hash(password, 'utf8');",
+                        "lineNumber": 102,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "const cipher = crypto.createCipheriv('aes-256-cbc', passwordHash, iv);",
+                        "lineNumber": 103,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "const cipher = crypto.createCipheriv('aes-256-gcm', passwordHash, iv);",
+                        "lineNumber": 103,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "const firstBlock = cipher.update(plainText, 'utf8');",
+                        "lineNumber": 104,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "const encrypted = Buffer.concat([firstBlock, cipher.final()]);",
+                        "lineNumber": 105,
+                        "lineChange": "none"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/rate-engineering/rate3-monorepo/commit/eeebe3c4ba10bbbaaa439943195f1b7c8b5e3b82?diff=split#diff-8d78c1de2f3473b830c5024c30c5bf23L307",
+                    "lines": [
+                      {
+                        "line": "// (other modes include: CBC, ECB, CFB, OFB, CTR)",
+                        "lineNumber": 304,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": " // Note: CBC and ECB modes use PKCS#7 padding as default",
+                        "lineNumber": 305,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": " const cipher = forge.cipher.createCipher('AES-GCM', key);",
+                        "lineNumber": 306,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": " cipher.start({ iv: this.iv });",
+                        "lineNumber": 307,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "const key = buffer.getBytes(keySize);",
+                        "lineNumber": 358,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "const iv = buffer.getBytes(ivSize);",
+                        "lineNumber": 359,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "const cipher = forge.cipher.createCipher('AES-CBC', key);",
+                        "lineNumber": 360,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "cipher.start({ iv });",
+                        "lineNumber": 361,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "cipher.update(forge.util.createBuffer(account.getPrivateKey(), 'binary'));",
+                        "lineNumber": 362,
+                        "lineChange": "removed"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/discourse/discourse-encrypt/commit/134702390b87b7e8b5b88d895df5ddf3636b3ca2?diff=split#diff-5df607ba4c506dd08a2a7ad84b32dd5dL26",
+                    "lines": [
+                      {
+                        "line": " */",
+                        "lineNumber": 23,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "export function generateKeyPair() {",
+                        "lineNumber": 24,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  return window.crypto.subtle",
+                        "lineNumber": 25,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    .generateKey(",
+                        "lineNumber": 26,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "      {",
+                        "lineNumber": 27,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": " */",
+                        "lineNumber": 193,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "export function generateKey() {",
+                        "lineNumber": 194,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  return window.crypto.subtle.generateKey(",
+                        "lineNumber": 195,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    { name: \"AES-CBC\", length: 256 },",
+                        "lineNumber": 196,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    { name: \"AES-GCM\", length: 256 },",
+                        "lineNumber": 196,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    true,",
+                        "lineNumber": 197,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    [\"encrypt\", \"decrypt\"]",
+                        "lineNumber": 198,
+                        "lineChange": "none"
+                      }
+                    ]
+                  }
+                ],
+                "exampleCommitDescriptions": [
+                  "* Added test harness and adjusted crypto functions",
+                  "* Fix for decrypting session data",
+                  "* Initial change to AES-GCM decryption."
+                ],
+                "precision": "very-high",
+                "repoDatasetSize": 55,
+                "cwe": [
+                  "CWE-327"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "javascript/InsecureCipherNoIntegrity",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Counter mode (used in createCipher) does not provide integrity. Consider using  Galois/Counter mode.",
+            "markdown": "{0} mode (used in {1}) does not provide integrity. Consider using  Galois/Counter mode.",
+            "arguments": [
+              "[Counter](0)",
+              "[createCipher](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "DevcontainersCi/dist/index.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1376,
+                  "endLine": 1376,
+                  "startColumn": 22,
+                  "endColumn": 40
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "4e5da931cd4b61f005ddbd189947d7bb3392903a67a7ef37a338efae5a808397",
+            "1": "1064501f.4773f344.191eaf2b.d7919eeb.ef9f7d82.8020cfdf.1e2b9372.71520ffe.1064501f.4773f344.191eaf2b.d7919eeb.ef9f7d82.8020cfdf.1e2b9372.71520ffe"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "DevcontainersCi/dist/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 1376,
+                            "endLine": 1376,
+                            "startColumn": 42,
+                            "endColumn": 54
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "DevcontainersCi/dist/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 1376,
+                            "endLine": 1376,
+                            "startColumn": 22,
+                            "endColumn": 40
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 555,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureCipherNoIntegrity",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Counter mode (used in createCipheriv) does not provide integrity. Consider using  Galois/Counter mode.",
+            "markdown": "{0} mode (used in {1}) does not provide integrity. Consider using  Galois/Counter mode.",
+            "arguments": [
+              "[Counter](0)",
+              "[createCipheriv](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "DevcontainersCi/dist/index.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 5929,
+                  "endLine": 5929,
+                  "startColumn": 22,
+                  "endColumn": 42
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "ad2047447dea9de938934ab44ace3195bf8a86130d56ac32c537116fe64f765e",
+            "1": "37bc1bfe.4bbe55b4.191eaf2b.8f3c2a81.ef9f7d82.8020cfdf.7a8c7288.71520ffe.37bc1bfe.4bbe55b4.191eaf2b.8f3c2a81.ef9f7d82.8020cfdf.cd61fc56.71520ffe"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "DevcontainersCi/dist/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 5898,
+                            "endLine": 5898,
+                            "startColumn": 17,
+                            "endColumn": 29
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "DevcontainersCi/dist/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 5929,
+                            "endLine": 5929,
+                            "startColumn": 22,
+                            "endColumn": 42
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 555,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureCipherNoIntegrity",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Counter mode (used in createDecipheriv) does not provide integrity. Consider using  Galois/Counter mode.",
+            "markdown": "{0} mode (used in {1}) does not provide integrity. Consider using  Galois/Counter mode.",
+            "arguments": [
+              "[Counter](0)",
+              "[createDecipheriv](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "DevcontainersCi/dist/index.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 5944,
+                  "endLine": 5944,
+                  "startColumn": 28,
+                  "endColumn": 50
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "969a752faadd0d3274fe38c376834d9b01b70f3f743c336b77d36b4c7e62eb53",
+            "1": "37bc1bfe.4773f344.191eaf2b.d7919eeb.ef9f7d82.ae30f3cc.7a8c7288.71520ffe.37bc1bfe.4773f344.191eaf2b.d7919eeb.ef9f7d82.ae30f3cc.cd61fc56.71520ffe"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "DevcontainersCi/dist/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 5898,
+                            "endLine": 5898,
+                            "startColumn": 17,
+                            "endColumn": 29
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "DevcontainersCi/dist/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 5944,
+                            "endLine": 5944,
+                            "startColumn": 28,
+                            "endColumn": 50
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 555,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "coverage": [
+          {
+            "files": 1,
+            "isSupported": true,
+            "lang": "XML"
+          },
+          {
+            "files": 15,
+            "isSupported": true,
+            "lang": "TypeScript"
+          },
+          {
+            "files": 20,
+            "isSupported": true,
+            "lang": "JavaScript"
+          }
+        ]
+      }
+    }
+  ]
+}

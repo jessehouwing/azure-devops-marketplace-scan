@@ -1,0 +1,1278 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "SnykCode",
+          "semanticVersion": "1.0.0",
+          "version": "1.0.0",
+          "rules": [
+            {
+              "id": "javascript/DOMXSS",
+              "name": "DOMXSS",
+              "shortDescription": {
+                "text": "Cross-site Scripting (XSS)"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "markdown": "## Details\n\nA cross-site scripting attack occurs when the attacker tricks a legitimate web-based application or site to accept a request as originating from a trusted source.\n\nThis is done by escaping the context of the web application; the web application then delivers that data to its users along with other trusted dynamic content, without validating it. The browser unknowingly executes malicious script on the client side (through client-side languages; usually JavaScript or HTML)  in order to perform actions that are otherwise typically blocked by the browser's Same Origin Policy.\n\nInjecting malicious code is the most prevalent manner by which XSS is exploited; for this reason, escaping characters in order to prevent this manipulation is the top method for securing code against this vulnerability.\n\nEscaping means that the application is coded to mark key characters, and particularly key characters included in user input, to prevent those characters from being interpreted in a dangerous context. For example, in HTML, `<` can be coded as  `&lt`; and `>` can be coded as `&gt`; in order to be interpreted and displayed as themselves in text, while within the code itself, they are used for HTML tags. If malicious content is injected into an application that escapes special characters and that malicious content uses `<` and `>` as HTML tags, those characters are nonetheless not interpreted as HTML tags by the browser if they've been correctly escaped in the application code and in this way the attempted attack is diverted.\n\nThe most prominent use of XSS is to steal cookies (source: OWASP HttpOnly) and hijack user sessions, but XSS exploits have been used to expose sensitive information, enable access to privileged services and functionality and deliver malware.\n\n### Types of attacks\nThere are a few methods by which XSS can be manipulated:\n\n|Type|Origin|Description|\n|--|--|--|\n|**Stored**|Server|The malicious code is inserted in the application (usually as a link) by the attacker. The code is activated every time a user clicks the link.|\n|**Reflected**|Server|The attacker delivers a malicious link externally from the vulnerable web site application to a user. When clicked, malicious code is sent to the vulnerable web site, which reflects the attack back to the user's browser.|\n|**DOM-based**|Client|The attacker forces the user's browser to render a malicious page. The data in the page itself delivers the cross-site scripting data.|\n|**Mutated**| |The attacker injects code that appears safe, but is then rewritten and modified by the browser, while parsing the markup. An example is rebalancing unclosed quotation marks or even adding quotation marks to unquoted parameters.|\n\n### Affected environments\nThe following environments are susceptible to an XSS attack:\n\n* Web servers\n* Application servers\n* Web application environments\n\n### How to prevent\nThis section describes the top best practices designed to specifically protect your code:\n\n* Sanitize data input in an HTTP request before reflecting it back, ensuring all data is validated, filtered or escaped before echoing anything back to the user, such as the values of query parameters during searches.\n* Convert special characters such as `?`, `&`, `/`, `<`, `>` and spaces to their respective HTML or URL encoded equivalents.\n* Give users the option to disable client-side scripts.\n* Redirect invalid requests.\n* Detect simultaneous logins, including those from two separate IP addresses, and invalidate those sessions.\n* Use and enforce a Content Security Policy (source: Wikipedia) to disable any features that might be manipulated for an XSS attack.\n* Read the documentation for any of the libraries referenced in your code to understand which elements allow for embedded HTML.",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [
+                  {
+                    "commitURL": "https://github.com/jbt/markdown-editor/commit/4c02744b8a51de4a23002a7064e3d5a9a712f78c?diff=split#diff-0eb547304658805aad788d320f10bf1f292797b5e6d745a3bf617584da017051L187",
+                    "lines": [
+                      {
+                        "line": "  document.getElementById('out').innerHTML = marked(val);",
+                        "lineNumber": 186,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 187,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "var editor = CodeMirror.fromTextArea(document.getElementById('code'), {",
+                        "lineNumber": 189,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  mode: 'gfm',",
+                        "lineNumber": 190,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  lineNumbers: true,",
+                        "lineNumber": 191,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  matchBrackets: true,",
+                        "lineNumber": 192,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  lineWrapping: true,",
+                        "lineNumber": 193,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  theme: 'default',",
+                        "lineNumber": 194,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  onChange: update",
+                        "lineNumber": 195,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "});",
+                        "lineNumber": 196,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "document.addEventListener('drop', function(e){",
+                        "lineNumber": 198,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  e.preventDefault();",
+                        "lineNumber": 199,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  e.stopPropagation();",
+                        "lineNumber": 200,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  var theFile = e.dataTransfer.files[0];",
+                        "lineNumber": 202,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  var theReader = new FileReader();",
+                        "lineNumber": 203,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  theReader.onload = function(e){",
+                        "lineNumber": 204,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    editor.setValue(e.target.result);",
+                        "lineNumber": 205,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  };",
+                        "lineNumber": 206,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  theReader.readAsText(theFile);",
+                        "lineNumber": 208,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "}, false);",
+                        "lineNumber": 209,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "function save(){",
+                        "lineNumber": 211,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  var code = editor.getValue();",
+                        "lineNumber": 212,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  var blob = new Blob([code], { type: 'text/plain' });",
+                        "lineNumber": 213,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  saveBlob(blob);",
+                        "lineNumber": 214,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 215,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "function saveBlob(blob){",
+                        "lineNumber": 217,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  var name = \"untitled.md\";",
+                        "lineNumber": 218,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  if(window.saveAs){",
+                        "lineNumber": 219,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    window.saveAs(blob, name);",
+                        "lineNumber": 220,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  }else if(navigator.saveBlob){",
+                        "lineNumber": 221,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    navigator.saveBlob(blob, name);",
+                        "lineNumber": 222,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  }else{",
+                        "lineNumber": 223,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    url = URL.createObjectURL(blob);",
+                        "lineNumber": 224,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    var link = document.createElement(\"a\");",
+                        "lineNumber": 225,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    link.setAttribute(\"href\",url);",
+                        "lineNumber": 226,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    link.setAttribute(\"download\",name);",
+                        "lineNumber": 227,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    var event = document.createEvent('MouseEvents');",
+                        "lineNumber": 228,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    event.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);",
+                        "lineNumber": 229,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    link.dispatchEvent(event);",
+                        "lineNumber": 230,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  }",
+                        "lineNumber": 231,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 232,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "document.addEventListener('keydown', function(e){",
+                        "lineNumber": 234,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  if(e.keyCode == 83 && (e.ctrlKey || e.metaKey)){",
+                        "lineNumber": 235,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    e.preventDefault();",
+                        "lineNumber": 236,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    save();",
+                        "lineNumber": 237,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    return false;",
+                        "lineNumber": 238,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  }",
+                        "lineNumber": 239,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "})",
+                        "lineNumber": 240,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "var hashto;",
+                        "lineNumber": 242,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "function updateHash(){",
+                        "lineNumber": 244,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  window.location.hash = btoa(RawDeflate.deflate(editor.getValue()));",
+                        "lineNumber": 245,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "  window.location.hash = btoa(RawDeflate.deflate(unescape(encodeURIComponent(editor.getValue()))))",
+                        "lineNumber": 245,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 246,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "if(window.location.hash){",
+                        "lineNumber": 248,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  var h = window.location.hash.replace(/^#/, '');",
+                        "lineNumber": 249,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  if(h.slice(0,5) == 'view:'){",
+                        "lineNumber": 250,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    setOutput(RawDeflate.inflate(atob(h.slice(5))));",
+                        "lineNumber": 251,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    setOutput(decodeURIComponent(escape(RawDeflate.inflate(atob(h.slice(5))))));",
+                        "lineNumber": 251,
+                        "lineChange": "added"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/RasPlex/OpenPHT/commit/ea03c88ab96c2607d7fc7bdb04bed16a2c14afa5?diff=split#diff-cbc600141d5846348060616895d0adbb51a9720d9504a4d7d33cd5eb65e44d4bL57",
+                    "lines": [
+                      {
+                        "line": "document.write('<img src=\"' + thumbnail + '\" class=\"cover\"></img>');",
+                        "lineNumber": 56,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "var imgSrc = item[\"thumbnail\"] ? ('vfs/' + escape(item[\"thumbnail\"])) : \"images/DefaultVideo.png\";",
+                        "lineNumber": 53,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "document.write('<img src=\"' + imgSrc + '\" class=\"cover\"></img>');",
+                        "lineNumber": 54,
+                        "lineChange": "added"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/RasPlex/OpenPHT/commit/ea03c88ab96c2607d7fc7bdb04bed16a2c14afa5?diff=split#diff-07d3f208648c3e9987149a3900a8c9f269a0edd8ad11f1f0be50ad475bb36320L60",
+                    "lines": [
+                      {
+                        "line": "if (array[activeItem][\"thumbnail\"])",
+                        "lineNumber": 59,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "  document.write('<img src=\"thumb/' + array[activeItem][\"thumbnail\"] + '.jpg\"></img>\"');",
+                        "lineNumber": 60,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": " else",
+                        "lineNumber": 61,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "   document.write('<img src=\"images/DefaultAlbumCover.png\"></img>');",
+                        "lineNumber": 62,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": " var imgSrc = array[activeItem][\"thumbnail\"] ? ('vfs/' + escape(array[activeItem][\"thumbnail\"])) : \"images/DefaultAlbumCover.png\";",
+                        "lineNumber": 59,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": " document.write('<img src=\"' + imgSrc + '\"></img>');",
+                        "lineNumber": 60,
+                        "lineChange": "added"
+                      }
+                    ]
+                  }
+                ],
+                "exampleCommitDescriptions": [
+                  "Add unit test.",
+                  "e3db0cd CHANGES.md\n84d1acf Add tests.",
+                  "Update and clean up the tests by using the iframe's load event."
+                ],
+                "precision": "very-high",
+                "repoDatasetSize": 1490,
+                "cwe": [
+                  "CWE-79"
+                ]
+              }
+            },
+            {
+              "id": "javascript/InsufficientPostmessageValidation",
+              "name": "InsufficientPostmessageValidation",
+              "shortDescription": {
+                "text": "Insufficient postMessage Validation"
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "help": {
+                "markdown": "\n## Details\n\npostMessage is a feature to perform cross-origin communication between JavaScript Window objects. This can be done by:\n\n* The sender using the `targetWindow.postMessage(message, targetOrigin)` to send a message to the `targetWindow` but only if the origin in that window matches `targetOrigin` (or if targetOrigin is set to the special value `*`);\n\n* The receiver listening for the message event in the window object.\n\nHowever, if no validation is done by the receiver, this could allow any window to send arbitrary data to the handler. This vulnerability could be leveraged by an attacker to disclose sensitive data to a malicious origin, or perform actions on a vicitim's behalf.\n\nExample:\n\n```\n\nwindow.addEventListener(\"message\", (event) => {\n    // DANGEROUS: No validation of origin\n    doStuff(event.data);\n});\n\n```\n\n### Best practices for prevention\n* Adopt a zero-trust model in which all input is considered potentially suspect.\n* Specify the targetOrigin instead of designating a wildcard `*`.\n\nExample:\n\n```\nwindow.addEventListener(\"message\", (event) => {\n    if (event.origin !== \"http://example.org\") // SAFE: origin checked\n        return;\n\n    console.log(event.data)\n});\n```\n\n### References\n\n* [Introduction to postMessage() Vulnerabilities](https://blog.yeswehack.com/yeswerhackers/introduction-postmessage-vulnerabilities/)",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [],
+                "exampleCommitDescriptions": [],
+                "precision": "very-high",
+                "repoDatasetSize": 0,
+                "cwe": [
+                  "CWE-20"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "javascript/DOMXSS",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Unsanitized input from data from a remote resource flows into innerHTML, where it is used to dynamically construct the HTML page on client side. This may result in a DOM Based Cross-Site Scripting attack (DOMXSS).",
+            "markdown": "Unsanitized input from {0} {1} into {2}, where it is used to dynamically construct the HTML page on client side. This may result in a DOM Based Cross-Site Scripting attack (DOMXSS).",
+            "arguments": [
+              "[data from a remote resource](0)",
+              "[flows](1),(2)",
+              "[innerHTML](3)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/getHtml.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 34,
+                  "endLine": 34,
+                  "startColumn": 39,
+                  "endColumn": 42
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "7b6d8bc25868e001b466feb69b3f04d2e108200f8f8a1847b4879892b47c9f13",
+            "1": "2d06e3d6.67a80300.98501263.6483b32f.9cde7c93.dbe83c7e.83265159.545e9171.2d06e3d6.4773f344.5d7f0106.b7d92c60.fd1fa73f.dbe83c7e.83265159.545e9171"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 32,
+                            "endLine": 32,
+                            "startColumn": 51,
+                            "endColumn": 54
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 32,
+                            "endLine": 32,
+                            "startColumn": 51,
+                            "endColumn": 54
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 2,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 34,
+                            "endLine": 34,
+                            "startColumn": 39,
+                            "endColumn": 42
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 3,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 34,
+                            "endLine": 34,
+                            "startColumn": 39,
+                            "endColumn": 42
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 659,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              },
+              {
+                "label": true,
+                "type": "commonlyFixed"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/DOMXSS",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Unsanitized input from data from a remote resource flows into append, where it is used to dynamically construct the HTML page on client side. This may result in a DOM Based Cross-Site Scripting attack (DOMXSS).",
+            "markdown": "Unsanitized input from {0} {1} into {2}, where it is used to dynamically construct the HTML page on client side. This may result in a DOM Based Cross-Site Scripting attack (DOMXSS).",
+            "arguments": [
+              "[data from a remote resource](0)",
+              "[flows](1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12)",
+              "[append](13)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/getHtml.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 36,
+                  "endLine": 36,
+                  "startColumn": 17,
+                  "endColumn": 32
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "425d19dabf5949f16f0ac8ee664ba5610d739593bdedd414c907aa0e5a326a91",
+            "1": "c38e84d1.4773f344.607187b5.c7d88019.2cc781c6.76fabf72.cd61fc56.7a2329a2.2e040c49.c3c3a64d.5d7f0106.060ddc60.2cc781c6.dbe83c7e.83265159.7a2329a2"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 32,
+                            "endLine": 32,
+                            "startColumn": 51,
+                            "endColumn": 54
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 32,
+                            "endLine": 32,
+                            "startColumn": 51,
+                            "endColumn": 54
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 2,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 34,
+                            "endLine": 34,
+                            "startColumn": 39,
+                            "endColumn": 42
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 3,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 34,
+                            "endLine": 34,
+                            "startColumn": 27,
+                            "endColumn": 35
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 4,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 34,
+                            "endLine": 34,
+                            "startColumn": 17,
+                            "endColumn": 25
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 5,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 35,
+                            "endLine": 35,
+                            "startColumn": 32,
+                            "endColumn": 40
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 6,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 35,
+                            "endLine": 35,
+                            "startColumn": 30,
+                            "endColumn": 41
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 7,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 35,
+                            "endLine": 35,
+                            "startColumn": 21,
+                            "endColumn": 26
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 8,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 36,
+                            "endLine": 36,
+                            "startColumn": 34,
+                            "endColumn": 39
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 9,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 36,
+                            "endLine": 36,
+                            "startColumn": 34,
+                            "endColumn": 44
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 10,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 36,
+                            "endLine": 36,
+                            "startColumn": 34,
+                            "endColumn": 52
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 11,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 36,
+                            "endLine": 36,
+                            "startColumn": 34,
+                            "endColumn": 57
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 12,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 36,
+                            "endLine": 36,
+                            "startColumn": 34,
+                            "endColumn": 59
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 13,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 36,
+                            "endLine": 36,
+                            "startColumn": 17,
+                            "endColumn": 32
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 659,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              },
+              {
+                "label": true,
+                "type": "commonlyFixed"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/DOMXSS",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Unsanitized input from data from a remote resource flows into append, where it is used to dynamically construct the HTML page on client side. This may result in a DOM Based Cross-Site Scripting attack (DOMXSS).",
+            "markdown": "Unsanitized input from {0} {1} into {2}, where it is used to dynamically construct the HTML page on client side. This may result in a DOM Based Cross-Site Scripting attack (DOMXSS).",
+            "arguments": [
+              "[data from a remote resource](0)",
+              "[flows](1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12),(13)",
+              "[append](14)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/getHtml.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 37,
+                  "endLine": 37,
+                  "startColumn": 17,
+                  "endColumn": 32
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "5cb0eb423e4bb5a3abf75d0c5db545bdada479815069f6b84f7190b87b8a34d5",
+            "1": "fec728a8.4773f344.607187b5.c7d88019.282260e6.76fabf72.cd61fc56.7a2329a2.2e040c49.c3c3a64d.5d7f0106.060ddc60.2cc781c6.dbe83c7e.83265159.7a2329a2"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 32,
+                            "endLine": 32,
+                            "startColumn": 51,
+                            "endColumn": 54
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 32,
+                            "endLine": 32,
+                            "startColumn": 51,
+                            "endColumn": 54
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 2,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 34,
+                            "endLine": 34,
+                            "startColumn": 39,
+                            "endColumn": 42
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 3,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 34,
+                            "endLine": 34,
+                            "startColumn": 27,
+                            "endColumn": 35
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 4,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 34,
+                            "endLine": 34,
+                            "startColumn": 17,
+                            "endColumn": 25
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 5,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 35,
+                            "endLine": 35,
+                            "startColumn": 32,
+                            "endColumn": 40
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 6,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 35,
+                            "endLine": 35,
+                            "startColumn": 30,
+                            "endColumn": 41
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 7,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 35,
+                            "endLine": 35,
+                            "startColumn": 21,
+                            "endColumn": 26
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 8,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 36,
+                            "endLine": 36,
+                            "startColumn": 34,
+                            "endColumn": 39
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 9,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 37,
+                            "endLine": 37,
+                            "startColumn": 34,
+                            "endColumn": 39
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 10,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 37,
+                            "endLine": 37,
+                            "startColumn": 34,
+                            "endColumn": 44
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 11,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 37,
+                            "endLine": 37,
+                            "startColumn": 34,
+                            "endColumn": 52
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 12,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 37,
+                            "endLine": 37,
+                            "startColumn": 34,
+                            "endColumn": 57
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 13,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 37,
+                            "endLine": 37,
+                            "startColumn": 34,
+                            "endColumn": 59
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 14,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/getHtml.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 37,
+                            "endLine": 37,
+                            "startColumn": 17,
+                            "endColumn": 32
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 659,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              },
+              {
+                "label": true,
+                "type": "commonlyFixed"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsufficientPostmessageValidation",
+          "ruleIndex": 1,
+          "level": "note",
+          "message": {
+            "text": "The origin of the received message is not checked. This means any site (even malicious) can send message to this window. If you don't expect this, consider checking the origin of sender.",
+            "markdown": "The origin of the received message is not checked. This means any site (even malicious) can send message to this window. If you don't expect this, consider checking the origin of sender.",
+            "arguments": []
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/VSS.SDK.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 665,
+                  "endLine": 665,
+                  "startColumn": 65,
+                  "endColumn": 69
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "fb36607d7594dd681ad555b378d4f9ae25a70f3129ddf5d47293163ee9c9fd39",
+            "1": "cbabde2c.4773f344.607187b5.c559ebce.d9bf5fbd.f681b7b7.83265159.3cee0341.9194119a.4773f344.607187b5.c559ebce.d9bf5fbd.f681b7b7.83265159.1db0a836"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "lib/VSS.SDK.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 665,
+                            "endLine": 665,
+                            "startColumn": 65,
+                            "endColumn": 69
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 203,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "hotFileSource"
+              }
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "coverage": [
+          {
+            "files": 3,
+            "isSupported": true,
+            "lang": "XML"
+          },
+          {
+            "files": 4,
+            "isSupported": true,
+            "lang": "TypeScript"
+          },
+          {
+            "files": 15,
+            "isSupported": true,
+            "lang": "HTML"
+          },
+          {
+            "files": 26,
+            "isSupported": true,
+            "lang": "JavaScript"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,212 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "SnykCode",
+          "semanticVersion": "1.0.0",
+          "version": "1.0.0",
+          "rules": [
+            {
+              "id": "javascript/TrojanSourceConfusingUnicode",
+              "name": "TrojanSourceConfusingUnicode",
+              "shortDescription": {
+                "text": "TrojanSourceConfusingUnicode"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "markdown": "",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [],
+                "exampleCommitDescriptions": [],
+                "precision": "very-high",
+                "repoDatasetSize": 0
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "javascript/TrojanSourceConfusingUnicode",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "(BETA Suggestion) The identifier name contains potentially confusable UTF-8 characters and may be represented visually in a way that does not convey the actual semantics of the code to a human reviewer.",
+            "markdown": "(BETA Suggestion) The identifier name contains potentially confusable UTF-8 characters and may be represented visually in a way that does not convey the actual semantics of the code to a human reviewer.",
+            "arguments": []
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "_build/Tasks/GooglePlayPromoteV3/google-play-promote.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 48,
+                  "endLine": 48,
+                  "startColumn": 19,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "68f8c06e69e913303099b92e6e0b77c50f4f6c45912cfc4b32913e0201c4d98b"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "_build/Tasks/GooglePlayPromoteV3/google-play-promote.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 48,
+                            "endLine": 48,
+                            "startColumn": 19,
+                            "endColumn": 34
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 369,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/TrojanSourceConfusingUnicode",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "(BETA Suggestion) The identifier name contains potentially confusable UTF-8 characters and may be represented visually in a way that does not convey the actual semantics of the code to a human reviewer.",
+            "markdown": "(BETA Suggestion) The identifier name contains potentially confusable UTF-8 characters and may be represented visually in a way that does not convey the actual semantics of the code to a human reviewer.",
+            "arguments": []
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "_build/Tasks/GooglePlayPromoteV3/google-play-promote.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 77,
+                  "endLine": 77,
+                  "startColumn": 17,
+                  "endColumn": 32
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "08792d9a9c2e73989ecb21e7a3eae76fdc962f7cf844ff3b162a84b35b9437ac"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "_build/Tasks/GooglePlayPromoteV3/google-play-promote.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 77,
+                            "endLine": 77,
+                            "startColumn": 17,
+                            "endColumn": 32
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 369,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              }
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "coverage": [
+          {
+            "files": 1,
+            "isSupported": true,
+            "lang": "XML"
+          },
+          {
+            "files": 4530,
+            "isSupported": true,
+            "lang": "JavaScript"
+          },
+          {
+            "files": 32,
+            "isSupported": true,
+            "lang": "TypeScript"
+          },
+          {
+            "files": 8,
+            "isSupported": true,
+            "lang": "HTML"
+          },
+          {
+            "files": 4,
+            "isSupported": false,
+            "lang": "Unknown"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,558 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "SnykCode",
+          "semanticVersion": "1.0.0",
+          "version": "1.0.0",
+          "rules": [
+            {
+              "id": "javascript/TooPermissiveCorsHeader",
+              "name": "TooPermissiveCorsHeader",
+              "shortDescription": {
+                "text": "Origin Validation Error"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "markdown": "\n## Details\n\nAs a legacy of early web design and site limitations, most web applications default, for security reasons, to a \"same origin policy\". This means that browsers can only retrieve data from another site if the two sites share the same domain. In today's complex online environment, however, sites and applications often need to retrieve data from other domains. This is done under fairly limited conditions through an exception to the same origin policy known as \"cross-origin resource sharing\".\n\nDevelopers may create definitions of trusted domains that are broader than absolutely necessary, inadvertently opening up wider access than intended. This weakness could result in data exposure or loss, or even allow an attacker to take over the site or application.\n\n### Best practices for prevention\n* Avoid using wildcards for cross-origin resource sharing. Instead, define intended domains explicitly.\n* Ensure that your site or app is well defended against cross-site scripting attacks (XSS), which could lead to takeover via an overly permissive cross-domain policy.\n* Do not mix secure and insecure protocols when defining cross-domain policies.\n* Consider defining a clear approved list to specify which domains will be given resource-level access; use this approved list to validate all domain access requests.\n* Clearly define which methods (view, read, and update) are permitted for each resource and domain to avoid abuse.",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [
+                  {
+                    "commitURL": "https://github.com/mozilla/makedrive/commit/e8b990dcccfbffb301e3e45eabc825b99ce697da?diff=split#diff-65db868b40704a5a229d1c3795d89fd768c70258e5925f5ea1774c5a214fba63L24",
+                    "lines": [
+                      {
+                        "line": "res.header( \"Access-Control-Allow-Origin\", \"*\" );",
+                        "lineNumber": 23,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "res.header( \"Access-Control-Allow-Origin\", env.get(\"ALLOWED_CORS_DOMAINS\") );",
+                        "lineNumber": 24,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "res.header( \"Access-Control-Allow-Credentials\", true );",
+                        "lineNumber": 25,
+                        "lineChange": "added"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/UOSnetwork/ucom.backend/commit/963e3b1439c98b0fb1da74cc40804e412feec2fa?diff=split#diff-7f3ce8e6cf3d0fa9fbdaa0f6157f797312608094bf135c08f542eef6d326ef5fR15",
+                    "lines": [
+                      {
+                        "line": "const allowedOrigins = 'http://localhost:8000,https://staging.u.community,https://u.community';",
+                        "lineNumber": 14,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "// #security - very weak origin policy",
+                        "lineNumber": 15,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "// @ts-ignore",
+                        "lineNumber": 16,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "app.use((req, res, next) => {",
+                        "lineNumber": 17,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    // Website you wish to allow to connect",
+                        "lineNumber": 17,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    res.setHeader('Access-Control-Allow-Origin', '*');",
+                        "lineNumber": 18,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    // Request methods you wish to allow",
+                        "lineNumber": 19,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');",
+                        "lineNumber": 20,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    // Request headers you wish to allow",
+                        "lineNumber": 21,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    res.setHeader('Access-Control-Allow-Headers', `X-Requested-With,content-type,Authorization,${CommonHeaders.TOKEN_USERS_EXTERNAL_GITHUB}`);",
+                        "lineNumber": 22,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    // Set to true if you need the website to include cookies in the requests sent",
+                        "lineNumber": 23,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    // to the API (e.g. in case you use sessions)",
+                        "lineNumber": 24,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    res.setHeader('Access-Control-Allow-Credentials', true);",
+                        "lineNumber": 25,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    // Pass to next layer of middleware",
+                        "lineNumber": 26,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    res.setHeader('Access-Control-Allow-Origin', allowedOrigins);",
+                        "lineNumber": 18,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');",
+                        "lineNumber": 19,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    res.setHeader('Access-Control-Allow-Headers', `content-type,Authorization,${CommonHeaders.TOKEN_USERS_EXTERNAL_GITHUB}`);",
+                        "lineNumber": 20,
+                        "lineChange": "added"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/UOSnetwork/ucom.backend/commit/963e3b1439c98b0fb1da74cc40804e412feec2fa?diff=split#diff-d245dba17d630f8008381331ece6b22e883c20c1e1546966df0a935955d2ba79R19",
+                    "lines": [
+                      {
+                        "line": "const allowedOrigins = 'http://localhost:8000,https://staging.u.community,https://u.community';",
+                        "lineNumber": 18,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "// #security - very weak origin policy",
+                        "lineNumber": 20,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "// @ts-ignore",
+                        "lineNumber": 21,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "app.use((req, res, next) => {",
+                        "lineNumber": 22,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  // Website you wish to allow to connect",
+                        "lineNumber": 21,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "  res.setHeader('Access-Control-Allow-Origin', '*');",
+                        "lineNumber": 22,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "  res.setHeader('Access-Control-Allow-Origin', allowedOrigins);",
+                        "lineNumber": 23,
+                        "lineChange": "added"
+                      }
+                    ]
+                  }
+                ],
+                "exampleCommitDescriptions": [
+                  "Finish CORS setting via config",
+                  "remove logs, fix content-type header, test echo server"
+                ],
+                "precision": "very-high",
+                "repoDatasetSize": 82,
+                "cwe": [
+                  "CWE-942",
+                  "CWE-346"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "javascript/TooPermissiveCorsHeader",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Setting setRequestHeader header to \"*\" in setRequestHeader might be too permissive. This allows malicious code on other domains to communicate with the application, which is a security risk",
+            "markdown": "Setting {0} to {1} in {2} might be too permissive. This allows malicious code on other domains to communicate with the application, which is a security risk",
+            "arguments": [
+              "[setRequestHeader header](0)",
+              "[\"*\"](1)",
+              "[setRequestHeader](2)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/az-rest.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 31,
+                  "endLine": 31,
+                  "startColumn": 9,
+                  "endColumn": 32
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "9297cb28a7f3b4f7eb817b6a0f4f85709c9733fda722bea6f760fefecf12a7bb",
+            "1": "fae39a93.3b7984e3.1bdbfa1c.5a1e0b52.abd1f8d3.98c7c24d.cd61fc56.bc637401.fae39a93.a17c4800.1bdbfa1c.5a1e0b52.abd1f8d3.98c7c24d.cd61fc56.545e9171"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/az-rest.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 31,
+                            "endLine": 31,
+                            "startColumn": 9,
+                            "endColumn": 32
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/az-rest.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 31,
+                            "endLine": 31,
+                            "startColumn": 9,
+                            "endColumn": 32
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 2,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/az-rest.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 31,
+                            "endLine": 31,
+                            "startColumn": 9,
+                            "endColumn": 32
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 650,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/TooPermissiveCorsHeader",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Setting setRequestHeader header to \"*\" in setRequestHeader might be too permissive. This allows malicious code on other domains to communicate with the application, which is a security risk",
+            "markdown": "Setting {0} to {1} in {2} might be too permissive. This allows malicious code on other domains to communicate with the application, which is a security risk",
+            "arguments": [
+              "[setRequestHeader header](0)",
+              "[\"*\"](1)",
+              "[setRequestHeader](2)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/az-rest.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 45,
+                  "endLine": 45,
+                  "startColumn": 17,
+                  "endColumn": 44
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "a76a588d08ed718dc05bb6afcf214229b4afd30629997ee074b19baf6497cbf6",
+            "1": "fae39a93.3b7984e3.1bdbfa1c.5a1e0b52.51205854.8020cfdf.cd61fc56.42a67b41.fae39a93.a17c4800.1bdbfa1c.5a1e0b52.51205854.b9c617ac.cd61fc56.545e9171"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/az-rest.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 45,
+                            "endLine": 45,
+                            "startColumn": 17,
+                            "endColumn": 44
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/az-rest.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 45,
+                            "endLine": 45,
+                            "startColumn": 17,
+                            "endColumn": 44
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 2,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/az-rest.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 45,
+                            "endLine": 45,
+                            "startColumn": 17,
+                            "endColumn": 44
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 650,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/TooPermissiveCorsHeader",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Setting setRequestHeader header to \"*\" in setRequestHeader might be too permissive. This allows malicious code on other domains to communicate with the application, which is a security risk",
+            "markdown": "Setting {0} to {1} in {2} might be too permissive. This allows malicious code on other domains to communicate with the application, which is a security risk",
+            "arguments": [
+              "[setRequestHeader header](0)",
+              "[\"*\"](1)",
+              "[setRequestHeader](2)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/az-rest.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 73,
+                  "endLine": 73,
+                  "startColumn": 9,
+                  "endColumn": 32
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "926041b3af1ab51a9f5c76e5f75ffed2842092e22bc566a1c6958486a0b7834f",
+            "1": "fae39a93.3b7984e3.1bdbfa1c.5a1e0b52.abd1f8d3.98c7c24d.cd61fc56.bc637401.fae39a93.a17c4800.1bdbfa1c.5a1e0b52.abd1f8d3.98c7c24d.cd61fc56.545e9171"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/az-rest.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 73,
+                            "endLine": 73,
+                            "startColumn": 9,
+                            "endColumn": 32
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/az-rest.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 73,
+                            "endLine": 73,
+                            "startColumn": 9,
+                            "endColumn": 32
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 2,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/az-rest.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 73,
+                            "endLine": 73,
+                            "startColumn": 9,
+                            "endColumn": 32
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 650,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "coverage": [
+          {
+            "files": 1,
+            "isSupported": true,
+            "lang": "XML"
+          },
+          {
+            "files": 2,
+            "isSupported": true,
+            "lang": "HTML"
+          },
+          {
+            "files": 6,
+            "isSupported": true,
+            "lang": "JavaScript"
+          }
+        ]
+      }
+    }
+  ]
+}

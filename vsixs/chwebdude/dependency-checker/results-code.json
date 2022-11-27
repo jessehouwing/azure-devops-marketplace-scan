@@ -1,0 +1,497 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "SnykCode",
+          "semanticVersion": "1.0.0",
+          "version": "1.0.0",
+          "rules": [
+            {
+              "id": "javascript/InsufficientPostmessageValidation",
+              "name": "InsufficientPostmessageValidation",
+              "shortDescription": {
+                "text": "Insufficient postMessage Validation"
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "help": {
+                "markdown": "\n## Details\n\npostMessage is a feature to perform cross-origin communication between JavaScript Window objects. This can be done by:\n\n* The sender using the `targetWindow.postMessage(message, targetOrigin)` to send a message to the `targetWindow` but only if the origin in that window matches `targetOrigin` (or if targetOrigin is set to the special value `*`);\n\n* The receiver listening for the message event in the window object.\n\nHowever, if no validation is done by the receiver, this could allow any window to send arbitrary data to the handler. This vulnerability could be leveraged by an attacker to disclose sensitive data to a malicious origin, or perform actions on a vicitim's behalf.\n\nExample:\n\n```\n\nwindow.addEventListener(\"message\", (event) => {\n    // DANGEROUS: No validation of origin\n    doStuff(event.data);\n});\n\n```\n\n### Best practices for prevention\n* Adopt a zero-trust model in which all input is considered potentially suspect.\n* Specify the targetOrigin instead of designating a wildcard `*`.\n\nExample:\n\n```\nwindow.addEventListener(\"message\", (event) => {\n    if (event.origin !== \"http://example.org\") // SAFE: origin checked\n        return;\n\n    console.log(event.data)\n});\n```\n\n### References\n\n* [Introduction to postMessage() Vulnerabilities](https://blog.yeswehack.com/yeswerhackers/introduction-postmessage-vulnerabilities/)",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [],
+                "exampleCommitDescriptions": [],
+                "precision": "very-high",
+                "repoDatasetSize": 0,
+                "cwe": [
+                  "CWE-20"
+                ]
+              }
+            },
+            {
+              "id": "javascript/Ssti",
+              "name": "Ssti",
+              "shortDescription": {
+                "text": "Improper Neutralization of Directives in Statically Saved Code"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "markdown": "\n## Details\n\nAn attacker exploits this weakness by indirectly controlling the contents of an executable server-side file (such as `.php` or `.aspx`) to trick the server into accessing sensitive data, providing authentication, or even executing shell commands. This weakness is sometimes also known as **Server-Side Template Injection (SSTI)**, since templates are one of the most common types of resources that suffer from this weakness.\nThese types of attacks differ from cross-site scripting (XSS) attacks, which take place on the client side and are generally more easily detected. However, code that is vulnerable to XSS attacks may also be vulnerable to SSTI attacks, since they arise through similar design flaws. And similar to XSS and other injection-type attacks, SSTI attacks are relatively preventable through proactive planning and design during development.\n\n### Best practices for prevention\n* Take a preventative, zero-trust approach and implement safer methods of processing user-controllable input on pages issuing directives to the server.\n* Never pass incoming data directly to the server. Instead, sanitize and validate all incoming data from the client side, ideally checking it against an allowlist of valid actions and destinations (instead of just parsing for banned characters).\n* Select template engines that use sandboxing or allowlists to defend against the possibility of SSTI. However, keep in mind that these may have intrinsic weaknesses.\n* Test applications using lists of publicly available template expression test strings and problematic payloads for your PHP template engine.\n* Given the fallibility of parsing approaches and sandboxing, consider implementing complementary protection methods, such as kernel hardening and read-only filesystems.",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [
+                  {
+                    "commitURL": "https://github.com/bipbop/harlan/commit/f7f1a10756926787b42e11dbf47f848da36ff799?diff=split#diff-aad26a354c69662c1c80143889e9604cL5",
+                    "lines": [
+                      {
+                        "line": "const Templates = function () {",
+                        "lineNumber": 1,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    ",
+                        "lineNumber": 2,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    this.render = function (path, view, callback) {",
+                        "lineNumber": 3,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "        return $.get('templates/' + path + '.tpl', function (data) {",
+                        "lineNumber": 4,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "            callback(Mustache.render(data, view));",
+                        "lineNumber": 5,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "        });",
+                        "lineNumber": 6,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    };",
+                        "lineNumber": 7,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    this.render = (path, view, callback) => $.get(`templates/${path}.tpl`, data => {",
+                        "lineNumber": 3,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "        callback(Mustache.render(data, view));",
+                        "lineNumber": 4,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    });",
+                        "lineNumber": 5,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "};",
+                        "lineNumber": 8,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": " ",
+                        "lineNumber": 9,
+                        "lineChange": "none"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/OmarIthawi/arabic-mathjax/commit/08baac43892b5a401be2524f01999a73d8489577?diff=split#diff-5f34d6fd428013b64e432638e3e0378fL2",
+                    "lines": [
+                      {
+                        "line": "jQuery(function($) {",
+                        "lineNumber": 1,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    $.get('equations.html', function(template) {",
+                        "lineNumber": 2,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "        var rendered = Mustache.render(template, {",
+                        "lineNumber": 3,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "            equations: EQUATIONS",
+                        "lineNumber": 4,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "        });",
+                        "lineNumber": 5,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "var renderEquations = function () {",
+                        "lineNumber": 1,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "  var $ = jQuery;",
+                        "lineNumber": 2,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": " ",
+                        "lineNumber": 6,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  $.get('equations.html', function (template) {",
+                        "lineNumber": 4,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    var rendered = Mustache.render(template, {",
+                        "lineNumber": 5,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "      equations: EQUATIONS",
+                        "lineNumber": 6,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    });",
+                        "lineNumber": 7,
+                        "lineChange": "added"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/borisding/universsr/commit/c88b733fc8c1b46c31137c06f7d7f234cea059db?diff=split#diff-f53e59f241bb62f0261e245350683e07L39",
+                    "lines": [
+                      {
+                        "line": "// also, should allow it to be mounted as middleware for production usage",
+                        "lineNumber": 36,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "export default function serverRenderer({ clientStats }) {",
+                        "lineNumber": 37,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  return async (req, res, next) => {",
+                        "lineNumber": 38,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    try {",
+                        "lineNumber": 39,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "      clearChunks();",
+                        "lineNumber": 40,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "const renderedAppString = await frontloadServerRender(() =>",
+                        "lineNumber": 50,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  renderToString(",
+                        "lineNumber": 51,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    <Provider store={store}>",
+                        "lineNumber": 52,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "      <StaticRouter location={req.url} context={context}>",
+                        "lineNumber": 53,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "      <StaticRouter location={url} context={context}>",
+                        "lineNumber": 53,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "        {renderRoutes(routes)}",
+                        "lineNumber": 54,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "      </StaticRouter>",
+                        "lineNumber": 55,
+                        "lineChange": "none"
+                      }
+                    ]
+                  }
+                ],
+                "exampleCommitDescriptions": [
+                  "Add base filters for rendering",
+                  "[ RELEASE ] inject initial state to store from server",
+                  "use es6 modules"
+                ],
+                "precision": "very-high",
+                "repoDatasetSize": 100,
+                "cwe": [
+                  "CWE-96"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "javascript/InsufficientPostmessageValidation",
+          "ruleIndex": 0,
+          "level": "note",
+          "message": {
+            "text": "The origin of the received message is not checked. This means any site (even malicious) can send message to this window. If you don't expect this, consider checking the origin of sender.",
+            "markdown": "The origin of the received message is not checked. This means any site (even malicious) can send message to this window. If you don't expect this, consider checking the origin of sender.",
+            "arguments": []
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/VSS.SDK.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 655,
+                  "endLine": 655,
+                  "startColumn": 65,
+                  "endColumn": 69
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "9c99c033f97d57235420d334c8f492d95ee6e1540265e53c629490b7d4c82b81",
+            "1": "cbabde2c.4773f344.607187b5.c559ebce.d9bf5fbd.f681b7b7.83265159.3cee0341.9194119a.4773f344.607187b5.c559ebce.d9bf5fbd.f681b7b7.83265159.1db0a836"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "lib/VSS.SDK.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 655,
+                            "endLine": 655,
+                            "startColumn": 65,
+                            "endColumn": 69
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 212,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "hotFileSource"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/Ssti",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Unsanitized input from data from a remote resource flows into render, where it is used to construct a template that gets rendered. This may result in a Server-Side Template Injection vulnerability.",
+            "markdown": "Unsanitized input from {0} {1} into {2}, where it is used to construct a template that gets rendered. This may result in a Server-Side Template Injection vulnerability.",
+            "arguments": [
+              "[data from a remote resource](0)",
+              "[flows](1),(2)",
+              "[render](3)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/tab.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 66,
+                  "endLine": 66,
+                  "startColumn": 52,
+                  "endColumn": 66
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "48127273a80507e0a0d690d13cee445cd41553ac82172bdfc1f178fbc404d6de",
+            "1": "cbabde2c.4773f344.b4ce1011.d7919eeb.ef9f7d82.8020cfdf.83265159.aac3475e.0dcb03b6.4773f344.b4ce1011.c559ebce.f7b6c27c.8020cfdf.83265159.aac3475e"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/tab.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 65,
+                            "endLine": 65,
+                            "startColumn": 78,
+                            "endColumn": 85
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/tab.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 65,
+                            "endLine": 65,
+                            "startColumn": 78,
+                            "endColumn": 85
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 2,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/tab.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 66,
+                            "endLine": 66,
+                            "startColumn": 68,
+                            "endColumn": 75
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 3,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "scripts/tab.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 66,
+                            "endLine": 66,
+                            "startColumn": 52,
+                            "endColumn": 66
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 562,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "coverage": [
+          {
+            "files": 2,
+            "isSupported": true,
+            "lang": "XML"
+          },
+          {
+            "files": 5,
+            "isSupported": true,
+            "lang": "HTML"
+          },
+          {
+            "files": 91,
+            "isSupported": true,
+            "lang": "JavaScript"
+          },
+          {
+            "files": 55,
+            "isSupported": true,
+            "lang": "TypeScript"
+          },
+          {
+            "files": 1,
+            "isSupported": false,
+            "lang": "Roff Manpage"
+          }
+        ]
+      }
+    }
+  ]
+}

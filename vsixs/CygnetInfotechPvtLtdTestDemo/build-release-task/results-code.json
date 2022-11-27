@@ -1,0 +1,1019 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "SnykCode",
+          "semanticVersion": "1.0.0",
+          "version": "1.0.0",
+          "rules": [
+            {
+              "id": "javascript/PT",
+              "name": "PT",
+              "shortDescription": {
+                "text": "Path Traversal"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "markdown": "## Details\n\nA Directory Traversal attack (also known as path traversal) aims to access files and directories that are stored outside the intended folder. By manipulating files with \"dot-dot-slash (../)\" sequences and its variations, or by using absolute file paths, it may be possible to access arbitrary files and directories stored on file system, including application source code, configuration, and other critical system files.\n\nBeing able to access and manipulate an arbitrary path leads to vulnerabilities when a program is being run with privileges that the user providing the path should not have. A website with a path traversal vulnerability would allow users access to sensitive files on the server hosting it. CLI programs may also be vulnerable to path traversal if they are being ran with elevated privileges (such as with the setuid or setgid flags in Unix systems).\n\nDirectory Traversal vulnerabilities can be generally divided into two types:\n\n- **Information Disclosure**: Allows the attacker to gain information about the folder structure or read the contents of sensitive files on the system.\n\n`st` is a module for serving static files on web pages, and contains a [vulnerability of this type](https://snyk.io/vuln/npm:st:20140206). In our example, we will serve files from the `public` route.\n\nIf an attacker requests the following URL from our server, it will in turn leak the sensitive private key of the root user.\n\n```\ncurl http://localhost:8080/public/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/root/.ssh/id_rsa\n```\n**Note** `%2e` is the URL encoded version of `.` (dot).\n\n- **Writing arbitrary files**: Allows the attacker to create or replace existing files. This type of vulnerability is also known as `Zip-Slip`.\n\nOne way to achieve this is by using a malicious `zip` archive that holds path traversal filenames. When each filename in the zip archive gets concatenated to the target extraction folder, without validation, the final path ends up outside of the target folder. If an executable or a configuration file is overwritten with a file containing malicious code, the problem can turn into an arbitrary code execution issue quite easily.\n\nThe following is an example of a `zip` archive with one benign file and one malicious file. Extracting the malicious file will result in traversing out of the target folder, ending up in `/root/.ssh/` overwriting the `authorized_keys` file:\n\n```\n2018-04-15 22:04:29 .....           19           19  good.txt\n2018-04-15 22:04:42 .....           20           20  ../../../../../../root/.ssh/authorized_keys\n```",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [
+                  {
+                    "commitURL": "https://github.com/how-to-firebase/fogo/commit/a3d5054fa9e7da0201e2709d847102a00a525067?diff=split#diff-ef1bae33e98527602bd4e6bfe2fe6c04747d71e6655a5c718f7100b844c9bb6eL158",
+                    "lines": [
+                      {
+                        "line": "  return `/tmp/${path.parse(filename).base}`;",
+                        "lineNumber": 157,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "  return `/tmp/${Date.now()}`;",
+                        "lineNumber": 157,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 158,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "function convertLocalFile(localFilename, versionName) {",
+                        "lineNumber": 160,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  const cmd = getCmd(localFilename, versionName);",
+                        "lineNumber": 161,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  return execPromise(cmd);",
+                        "lineNumber": 162,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 163,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "function getCmd(localFilename, versionName) {",
+                        "lineNumber": 165,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  return `convert ${localFilename} -resize ${versionName}\\\\> ${localFilename}`;",
+                        "lineNumber": 166,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 167,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "function execPromise(cmd) {",
+                        "lineNumber": 169,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  return new Promise((resolve, reject) =>",
+                        "lineNumber": 170,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    exec(cmd, (error, stdout) => (error ? reject(error) : resolve(stdout)))",
+                        "lineNumber": 171,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  );",
+                        "lineNumber": 172,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 173,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "function getDestination(filename, versionName) {",
+                        "lineNumber": 175,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  const filenameParts = filename.split('/');",
+                        "lineNumber": 176,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  filenameParts[filenameParts.length - 2] = versionName;",
+                        "lineNumber": 177,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  return filenameParts.join('/');",
+                        "lineNumber": 178,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 179,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "function getFile(admin, filename) {",
+                        "lineNumber": 181,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  return admin",
+                        "lineNumber": 182,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    .storage()",
+                        "lineNumber": 183,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    .bucket()",
+                        "lineNumber": 184,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    .file(filename);",
+                        "lineNumber": 185,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 186,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "function unlinkPromise(localFilename) {",
+                        "lineNumber": 188,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  return new Promise(",
+                        "lineNumber": 189,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    (resolve, reject) => fs.unlink(localFilename, err => err && reject(err)) || resolve()",
+                        "lineNumber": 190,
+                        "lineChange": "none"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/zhoukekestar/modules/commit/b6c2fc78dc8679080b982124a24771f1466b2fb2?diff=split#diff-7347edae6e14bc50ee18f048e29145ce21cf3bb679d0391605c283ec246942bcL20",
+                    "lines": [
+                      {
+                        "line": "res.sendFile(dir + '/' + req.params.id);",
+                        "lineNumber": 19,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "// Test ok on winodws. Not sure that linux will be work ok.",
+                        "lineNumber": 20,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "res.sendFile((dir + '/' + req.params.id).replace(/\\//g, '\\\\\\\\'));",
+                        "lineNumber": 21,
+                        "lineChange": "added"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/NodeBB/NodeBB/commit/cacc732015c64bba55a6ab45510086febccfb1b2?diff=split#diff-300f765b568b38163933bfcd40c75fe91709a35e9a7522bca2f8c5fe4b19195aL102",
+                    "lines": [
+                      {
+                        "line": "\t\t\tuploadUserPicture(req.user.uid, req.files.userPhoto.name, req.files.userPhoto.path, res);",
+                        "lineNumber": 101,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "\t\t\tuploadUserPicture(req.user.uid, path.extname(req.files.userPhoto.name), req.files.userPhoto.path, res);",
+                        "lineNumber": 101,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "\t\t\treturn;",
+                        "lineNumber": 102,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t}",
+                        "lineNumber": 103,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t",
+                        "lineNumber": 104,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\tvar absolutePath = path.join(global.configuration['ROOT_DIRECTORY'], global.nconf.get('upload_path'), path.basename(oldpicture));",
+                        "lineNumber": 105,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t",
+                        "lineNumber": 106,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\tfs.unlink(absolutePath, function(err) {",
+                        "lineNumber": 107,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t\tif(err) {\t\t\t\t",
+                        "lineNumber": 108,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t\t\tconsole.error('[%d] %s', Date.now(), + err);",
+                        "lineNumber": 109,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t\t}",
+                        "lineNumber": 110,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t\t",
+                        "lineNumber": 111,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t\tuploadUserPicture(req.user.uid, path.extname(req.files.userPhoto.name), req.files.userPhoto.path, res);",
+                        "lineNumber": 112,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t\t",
+                        "lineNumber": 113,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t});",
+                        "lineNumber": 114,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t});",
+                        "lineNumber": 115,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "});",
+                        "lineNumber": 116,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "function uploadUserPicture(uid, extension, tempPath, res) {",
+                        "lineNumber": 118,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\tif(!extension) {",
+                        "lineNumber": 119,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\tres.send({",
+                        "lineNumber": 120,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t\terror: 'Error uploading file! Error : Invalid extension!'",
+                        "lineNumber": 121,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t});",
+                        "lineNumber": 122,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\treturn;",
+                        "lineNumber": 123,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t}",
+                        "lineNumber": 124,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\tvar filename = uid + '-profileimg' + extension;",
+                        "lineNumber": 126,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\tvar uploadPath = path.join(global.configuration['ROOT_DIRECTORY'], global.nconf.get('upload_path'), filename);",
+                        "lineNumber": 127,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t",
+                        "lineNumber": 128,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t// @todo move to proper logging code - this should only be temporary",
+                        "lineNumber": 129,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\tconsole.log('Info: Attempting upload to: '+ uploadPath);",
+                        "lineNumber": 130,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t",
+                        "lineNumber": 131,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\tvar is = fs.createReadStream(tempPath);",
+                        "lineNumber": 132,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\tvar os = fs.createWriteStream(uploadPath);",
+                        "lineNumber": 133,
+                        "lineChange": "none"
+                      }
+                    ]
+                  }
+                ],
+                "exampleCommitDescriptions": [
+                  "- only tested with files",
+                  "add integer support, and failing tests"
+                ],
+                "precision": "very-high",
+                "repoDatasetSize": 760,
+                "cwe": [
+                  "CWE-23"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "javascript/PT",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Unsanitized input from a local file flows into fs.unlink, where it is used as a path. This may result in a Path Traversal vulnerability and allow an attacker to delete arbitrary files.",
+            "markdown": "Unsanitized input from {0} {1} into {2}, where it is used as a path. This may result in a Path Traversal vulnerability and allow an attacker to delete arbitrary files.",
+            "arguments": [
+              "[a local file](0)",
+              "[flows](1),(2),(3),(4),(5),(6),(7),(8)",
+              "[fs.unlink](9)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "buildAndReleaseTask/index.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 305,
+                  "endLine": 305,
+                  "startColumn": 53,
+                  "endColumn": 115
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "5379dbb746effddc63574cb2c0fbc671435ab6e7de44c25078c8c168621e9f4e",
+            "1": "3578c172.4773f344.8f2e9f20.d7919eeb.ef9f7d82.8020cfdf.cd61fc56.7a5725d3.2d06e3d6.f6fe3173.8f2e9f20.dc733355.acf24367.37110c89.83265159.d5de5421"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 301,
+                            "endLine": 301,
+                            "startColumn": 111,
+                            "endColumn": 115
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 301,
+                            "endLine": 301,
+                            "startColumn": 111,
+                            "endColumn": 115
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 2,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 303,
+                            "endLine": 303,
+                            "startColumn": 76,
+                            "endColumn": 80
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 3,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 303,
+                            "endLine": 303,
+                            "startColumn": 66,
+                            "endColumn": 72
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 4,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 303,
+                            "endLine": 303,
+                            "startColumn": 88,
+                            "endColumn": 94
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 5,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 304,
+                            "endLine": 304,
+                            "startColumn": 64,
+                            "endColumn": 70
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 6,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 304,
+                            "endLine": 304,
+                            "startColumn": 57,
+                            "endColumn": 60
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 7,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 305,
+                            "endLine": 305,
+                            "startColumn": 96,
+                            "endColumn": 99
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 8,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 305,
+                            "endLine": 305,
+                            "startColumn": 63,
+                            "endColumn": 100
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 9,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 305,
+                            "endLine": 305,
+                            "startColumn": 53,
+                            "endColumn": 115
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 566,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/PT",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Unsanitized input from a local file flows into fs.unlink, where it is used as a path. This may result in a Path Traversal vulnerability and allow an attacker to delete arbitrary files.",
+            "markdown": "Unsanitized input from {0} {1} into {2}, where it is used as a path. This may result in a Path Traversal vulnerability and allow an attacker to delete arbitrary files.",
+            "arguments": [
+              "[a local file](0)",
+              "[flows](1),(2),(3),(4)",
+              "[fs.unlink](5)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "buildAndReleaseTask/index.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 252,
+                  "endLine": 252,
+                  "startColumn": 21,
+                  "endColumn": 77
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "0dc9daa4840c8fc5441096d5d4619a3a315c8453faa5e11f9f59ad6450bc377e",
+            "1": "3578c172.4773f344.c6c2ed85.d7919eeb.ef9f7d82.8020cfdf.cd61fc56.7a5725d3.2d06e3d6.f6fe3173.c9330245.dc733355.acf24367.37110c89.83265159.d5de5421"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 249,
+                            "endLine": 249,
+                            "startColumn": 62,
+                            "endColumn": 71
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 249,
+                            "endLine": 249,
+                            "startColumn": 62,
+                            "endColumn": 71
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 2,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 251,
+                            "endLine": 251,
+                            "startColumn": 28,
+                            "endColumn": 31
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 3,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 252,
+                            "endLine": 252,
+                            "startColumn": 62,
+                            "endColumn": 65
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 4,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 252,
+                            "endLine": 252,
+                            "startColumn": 31,
+                            "endColumn": 66
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 5,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 252,
+                            "endLine": 252,
+                            "startColumn": 21,
+                            "endColumn": 77
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 566,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/PT",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Unsanitized input from data from a remote resource flows into fs.writeFile, where it is used as a path. This may result in a Path Traversal vulnerability and allow an attacker to write to arbitrary files.",
+            "markdown": "Unsanitized input from {0} {1} into {2}, where it is used as a path. This may result in a Path Traversal vulnerability and allow an attacker to write to arbitrary files.",
+            "arguments": [
+              "[data from a remote resource](0)",
+              "[flows](1),(2),(3),(4),(5),(6),(7)",
+              "[fs.writeFile](8)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "buildAndReleaseTask/index.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 559,
+                  "endLine": 559,
+                  "startColumn": 31,
+                  "endColumn": 94
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "1e5ebdc3179ee00774fa8aeb1d1649fecab9f8b6218bf23a3da9513fa2d0d8d8",
+            "1": "099c30d7.4773f344.c9330245.d7919eeb.ef9f7d82.8020cfdf.df7e59ba.7b1860da.46b7c801.7d4b7307.97923ac6.c8688b2b.79a7d027.8e51db46.f0256597.7b1860da"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 725,
+                            "endLine": 725,
+                            "startColumn": 24,
+                            "endColumn": 32
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 725,
+                            "endLine": 725,
+                            "startColumn": 24,
+                            "endColumn": 32
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 2,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 725,
+                            "endLine": 725,
+                            "startColumn": 24,
+                            "endColumn": 50
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 3,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 507,
+                            "endLine": 507,
+                            "startColumn": 48,
+                            "endColumn": 82
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 4,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 507,
+                            "endLine": 507,
+                            "startColumn": 25,
+                            "endColumn": 38
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 5,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 509,
+                            "endLine": 509,
+                            "startColumn": 70,
+                            "endColumn": 83
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 6,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 509,
+                            "endLine": 509,
+                            "startColumn": 25,
+                            "endColumn": 37
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 7,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 559,
+                            "endLine": 559,
+                            "startColumn": 44,
+                            "endColumn": 56
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 8,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 559,
+                            "endLine": 559,
+                            "startColumn": 31,
+                            "endColumn": 94
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 566,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "coverage": [
+          {
+            "files": 1,
+            "isSupported": true,
+            "lang": "XML"
+          },
+          {
+            "files": 10,
+            "isSupported": true,
+            "lang": "JavaScript"
+          },
+          {
+            "files": 1,
+            "isSupported": true,
+            "lang": "HTML"
+          },
+          {
+            "files": 2,
+            "isSupported": true,
+            "lang": "TypeScript"
+          }
+        ]
+      }
+    }
+  ]
+}

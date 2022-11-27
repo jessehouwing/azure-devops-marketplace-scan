@@ -1,0 +1,622 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "SnykCode",
+          "semanticVersion": "1.0.0",
+          "version": "1.0.0",
+          "rules": [
+            {
+              "id": "javascript/InsecureTLSConfig",
+              "name": "InsecureTLSConfig",
+              "shortDescription": {
+                "text": "Insecure TLS Configuration"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "help": {
+                "markdown": "\n## Details\n\nImplementing encryption for the transmission and storage of sensitive information is essential. But encryption standards are constantly changing since attackers have more and more powerful resources at their disposal-along with more sophisticated attack algorithms. This means that encryption is only useful if it meets current standards appropriate for the type of data being transmitted or stored.\nWhen organizations use weakly encoded passwords or weak hashes (especially when they also utilize single-factor authentication, which places too much emphasis on passwords), attackers can potentially gain unauthorized access through a brute-force attack.\n\n### Best practices for prevention\n* Use TLS instead of SSL\n* Be aware of outdated algorithms; recognize and implement current cryptographic standards instead.\n* Never use custom or DIY security and cryptographic methods; instead, use methods that are part of an accepted library or framework.\n* Ensure that code dealing with cryptographic methods is highly modular and can be easily replaced as security standards change.\n* Increase developer awareness of proper encryption key management and protection to ensure best practices throughout the application.",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [],
+                "exampleCommitDescriptions": [],
+                "precision": "very-high",
+                "repoDatasetSize": 0,
+                "cwe": [
+                  "CWE-327"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "javascript/InsecureTLSConfig",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Setting the 'NODE_TLS_REJECT_UNAUTHORIZED' to '0' makes TLS connections and HTTPS requests insecure.",
+            "markdown": "Setting the '{0}' to '{1}' makes TLS connections and HTTPS requests insecure.",
+            "arguments": [
+              "[NODE_TLS_REJECT_UNAUTHORIZED](0)",
+              "[0](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "tasks/terraform/index.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 33,
+                  "endLine": 33,
+                  "startColumn": 13,
+                  "endColumn": 58
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "ddaf296c0a853da229a4f639adafaa02207e2e8524cc0da7672032fc7db14927",
+            "1": "c8627281.7d8d7fe0.a5cb6912.3ee430ec.bb6bc4ed.8431f2ca.92405ed5.83183368.c8627281.7d8d7fe0.a5cb6912.fb509508.bb6bc4ed.8431f2ca.92405ed5.83183368"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "tasks/terraform/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 33,
+                            "endLine": 33,
+                            "startColumn": 25,
+                            "endColumn": 52
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "tasks/terraform/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 33,
+                            "endLine": 33,
+                            "startColumn": 56,
+                            "endColumn": 58
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 667,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureTLSConfig",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Setting the 'NODE_TLS_REJECT_UNAUTHORIZED' to '0' makes TLS connections and HTTPS requests insecure.",
+            "markdown": "Setting the '{0}' to '{1}' makes TLS connections and HTTPS requests insecure.",
+            "arguments": [
+              "[NODE_TLS_REJECT_UNAUTHORIZED](0)",
+              "[0](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "tasks/terraform/index.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 29,
+                  "endLine": 29,
+                  "startColumn": 5,
+                  "endColumn": 50
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "c23afb14ce6b78036a2beebb928d4c0cae646d17ae51c993c30475f2111f8813",
+            "1": "c8627281.7d8d7fe0.a5cb6912.3ee430ec.bb6bc4ed.8431f2ca.92405ed5.83183368.c8627281.7d8d7fe0.a5cb6912.fb509508.bb6bc4ed.8431f2ca.92405ed5.83183368"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "tasks/terraform/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 29,
+                            "endLine": 29,
+                            "startColumn": 17,
+                            "endColumn": 44
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "tasks/terraform/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 29,
+                            "endLine": 29,
+                            "startColumn": 48,
+                            "endColumn": 50
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 617,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileCodeFlow"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureTLSConfig",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Setting the 'NODE_TLS_REJECT_UNAUTHORIZED' to '0' makes TLS connections and HTTPS requests insecure.",
+            "markdown": "Setting the '{0}' to '{1}' makes TLS connections and HTTPS requests insecure.",
+            "arguments": [
+              "[NODE_TLS_REJECT_UNAUTHORIZED](0)",
+              "[0](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "tasks/vault/index.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 20,
+                  "endLine": 20,
+                  "startColumn": 5,
+                  "endColumn": 50
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "19294d05ea90b84d41d056693716098999745bad2464c93227910cda16136aa0",
+            "1": "cbabde2c.7d8d7fe0.a5cb6912.431a86ae.bb6bc4ed.3a6b6627.92405ed5.83183368.ca3b5f11.70dd3b3b.568208f0.fb509508.bb6bc4ed.3a6b6627.92405ed5.83183368"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "tasks/vault/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 20,
+                            "endLine": 20,
+                            "startColumn": 17,
+                            "endColumn": 44
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "tasks/vault/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 20,
+                            "endLine": 20,
+                            "startColumn": 48,
+                            "endColumn": 50
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 617,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileCodeFlow"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureTLSConfig",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Setting the 'NODE_TLS_REJECT_UNAUTHORIZED' to '0' makes TLS connections and HTTPS requests insecure.",
+            "markdown": "Setting the '{0}' to '{1}' makes TLS connections and HTTPS requests insecure.",
+            "arguments": [
+              "[NODE_TLS_REJECT_UNAUTHORIZED](0)",
+              "[0](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "tasks/packer/index.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 29,
+                  "endLine": 29,
+                  "startColumn": 5,
+                  "endColumn": 50
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "3e2f2759de91c4456cb1497557f2620f60f2bab306905c9c0656217d342a7def",
+            "1": "c8627281.7d8d7fe0.a5cb6912.3ee430ec.bb6bc4ed.8431f2ca.92405ed5.83183368.c8627281.7d8d7fe0.a5cb6912.fb509508.bb6bc4ed.8431f2ca.92405ed5.83183368"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "tasks/packer/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 29,
+                            "endLine": 29,
+                            "startColumn": 17,
+                            "endColumn": 44
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "tasks/packer/index.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 29,
+                            "endLine": 29,
+                            "startColumn": 48,
+                            "endColumn": 50
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 617,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileCodeFlow"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureTLSConfig",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Setting the 'NODE_TLS_REJECT_UNAUTHORIZED' to '0' makes TLS connections and HTTPS requests insecure.",
+            "markdown": "Setting the '{0}' to '{1}' makes TLS connections and HTTPS requests insecure.",
+            "arguments": [
+              "[NODE_TLS_REJECT_UNAUTHORIZED](0)",
+              "[0](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "tasks/packer/index.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 33,
+                  "endLine": 33,
+                  "startColumn": 13,
+                  "endColumn": 58
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "8409ed200344073d57af015bfbe67850608f0ba650cc5dbd17c42a0773a69cc8",
+            "1": "c8627281.7d8d7fe0.a5cb6912.3ee430ec.bb6bc4ed.8431f2ca.92405ed5.83183368.c8627281.7d8d7fe0.a5cb6912.fb509508.bb6bc4ed.8431f2ca.92405ed5.83183368"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "tasks/packer/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 33,
+                            "endLine": 33,
+                            "startColumn": 25,
+                            "endColumn": 52
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "tasks/packer/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 33,
+                            "endLine": 33,
+                            "startColumn": 56,
+                            "endColumn": 58
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 667,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureTLSConfig",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Setting the 'NODE_TLS_REJECT_UNAUTHORIZED' to '0' makes TLS connections and HTTPS requests insecure.",
+            "markdown": "Setting the '{0}' to '{1}' makes TLS connections and HTTPS requests insecure.",
+            "arguments": [
+              "[NODE_TLS_REJECT_UNAUTHORIZED](0)",
+              "[0](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "tasks/vault/index.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 19,
+                  "endLine": 19,
+                  "startColumn": 9,
+                  "endColumn": 54
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "e836006648728bb27ca245d6416aa328221cefa9d8a98193b18784cd7616c383",
+            "1": "cbabde2c.7d8d7fe0.a5cb6912.431a86ae.bb6bc4ed.3a6b6627.92405ed5.83183368.ca3b5f11.70dd3b3b.568208f0.fb509508.bb6bc4ed.3a6b6627.92405ed5.83183368"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "tasks/vault/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 19,
+                            "endLine": 19,
+                            "startColumn": 21,
+                            "endColumn": 48
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "tasks/vault/index.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 19,
+                            "endLine": 19,
+                            "startColumn": 52,
+                            "endColumn": 54
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 667,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              }
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "coverage": [
+          {
+            "files": 7,
+            "isSupported": true,
+            "lang": "XML"
+          },
+          {
+            "files": 6297,
+            "isSupported": true,
+            "lang": "JavaScript"
+          },
+          {
+            "files": 255,
+            "isSupported": true,
+            "lang": "TypeScript"
+          },
+          {
+            "files": 3,
+            "isSupported": false,
+            "lang": "Roff Manpage"
+          },
+          {
+            "files": 9,
+            "isSupported": true,
+            "lang": "HTML"
+          },
+          {
+            "files": 3,
+            "isSupported": false,
+            "lang": "Unknown"
+          }
+        ]
+      }
+    }
+  ]
+}
