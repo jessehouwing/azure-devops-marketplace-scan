@@ -1,3 +1,5 @@
+report.json filter=lfs diff=lfs merge=lfs -text
+result.json filter=lfs diff=lfs merge=lfs -text
 /result.json filter=lfs diff=lfs merge=lfs -text
 /report.json filter=lfs diff=lfs merge=lfs -text
 * !text !filter !merge !diff
