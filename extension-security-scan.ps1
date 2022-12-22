@@ -81,9 +81,16 @@ foreach ($extension in $extensions)
         Invoke-WebRequest -Uri $vsixUrl -OutFile $savePath
     }
 
-    if (-not (Test-path -Path $extractedPath -PathType Container))
+    $vsixManifestFile = Join-Path -Path $extractedPath -ChildPath "extension.vsixmanifest"
+    $vsoManifestFile = Join-Path $extractedPath -ChildPath "extension.vsomanifest"
+
+    if (-not (
+        (Test-path -Path $extractedPath -PathType Container) `
+        -and (Test-path -Path $vsixManifestFile -PathType Leaf) `
+        -and (Test-path -Path $vsoManifestFile -PathType Leaf)
+        ))
     {
-        Expand-Archive -Path $savePath -DestinationPath $extractedPath
+        Expand-Archive -Path $savePath -DestinationPath $extractedPath -Force
     }
 
     write-host "##### COUNT: $count / $max "

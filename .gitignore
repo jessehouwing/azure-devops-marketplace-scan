@@ -1,2 +1,5 @@
-vsixs/**
-!**/results-code.json
+vsixs/
+!vsixs/**
+!result-code.json
+!extension.*manifest
+!task.json
