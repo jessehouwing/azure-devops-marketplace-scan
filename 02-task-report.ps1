@@ -21,7 +21,11 @@ foreach ($extension in $extensions) {
     $extensionId = $extension.extensionName
     $version = $extension.versions[0].version
     $extractedPath = Resolve-Path -path "./vsixs/$publisherId/$extensionId/$version/"
-    
+
+    $installCount = $extension.statistics | ?{ $_.statisticName -eq "install" } | %{ $_.value }
+    $downloadCount = $extension.statistics | ?{ $_.statisticName -eq "onpremDownloads" } | %{ $_.value }
+    $rating = $extension.statistics | ?{ $_.statisticName -eq "weightedRating" } | %{ $_.value }
+
     $consolidatedExtension = [PSCustomObject]@{
         publisher = $publisherId
         extensionId = $extensionId
@@ -32,6 +36,9 @@ foreach ($extension in $extensions) {
         localPath = [string]$extractedPath
         scanResults = $null
         executionHandlers = @()
+        installCount = $installCount
+        downloadCount = $downloadCount
+        rating = $rating
     }
 
     $scanResultPath = join-path -path "vsixs/$publisherId/$extensionId/" -childpath "results-code.json"
@@ -137,17 +144,17 @@ foreach ($extension in $consolidatedExtensions)
 
                 if ($null -ne $taskManifest.execution.Keys)
                 {
-                    $version.executionHandlers += $taskManifest.execution.Keys
+                    $version.executionHandlers += @($taskManifest.execution.Keys)
                 }
                 if ($null -ne $taskManifest.prejobexecution.Keys)
                 {
-                    $version.executionHandlers += $taskManifest.prejobexecution.Keys
+                    $version.executionHandlers += @($taskManifest.prejobexecution.Keys)
                 }
                 if ($null -ne $taskManifest.postjobexection.Keys)
                 {
-                    $version.executionHandlers += $taskManifest.postjobexecution.Keys
+                    $version.executionHandlers += @($taskManifest.postjobexecution.Keys)
                 }
-                $version.executionHandlers = $version.executionHandlers | Select-Object -Unique 
+                $version.executionHandlers = @($version.executionHandlers | Select-Object -Unique)
 
                 # get the azure-pipelines-task-lib version used
                 if ($version.executionHandlers -contains "Node" -or
@@ -212,8 +219,8 @@ foreach ($extension in $consolidatedExtensions)
                     $version.codescanResults = $codescanResults
                 }
                 
-                $task.executionHandlers += $version.executionHandlers
-                $task.executionHandlers = $task.executionHandlers | Select-Object -Unique 
+                $task.executionHandlers += @($version.executionHandlers)
+                $task.executionHandlers = @($task.executionHandlers | Select-Object -Unique )
             }
 
             $task.isDeprecated = ($task.versions | ?{ $_.taskManifest.deprecated -eq $true }).Count -gt 0
