@@ -22,7 +22,7 @@ foreach ($extension in $extensions) {
 
     $installCount = $extension.statistics | ?{ $_.statisticName -eq "install" } | %{ $_.value }
     $downloadCount = $extension.statistics | ?{ $_.statisticName -eq "onpremDownloads" } | %{ $_.value }
-    $rating = $extension.statistics | ?{ $_.statisticName -eq "weightedRating" } | %{ $_.value }
+    $rating = 0 + ($extension.statistics | ?{ $_.statisticName -eq "averagerating" } | %{ $_.value })
 
     $consolidatedExtension = [PSCustomObject]@{
         publisher = $publisherId
