@@ -33,6 +33,7 @@ foreach ($extension in $extensions) {
         vsoManifest = $null
         localPath = [string]$extractedPath
         scanResults = $null
+        dependencyResults = $null
         executionHandlers = @()
         installCount = $installCount
         downloadCount = $downloadCount
@@ -43,6 +44,12 @@ foreach ($extension in $extensions) {
     if (Test-Path -Path $scanResultPath -PathType Leaf )
     {
         $consolidatedExtension.scanResults = (gc -raw $scanResultPath) | ConvertFrom-Json
+    }
+
+    $depedencyResultsPath = join-path -path "vsixs/$publisherId/$extensionId/" -childpath "results-deps.json"
+    if (Test-Path -Path $depedencyResultsPath -PathType Leaf)
+    {
+        $consolidatedExtension.dependencyResults = Get-Content -raw -Path $depedencyResultsPath | ConvertFrom-Json
     }
 
     $vsixManifestFile = Join-Path -Path $extractedPath -ChildPath "extension.vsixmanifest"
@@ -61,10 +68,6 @@ write-host "Reading tasks"
 foreach ($extension in $consolidatedExtensions)
 {
     write-host " - $($extension.publisher)/$($extension.extensionId)"
-
-    $depedencyResultsPath = join-path -path "vsixs/$publisherId/$extensionId/" -childpath "deps.json"
-    $depedencyResults = Get-Content -raw -Path $depedencyResultsPath | ConvertFrom-Json
-
 
     if ($null -ne $extension.vsoManifest)
     {
@@ -176,7 +179,9 @@ foreach ($extension in $consolidatedExtensions)
 
                     if ($tasklibdir)
                     {
-                        gc -raw (join-path -path $tasklibdir.FullName -ChildPath "package.json") | ConvertFrom-Json -AsHashtable | %{
+                        $taskLibManifestFile = (join-path -path $tasklibdir.FullName -ChildPath "package.json")
+                        & git add $taskLibManifestFile --force
+                        gc -raw $taskLibManifestFile | ConvertFrom-Json -AsHashtable | %{
                             $version.jsTasklibVersion = $_.version
                         }
                     } else {
@@ -192,9 +197,11 @@ foreach ($extension in $consolidatedExtensions)
                     {
                         $version.psTaskLibVersion = "missing"
                     } else {
-                        $manifest = gc -raw (join-path -path $tasklibdir.FullName -ChildPath "VstsTaskSdk.psd1")
+                        $psManifestFile = (join-path -path $tasklibdir.FullName -ChildPath "VstsTaskSdk.psd1")
+                        $manifest = gc -raw $psManifestFile
                         if ($manifest)
                         {
+                            & git add $psManifestFile --force
                             # probably malformed duplicated manifest. Truncate and try again.
                             $manifest = [regex]::Replace("$manifest", "(?sm:)^}\s*@{.*", "}")
                             $data = ( Invoke-Expression $manifest )
@@ -207,8 +214,11 @@ foreach ($extension in $consolidatedExtensions)
 
                 # Lets grab the vulnerable dependencies for this version
                 # in the list of dependency culnerabilities, find all results that share the base path with this task
-                $vulnerabilities = $depedencyResults | ?{ 
-                    ([System.Uri]$version.localpath).IsBaseOf([System.Uri](join-path -path $currentDirectory -ChildPath $_.displayTargetFile))
+                $vulnerabilities = $extension.dependencyResults | ?{ 
+                    if ($_) {
+                        return ([System.Uri]$version.localpath).IsBaseOf([System.Uri](join-path -path $_.path -ChildPath $_.displayTargetFile))
+                    }
+                    return $false
                 }
                 $version.vulnerableDependencies = $vulnerabilities
                 
