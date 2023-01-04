@@ -1,0 +1,1639 @@
+{
+  "vulnerabilities": [
+    {
+      "id": "SNYK-JS-AUTOLINKER-2438289",
+      "title": "Authentication Bypass by Spoofing",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+      "credit": [
+        "dbrgn"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<3.16.1"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "3.16.1"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 8.8,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "autolinker",
+      "references": [
+        {
+          "url": "https://github.com/gregjacobs/Autolinker.js/pull/382/commits/8039ed0e63e883d22f2192f57e9f67d383977100",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/gregjacobs/Autolinker.js/pull/386/commits/b34112671071cc9ad50b8fc20719651b972fd8e8",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/gregjacobs/Autolinker.js/issues/377",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/gregjacobs/Autolinker.js/pull/386",
+          "title": "GitHub PR"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n[autolinker](https://www.npmjs.com/package/autolinker) is an Utility to Automatically Link URLs, Email Addresses, Phone Numbers, Twitter handles, and Hashtags in a given block of text/HTML.\n\nAffected versions of this package are vulnerable to Authentication Bypass by Spoofing when a `URL` string contains a Unicode `RTLO` character, two separate links are generated.\n## Remediation\nUpgrade `autolinker` to version 3.16.1 or higher.\n## References\n- [GitHub Commit](https://github.com/gregjacobs/Autolinker.js/pull/382/commits/8039ed0e63e883d22f2192f57e9f67d383977100)\n- [GitHub Commit](https://github.com/gregjacobs/Autolinker.js/pull/386/commits/b34112671071cc9ad50b8fc20719651b972fd8e8)\n- [GitHub Issue](https://github.com/gregjacobs/Autolinker.js/issues/377)\n- [GitHub PR](https://github.com/gregjacobs/Autolinker.js/pull/386)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-290"
+        ]
+      },
+      "packageName": "autolinker",
+      "proprietary": false,
+      "creationTime": "2022-03-31T13:50:52.048275Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-03-31T12:50:51Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-07-25T15:06:15Z",
+      "modificationTime": "2022-10-02T11:45:47.183814Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "XPlatGenerateReleaseNotesTask@*",
+        "handlebars-helpers@0.10.0",
+        "helper-markdown@1.0.0",
+        "remarkable@1.7.4",
+        "autolinker@0.28.1"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "autolinker",
+      "version": "0.28.1"
+    },
+    {
+      "id": "SNYK-JS-AUTOLINKER-564438",
+      "title": "Cross-site Scripting (XSS)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:L/I:L/A:N/E:P/RL:U/RC:C",
+      "credit": [
+        "rugged_info"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<3.14.0"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "3.14.0"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "medium",
+      "cvssScore": 4.6,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "autolinker",
+      "references": [
+        {
+          "url": "https://github.com/gregjacobs/Autolinker.js/commit/f21ea015366cfa62c4e45d4bd117681e82e9b2bf",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/gregjacobs/Autolinker.js/issues/197",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://hackerone.com/reports/592525",
+          "title": "HackerOne Report"
+        },
+        {
+          "url": "https://codepen.io/gvas/pen/LYPjRoK",
+          "title": "Sandbox PoC"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n[autolinker](https://www.npmjs.com/package/autolinker) is an Utility to Automatically Link URLs, Email Addresses, Phone Numbers, Twitter handles, and Hashtags in a given block of text/HTML.\n\nAffected versions of this package are vulnerable to Cross-site Scripting (XSS) due to it not sanitizing user input passed to the `innerHTML` tags.\n## Details\n\nA cross-site scripting attack occurs when the attacker tricks a legitimate web-based application or site to accept a request as originating from a trusted source.\n\nThis is done by escaping the context of the web application; the web application then delivers that data to its users along with other trusted dynamic content, without validating it. The browser unknowingly executes malicious script on the client side (through client-side languages; usually JavaScript or HTML)  in order to perform actions that are otherwise typically blocked by the browser’s Same Origin Policy.\n\nInjecting malicious code is the most prevalent manner by which XSS is exploited; for this reason, escaping characters in order to prevent this manipulation is the top method for securing code against this vulnerability.\n\nEscaping means that the application is coded to mark key characters, and particularly key characters included in user input, to prevent those characters from being interpreted in a dangerous context. For example, in HTML, `<` can be coded as  `&lt`; and `>` can be coded as `&gt`; in order to be interpreted and displayed as themselves in text, while within the code itself, they are used for HTML tags. If malicious content is injected into an application that escapes special characters and that malicious content uses `<` and `>` as HTML tags, those characters are nonetheless not interpreted as HTML tags by the browser if they’ve been correctly escaped in the application code and in this way the attempted attack is diverted.\n \nThe most prominent use of XSS is to steal cookies (source: OWASP HttpOnly) and hijack user sessions, but XSS exploits have been used to expose sensitive information, enable access to privileged services and functionality and deliver malware. \n\n### Types of attacks\nThere are a few methods by which XSS can be manipulated:\n\n|Type|Origin|Description|\n|--|--|--|\n|**Stored**|Server|The malicious code is inserted in the application (usually as a link) by the attacker. The code is activated every time a user clicks the link.|\n|**Reflected**|Server|The attacker delivers a malicious link externally from the vulnerable web site application to a user. When clicked, malicious code is sent to the vulnerable web site, which reflects the attack back to the user’s browser.| \n|**DOM-based**|Client|The attacker forces the user’s browser to render a malicious page. The data in the page itself delivers the cross-site scripting data.|\n|**Mutated**| |The attacker injects code that appears safe, but is then rewritten and modified by the browser, while parsing the markup. An example is rebalancing unclosed quotation marks or even adding quotation marks to unquoted parameters.|\n\n### Affected environments\nThe following environments are susceptible to an XSS attack:\n\n* Web servers\n* Application servers\n* Web application environments\n\n### How to prevent\nThis section describes the top best practices designed to specifically protect your code: \n\n* Sanitize data input in an HTTP request before reflecting it back, ensuring all data is validated, filtered or escaped before echoing anything back to the user, such as the values of query parameters during searches. \n* Convert special characters such as `?`, `&`, `/`, `<`, `>` and spaces to their respective HTML or URL encoded equivalents. \n* Give users the option to disable client-side scripts.\n* Redirect invalid requests.\n* Detect simultaneous logins, including those from two separate IP addresses, and invalidate those sessions.\n* Use and enforce a Content Security Policy (source: Wikipedia) to disable any features that might be manipulated for an XSS attack.\n* Read the documentation for any of the libraries referenced in your code to understand which elements allow for embedded HTML.\n\n## Remediation\nUpgrade `autolinker` to version 3.14.0 or higher.\n## References\n- [GitHub Commit](https://github.com/gregjacobs/Autolinker.js/commit/f21ea015366cfa62c4e45d4bd117681e82e9b2bf)\n- [GitHub Issue](https://github.com/gregjacobs/Autolinker.js/issues/197)\n- [HackerOne Report](https://hackerone.com/reports/592525)\n- [Sandbox PoC](https://codepen.io/gvas/pen/LYPjRoK)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-79"
+        ]
+      },
+      "packageName": "autolinker",
+      "proprietary": false,
+      "creationTime": "2020-04-06T09:31:21.580101Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2017-07-15T11:32:37Z",
+      "packageManager": "npm",
+      "publicationTime": "2019-12-16T13:46:49Z",
+      "modificationTime": "2021-03-14T11:25:13.601207Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "medium",
+      "from": [
+        "XPlatGenerateReleaseNotesTask@*",
+        "handlebars-helpers@0.10.0",
+        "helper-markdown@1.0.0",
+        "remarkable@1.7.4",
+        "autolinker@0.28.1"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "autolinker",
+      "version": "0.28.1"
+    },
+    {
+      "id": "SNYK-JS-AUTOLINKER-73494",
+      "title": "Denial of Service (DoS)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:N/I:N/A:H",
+      "credit": [
+        "wheresrhys"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<3.0.0"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "3.0.0"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "medium",
+      "cvssScore": 4.9,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "autolinker",
+      "references": [
+        {
+          "url": "https://github.com/gregjacobs/Autolinker.js/issues/257",
+          "title": "GitHub Issue"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n[autolinker](https://www.npmjs.com/package/autolinker) is an Utility to Automatically Link URLs, Email Addresses, Phone Numbers, Twitter handles, and Hashtags in a given block of text/HTML.\n\nAffected versions of this package are vulnerable to Denial of Service (DoS) due to an unterminated img src.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `autolinker` to version 3.0.0 or higher.\n## References\n- [GitHub Issue](https://github.com/gregjacobs/Autolinker.js/issues/257)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-400"
+        ]
+      },
+      "packageName": "autolinker",
+      "proprietary": false,
+      "creationTime": "2019-01-10T15:43:20.144029Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2019-01-08T16:51:36Z",
+      "packageManager": "npm",
+      "publicationTime": "2019-01-10T17:07:27Z",
+      "modificationTime": "2020-12-14T14:41:30.684288Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "medium",
+      "from": [
+        "XPlatGenerateReleaseNotesTask@*",
+        "handlebars-helpers@0.10.0",
+        "helper-markdown@1.0.0",
+        "remarkable@1.7.4",
+        "autolinker@0.28.1"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "autolinker",
+      "version": "0.28.1"
+    },
+    {
+      "id": "SNYK-JS-AUTOLINKER-2438289",
+      "title": "Authentication Bypass by Spoofing",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+      "credit": [
+        "dbrgn"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<3.16.1"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "3.16.1"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 8.8,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "autolinker",
+      "references": [
+        {
+          "url": "https://github.com/gregjacobs/Autolinker.js/pull/382/commits/8039ed0e63e883d22f2192f57e9f67d383977100",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/gregjacobs/Autolinker.js/pull/386/commits/b34112671071cc9ad50b8fc20719651b972fd8e8",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/gregjacobs/Autolinker.js/issues/377",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/gregjacobs/Autolinker.js/pull/386",
+          "title": "GitHub PR"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n[autolinker](https://www.npmjs.com/package/autolinker) is an Utility to Automatically Link URLs, Email Addresses, Phone Numbers, Twitter handles, and Hashtags in a given block of text/HTML.\n\nAffected versions of this package are vulnerable to Authentication Bypass by Spoofing when a `URL` string contains a Unicode `RTLO` character, two separate links are generated.\n## Remediation\nUpgrade `autolinker` to version 3.16.1 or higher.\n## References\n- [GitHub Commit](https://github.com/gregjacobs/Autolinker.js/pull/382/commits/8039ed0e63e883d22f2192f57e9f67d383977100)\n- [GitHub Commit](https://github.com/gregjacobs/Autolinker.js/pull/386/commits/b34112671071cc9ad50b8fc20719651b972fd8e8)\n- [GitHub Issue](https://github.com/gregjacobs/Autolinker.js/issues/377)\n- [GitHub PR](https://github.com/gregjacobs/Autolinker.js/pull/386)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-290"
+        ]
+      },
+      "packageName": "autolinker",
+      "proprietary": false,
+      "creationTime": "2022-03-31T13:50:52.048275Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-03-31T12:50:51Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-07-25T15:06:15Z",
+      "modificationTime": "2022-10-02T11:45:47.183814Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "XPlatGenerateReleaseNotesTask@*",
+        "handlebars-helpers@0.10.0",
+        "helper-md@0.2.2",
+        "remarkable@1.7.4",
+        "autolinker@0.28.1"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "autolinker",
+      "version": "0.28.1"
+    },
+    {
+      "id": "SNYK-JS-AUTOLINKER-564438",
+      "title": "Cross-site Scripting (XSS)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:L/I:L/A:N/E:P/RL:U/RC:C",
+      "credit": [
+        "rugged_info"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<3.14.0"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "3.14.0"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "medium",
+      "cvssScore": 4.6,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "autolinker",
+      "references": [
+        {
+          "url": "https://github.com/gregjacobs/Autolinker.js/commit/f21ea015366cfa62c4e45d4bd117681e82e9b2bf",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/gregjacobs/Autolinker.js/issues/197",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://hackerone.com/reports/592525",
+          "title": "HackerOne Report"
+        },
+        {
+          "url": "https://codepen.io/gvas/pen/LYPjRoK",
+          "title": "Sandbox PoC"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n[autolinker](https://www.npmjs.com/package/autolinker) is an Utility to Automatically Link URLs, Email Addresses, Phone Numbers, Twitter handles, and Hashtags in a given block of text/HTML.\n\nAffected versions of this package are vulnerable to Cross-site Scripting (XSS) due to it not sanitizing user input passed to the `innerHTML` tags.\n## Details\n\nA cross-site scripting attack occurs when the attacker tricks a legitimate web-based application or site to accept a request as originating from a trusted source.\n\nThis is done by escaping the context of the web application; the web application then delivers that data to its users along with other trusted dynamic content, without validating it. The browser unknowingly executes malicious script on the client side (through client-side languages; usually JavaScript or HTML)  in order to perform actions that are otherwise typically blocked by the browser’s Same Origin Policy.\n\nInjecting malicious code is the most prevalent manner by which XSS is exploited; for this reason, escaping characters in order to prevent this manipulation is the top method for securing code against this vulnerability.\n\nEscaping means that the application is coded to mark key characters, and particularly key characters included in user input, to prevent those characters from being interpreted in a dangerous context. For example, in HTML, `<` can be coded as  `&lt`; and `>` can be coded as `&gt`; in order to be interpreted and displayed as themselves in text, while within the code itself, they are used for HTML tags. If malicious content is injected into an application that escapes special characters and that malicious content uses `<` and `>` as HTML tags, those characters are nonetheless not interpreted as HTML tags by the browser if they’ve been correctly escaped in the application code and in this way the attempted attack is diverted.\n \nThe most prominent use of XSS is to steal cookies (source: OWASP HttpOnly) and hijack user sessions, but XSS exploits have been used to expose sensitive information, enable access to privileged services and functionality and deliver malware. \n\n### Types of attacks\nThere are a few methods by which XSS can be manipulated:\n\n|Type|Origin|Description|\n|--|--|--|\n|**Stored**|Server|The malicious code is inserted in the application (usually as a link) by the attacker. The code is activated every time a user clicks the link.|\n|**Reflected**|Server|The attacker delivers a malicious link externally from the vulnerable web site application to a user. When clicked, malicious code is sent to the vulnerable web site, which reflects the attack back to the user’s browser.| \n|**DOM-based**|Client|The attacker forces the user’s browser to render a malicious page. The data in the page itself delivers the cross-site scripting data.|\n|**Mutated**| |The attacker injects code that appears safe, but is then rewritten and modified by the browser, while parsing the markup. An example is rebalancing unclosed quotation marks or even adding quotation marks to unquoted parameters.|\n\n### Affected environments\nThe following environments are susceptible to an XSS attack:\n\n* Web servers\n* Application servers\n* Web application environments\n\n### How to prevent\nThis section describes the top best practices designed to specifically protect your code: \n\n* Sanitize data input in an HTTP request before reflecting it back, ensuring all data is validated, filtered or escaped before echoing anything back to the user, such as the values of query parameters during searches. \n* Convert special characters such as `?`, `&`, `/`, `<`, `>` and spaces to their respective HTML or URL encoded equivalents. \n* Give users the option to disable client-side scripts.\n* Redirect invalid requests.\n* Detect simultaneous logins, including those from two separate IP addresses, and invalidate those sessions.\n* Use and enforce a Content Security Policy (source: Wikipedia) to disable any features that might be manipulated for an XSS attack.\n* Read the documentation for any of the libraries referenced in your code to understand which elements allow for embedded HTML.\n\n## Remediation\nUpgrade `autolinker` to version 3.14.0 or higher.\n## References\n- [GitHub Commit](https://github.com/gregjacobs/Autolinker.js/commit/f21ea015366cfa62c4e45d4bd117681e82e9b2bf)\n- [GitHub Issue](https://github.com/gregjacobs/Autolinker.js/issues/197)\n- [HackerOne Report](https://hackerone.com/reports/592525)\n- [Sandbox PoC](https://codepen.io/gvas/pen/LYPjRoK)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-79"
+        ]
+      },
+      "packageName": "autolinker",
+      "proprietary": false,
+      "creationTime": "2020-04-06T09:31:21.580101Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2017-07-15T11:32:37Z",
+      "packageManager": "npm",
+      "publicationTime": "2019-12-16T13:46:49Z",
+      "modificationTime": "2021-03-14T11:25:13.601207Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "medium",
+      "from": [
+        "XPlatGenerateReleaseNotesTask@*",
+        "handlebars-helpers@0.10.0",
+        "helper-md@0.2.2",
+        "remarkable@1.7.4",
+        "autolinker@0.28.1"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "autolinker",
+      "version": "0.28.1"
+    },
+    {
+      "id": "SNYK-JS-AUTOLINKER-73494",
+      "title": "Denial of Service (DoS)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:N/I:N/A:H",
+      "credit": [
+        "wheresrhys"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<3.0.0"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "3.0.0"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "medium",
+      "cvssScore": 4.9,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "autolinker",
+      "references": [
+        {
+          "url": "https://github.com/gregjacobs/Autolinker.js/issues/257",
+          "title": "GitHub Issue"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n[autolinker](https://www.npmjs.com/package/autolinker) is an Utility to Automatically Link URLs, Email Addresses, Phone Numbers, Twitter handles, and Hashtags in a given block of text/HTML.\n\nAffected versions of this package are vulnerable to Denial of Service (DoS) due to an unterminated img src.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `autolinker` to version 3.0.0 or higher.\n## References\n- [GitHub Issue](https://github.com/gregjacobs/Autolinker.js/issues/257)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-400"
+        ]
+      },
+      "packageName": "autolinker",
+      "proprietary": false,
+      "creationTime": "2019-01-10T15:43:20.144029Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2019-01-08T16:51:36Z",
+      "packageManager": "npm",
+      "publicationTime": "2019-01-10T17:07:27Z",
+      "modificationTime": "2020-12-14T14:41:30.684288Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "medium",
+      "from": [
+        "XPlatGenerateReleaseNotesTask@*",
+        "handlebars-helpers@0.10.0",
+        "helper-md@0.2.2",
+        "remarkable@1.7.4",
+        "autolinker@0.28.1"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "autolinker",
+      "version": "0.28.1"
+    },
+    {
+      "id": "SNYK-JS-HIGHLIGHTJS-1048676",
+      "title": "Regular Expression Denial of Service (ReDoS)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+      "credit": [
+        "Unknown"
+      ],
+      "semver": {
+        "vulnerable": [
+          ">=9.0.0 <10.4.1"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "10.4.1"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "medium",
+      "cvssScore": 5.3,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "highlight.js",
+      "references": [
+        {
+          "url": "https://github.com/highlightjs/highlight.js/commit/373b9d862401162e832ce77305e49b859e110f9c",
+          "title": "GitHub Commit"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n[highlight.js](https://www.npmjs.com/package/highlight.js) is a syntax highlighter written in JavaScript. It works in the browser as well as on the server. It works with pretty much any markup, doesn’t depend on any framework, and has automatic language detection.\n\nAffected versions of this package are vulnerable to Regular Expression Denial of Service (ReDoS) via Exponential and Polynomial catastrophic backtracking in multiple language highlighting.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `highlight.js` to version 10.4.1 or higher.\n## References\n- [GitHub Commit](https://github.com/highlightjs/highlight.js/commit/373b9d862401162e832ce77305e49b859e110f9c)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-400"
+        ],
+        "GHSA": [
+          "GHSA-7wwv-vh3v-89cq"
+        ]
+      },
+      "packageName": "highlight.js",
+      "proprietary": false,
+      "creationTime": "2020-12-06T09:34:39.383236Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2020-12-04T16:47:20Z",
+      "packageManager": "npm",
+      "publicationTime": "2020-12-06T16:34:07.195287Z",
+      "modificationTime": "2020-12-06T16:34:07.402949Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "medium",
+      "from": [
+        "XPlatGenerateReleaseNotesTask@*",
+        "handlebars-helpers@0.10.0",
+        "helper-markdown@1.0.0",
+        "highlight.js@9.18.5"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "highlight.js",
+      "version": "9.18.5"
+    },
+    {
+      "id": "SNYK-JS-LODASHTEMPLATE-1088054",
+      "title": "Command Injection",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H/E:P/RL:U/RC:C",
+      "credit": [
+        "Marc Hassan"
+      ],
+      "semver": {
+        "vulnerable": [
+          "*"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.2,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "lodash.template",
+      "references": [
+        {
+          "url": "https://github.com/lodash/lodash/commit/3469357cff396a26c363f8c1b5a91dde28ba4b1c",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/lodash/lodash/blob/ddfd9b11a0126db2302cb70ec9973b66baec0975/lodash.js%23L14851",
+          "title": "Vulnerable Code"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
+          "cvssV3BaseScore": 7.2,
+          "modificationTime": "2022-09-14T01:10:48.257735Z"
+        }
+      ],
+      "description": "## Overview\n[lodash.template](https://www.npmjs.com/package/lodash.template) is a The Lodash method _.template exported as a Node.js module.\n\nAffected versions of this package are vulnerable to Command Injection via `template`.\r\n\r\n### PoC\r\n```js\r\nvar _ = require('lodash');\r\n\r\n_.template('', { variable: '){console.log(process.env)}; with(obj' })()\r\n```\n## Remediation\nThere is no fixed version for `lodash.template`.\n## References\n- [GitHub Commit](https://github.com/lodash/lodash/commit/3469357cff396a26c363f8c1b5a91dde28ba4b1c)\n- [Vulnerable Code](https://github.com/lodash/lodash/blob/ddfd9b11a0126db2302cb70ec9973b66baec0975/lodash.js#L14851)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2021-23337"
+        ],
+        "CWE": [
+          "CWE-78"
+        ],
+        "GHSA": [
+          "GHSA-35jh-r3h4-6jhm"
+        ]
+      },
+      "packageName": "lodash.template",
+      "proprietary": true,
+      "creationTime": "2021-03-22T12:03:39.360085Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2020-11-17T13:02:10Z",
+      "packageManager": "npm",
+      "publicationTime": "2021-02-15T11:50:50Z",
+      "modificationTime": "2022-09-14T01:10:48.257735Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "XPlatGenerateReleaseNotesTask@*",
+        "handlebars-helpers@0.10.0",
+        "helper-markdown@1.0.0",
+        "remarkable@1.7.4",
+        "autolinker@0.28.1",
+        "gulp-header@1.8.12",
+        "lodash.template@4.5.0"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "lodash.template",
+      "version": "4.5.0"
+    },
+    {
+      "id": "SNYK-JS-LODASHTEMPLATE-1088054",
+      "title": "Command Injection",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H/E:P/RL:U/RC:C",
+      "credit": [
+        "Marc Hassan"
+      ],
+      "semver": {
+        "vulnerable": [
+          "*"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.2,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "lodash.template",
+      "references": [
+        {
+          "url": "https://github.com/lodash/lodash/commit/3469357cff396a26c363f8c1b5a91dde28ba4b1c",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/lodash/lodash/blob/ddfd9b11a0126db2302cb70ec9973b66baec0975/lodash.js%23L14851",
+          "title": "Vulnerable Code"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
+          "cvssV3BaseScore": 7.2,
+          "modificationTime": "2022-09-14T01:10:48.257735Z"
+        }
+      ],
+      "description": "## Overview\n[lodash.template](https://www.npmjs.com/package/lodash.template) is a The Lodash method _.template exported as a Node.js module.\n\nAffected versions of this package are vulnerable to Command Injection via `template`.\r\n\r\n### PoC\r\n```js\r\nvar _ = require('lodash');\r\n\r\n_.template('', { variable: '){console.log(process.env)}; with(obj' })()\r\n```\n## Remediation\nThere is no fixed version for `lodash.template`.\n## References\n- [GitHub Commit](https://github.com/lodash/lodash/commit/3469357cff396a26c363f8c1b5a91dde28ba4b1c)\n- [Vulnerable Code](https://github.com/lodash/lodash/blob/ddfd9b11a0126db2302cb70ec9973b66baec0975/lodash.js#L14851)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2021-23337"
+        ],
+        "CWE": [
+          "CWE-78"
+        ],
+        "GHSA": [
+          "GHSA-35jh-r3h4-6jhm"
+        ]
+      },
+      "packageName": "lodash.template",
+      "proprietary": true,
+      "creationTime": "2021-03-22T12:03:39.360085Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2020-11-17T13:02:10Z",
+      "packageManager": "npm",
+      "publicationTime": "2021-02-15T11:50:50Z",
+      "modificationTime": "2022-09-14T01:10:48.257735Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "XPlatGenerateReleaseNotesTask@*",
+        "handlebars-helpers@0.10.0",
+        "helper-md@0.2.2",
+        "remarkable@1.7.4",
+        "autolinker@0.28.1",
+        "gulp-header@1.8.12",
+        "lodash.template@4.5.0"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "lodash.template",
+      "version": "4.5.0"
+    },
+    {
+      "id": "SNYK-JS-UNSETVALUE-2400660",
+      "title": "Prototype Pollution",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+      "credit": [
+        "khizar"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<2.0.1"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "2.0.1"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "unset-value",
+      "references": [
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/issues/11",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12",
+          "title": "GitHub PR"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/releases",
+          "title": "GitHub Release"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Prototype Pollution via the `unset` function in `index.js`, because it allows access to object prototype properties.\n\n## Details\n\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `__proto__`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\n\nThere are two main ways in which the pollution of prototypes occurs:\n\n-   Unsafe `Object` recursive merge\n    \n-   Property definition by path\n    \n\n### Unsafe Object recursive merge\n\nThe logic of a vulnerable recursive merge function follows the following high-level model:\n```\nmerge (target, source)\n\n  foreach property of source\n\n    if property exists and is an object on both the target and the source\n\n      merge(target[property], source[property])\n\n    else\n\n      target[property] = source[property]\n```\n<br>  \n\nWhen the source object contains a property named `__proto__` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\n\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\n\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\n\n### Property definition by path\n\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\n\nIf the attacker can control the value of “path”, they can set this value to `__proto__.myValue`. `myValue` is then assigned to the prototype of the class of the object.\n\n## Types of attacks\n\nThere are a few methods by which Prototype Pollution can be manipulated:\n\n| Type |Origin  |Short description |\n|--|--|--|\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\n\n## Affected environments\n\nThe following environments are susceptible to a Prototype Pollution attack:\n\n-   Application server\n    \n-   Web server\n\n-   Web browser\n    \n\n## How to prevent\n\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\n    \n2.  Require schema validation of JSON input.\n    \n3.  Avoid using unsafe recursive merge functions.\n    \n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\n    \n5.  As a best practice use `Map` instead of `Object`.\n\n### For more information on this vulnerability type:\n\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\nUpgrade `unset-value` to version 2.0.1 or higher.\n## References\n- [GitHub Commit](https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561)\n- [GitHub Issue](https://github.com/jonschlinkert/unset-value/issues/11)\n- [GitHub PR](https://github.com/jonschlinkert/unset-value/pull/12)\n- [GitHub Release](https://github.com/jonschlinkert/unset-value/releases)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-1321"
+        ]
+      },
+      "packageName": "unset-value",
+      "proprietary": false,
+      "creationTime": "2022-02-13T14:46:07.185334Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-02-13T14:44:04Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-02-13T15:26:38.063549Z",
+      "modificationTime": "2022-02-13T15:26:38.065734Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "XPlatGenerateReleaseNotesTask@*",
+        "handlebars-helpers@0.10.0",
+        "micromatch@3.1.10",
+        "snapdragon@0.8.2",
+        "base@0.11.2",
+        "cache-base@1.0.1",
+        "unset-value@1.0.0"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "unset-value",
+      "version": "1.0.0"
+    },
+    {
+      "id": "SNYK-JS-UNSETVALUE-2400660",
+      "title": "Prototype Pollution",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+      "credit": [
+        "khizar"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<2.0.1"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "2.0.1"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "unset-value",
+      "references": [
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/issues/11",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12",
+          "title": "GitHub PR"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/releases",
+          "title": "GitHub Release"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Prototype Pollution via the `unset` function in `index.js`, because it allows access to object prototype properties.\n\n## Details\n\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `__proto__`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\n\nThere are two main ways in which the pollution of prototypes occurs:\n\n-   Unsafe `Object` recursive merge\n    \n-   Property definition by path\n    \n\n### Unsafe Object recursive merge\n\nThe logic of a vulnerable recursive merge function follows the following high-level model:\n```\nmerge (target, source)\n\n  foreach property of source\n\n    if property exists and is an object on both the target and the source\n\n      merge(target[property], source[property])\n\n    else\n\n      target[property] = source[property]\n```\n<br>  \n\nWhen the source object contains a property named `__proto__` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\n\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\n\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\n\n### Property definition by path\n\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\n\nIf the attacker can control the value of “path”, they can set this value to `__proto__.myValue`. `myValue` is then assigned to the prototype of the class of the object.\n\n## Types of attacks\n\nThere are a few methods by which Prototype Pollution can be manipulated:\n\n| Type |Origin  |Short description |\n|--|--|--|\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\n\n## Affected environments\n\nThe following environments are susceptible to a Prototype Pollution attack:\n\n-   Application server\n    \n-   Web server\n\n-   Web browser\n    \n\n## How to prevent\n\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\n    \n2.  Require schema validation of JSON input.\n    \n3.  Avoid using unsafe recursive merge functions.\n    \n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\n    \n5.  As a best practice use `Map` instead of `Object`.\n\n### For more information on this vulnerability type:\n\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\nUpgrade `unset-value` to version 2.0.1 or higher.\n## References\n- [GitHub Commit](https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561)\n- [GitHub Issue](https://github.com/jonschlinkert/unset-value/issues/11)\n- [GitHub PR](https://github.com/jonschlinkert/unset-value/pull/12)\n- [GitHub Release](https://github.com/jonschlinkert/unset-value/releases)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-1321"
+        ]
+      },
+      "packageName": "unset-value",
+      "proprietary": false,
+      "creationTime": "2022-02-13T14:46:07.185334Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-02-13T14:44:04Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-02-13T15:26:38.063549Z",
+      "modificationTime": "2022-02-13T15:26:38.065734Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "XPlatGenerateReleaseNotesTask@*",
+        "handlebars-helpers@0.10.0",
+        "micromatch@3.1.10",
+        "braces@2.3.2",
+        "snapdragon@0.8.2",
+        "base@0.11.2",
+        "cache-base@1.0.1",
+        "unset-value@1.0.0"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "unset-value",
+      "version": "1.0.0"
+    },
+    {
+      "id": "SNYK-JS-UNSETVALUE-2400660",
+      "title": "Prototype Pollution",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+      "credit": [
+        "khizar"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<2.0.1"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "2.0.1"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "unset-value",
+      "references": [
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/issues/11",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12",
+          "title": "GitHub PR"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/releases",
+          "title": "GitHub Release"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Prototype Pollution via the `unset` function in `index.js`, because it allows access to object prototype properties.\n\n## Details\n\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `__proto__`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\n\nThere are two main ways in which the pollution of prototypes occurs:\n\n-   Unsafe `Object` recursive merge\n    \n-   Property definition by path\n    \n\n### Unsafe Object recursive merge\n\nThe logic of a vulnerable recursive merge function follows the following high-level model:\n```\nmerge (target, source)\n\n  foreach property of source\n\n    if property exists and is an object on both the target and the source\n\n      merge(target[property], source[property])\n\n    else\n\n      target[property] = source[property]\n```\n<br>  \n\nWhen the source object contains a property named `__proto__` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\n\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\n\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\n\n### Property definition by path\n\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\n\nIf the attacker can control the value of “path”, they can set this value to `__proto__.myValue`. `myValue` is then assigned to the prototype of the class of the object.\n\n## Types of attacks\n\nThere are a few methods by which Prototype Pollution can be manipulated:\n\n| Type |Origin  |Short description |\n|--|--|--|\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\n\n## Affected environments\n\nThe following environments are susceptible to a Prototype Pollution attack:\n\n-   Application server\n    \n-   Web server\n\n-   Web browser\n    \n\n## How to prevent\n\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\n    \n2.  Require schema validation of JSON input.\n    \n3.  Avoid using unsafe recursive merge functions.\n    \n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\n    \n5.  As a best practice use `Map` instead of `Object`.\n\n### For more information on this vulnerability type:\n\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\nUpgrade `unset-value` to version 2.0.1 or higher.\n## References\n- [GitHub Commit](https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561)\n- [GitHub Issue](https://github.com/jonschlinkert/unset-value/issues/11)\n- [GitHub PR](https://github.com/jonschlinkert/unset-value/pull/12)\n- [GitHub Release](https://github.com/jonschlinkert/unset-value/releases)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-1321"
+        ]
+      },
+      "packageName": "unset-value",
+      "proprietary": false,
+      "creationTime": "2022-02-13T14:46:07.185334Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-02-13T14:44:04Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-02-13T15:26:38.063549Z",
+      "modificationTime": "2022-02-13T15:26:38.065734Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "XPlatGenerateReleaseNotesTask@*",
+        "handlebars-helpers@0.10.0",
+        "micromatch@3.1.10",
+        "extglob@2.0.4",
+        "snapdragon@0.8.2",
+        "base@0.11.2",
+        "cache-base@1.0.1",
+        "unset-value@1.0.0"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "unset-value",
+      "version": "1.0.0"
+    },
+    {
+      "id": "SNYK-JS-UNSETVALUE-2400660",
+      "title": "Prototype Pollution",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+      "credit": [
+        "khizar"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<2.0.1"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "2.0.1"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "unset-value",
+      "references": [
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/issues/11",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12",
+          "title": "GitHub PR"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/releases",
+          "title": "GitHub Release"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Prototype Pollution via the `unset` function in `index.js`, because it allows access to object prototype properties.\n\n## Details\n\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `__proto__`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\n\nThere are two main ways in which the pollution of prototypes occurs:\n\n-   Unsafe `Object` recursive merge\n    \n-   Property definition by path\n    \n\n### Unsafe Object recursive merge\n\nThe logic of a vulnerable recursive merge function follows the following high-level model:\n```\nmerge (target, source)\n\n  foreach property of source\n\n    if property exists and is an object on both the target and the source\n\n      merge(target[property], source[property])\n\n    else\n\n      target[property] = source[property]\n```\n<br>  \n\nWhen the source object contains a property named `__proto__` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\n\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\n\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\n\n### Property definition by path\n\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\n\nIf the attacker can control the value of “path”, they can set this value to `__proto__.myValue`. `myValue` is then assigned to the prototype of the class of the object.\n\n## Types of attacks\n\nThere are a few methods by which Prototype Pollution can be manipulated:\n\n| Type |Origin  |Short description |\n|--|--|--|\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\n\n## Affected environments\n\nThe following environments are susceptible to a Prototype Pollution attack:\n\n-   Application server\n    \n-   Web server\n\n-   Web browser\n    \n\n## How to prevent\n\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\n    \n2.  Require schema validation of JSON input.\n    \n3.  Avoid using unsafe recursive merge functions.\n    \n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\n    \n5.  As a best practice use `Map` instead of `Object`.\n\n### For more information on this vulnerability type:\n\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\nUpgrade `unset-value` to version 2.0.1 or higher.\n## References\n- [GitHub Commit](https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561)\n- [GitHub Issue](https://github.com/jonschlinkert/unset-value/issues/11)\n- [GitHub PR](https://github.com/jonschlinkert/unset-value/pull/12)\n- [GitHub Release](https://github.com/jonschlinkert/unset-value/releases)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-1321"
+        ]
+      },
+      "packageName": "unset-value",
+      "proprietary": false,
+      "creationTime": "2022-02-13T14:46:07.185334Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-02-13T14:44:04Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-02-13T15:26:38.063549Z",
+      "modificationTime": "2022-02-13T15:26:38.065734Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "XPlatGenerateReleaseNotesTask@*",
+        "handlebars-helpers@0.10.0",
+        "micromatch@3.1.10",
+        "nanomatch@1.2.13",
+        "snapdragon@0.8.2",
+        "base@0.11.2",
+        "cache-base@1.0.1",
+        "unset-value@1.0.0"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "unset-value",
+      "version": "1.0.0"
+    },
+    {
+      "id": "SNYK-JS-UNSETVALUE-2400660",
+      "title": "Prototype Pollution",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+      "credit": [
+        "khizar"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<2.0.1"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "2.0.1"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "unset-value",
+      "references": [
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/issues/11",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12",
+          "title": "GitHub PR"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/releases",
+          "title": "GitHub Release"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Prototype Pollution via the `unset` function in `index.js`, because it allows access to object prototype properties.\n\n## Details\n\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `__proto__`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\n\nThere are two main ways in which the pollution of prototypes occurs:\n\n-   Unsafe `Object` recursive merge\n    \n-   Property definition by path\n    \n\n### Unsafe Object recursive merge\n\nThe logic of a vulnerable recursive merge function follows the following high-level model:\n```\nmerge (target, source)\n\n  foreach property of source\n\n    if property exists and is an object on both the target and the source\n\n      merge(target[property], source[property])\n\n    else\n\n      target[property] = source[property]\n```\n<br>  \n\nWhen the source object contains a property named `__proto__` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\n\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\n\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\n\n### Property definition by path\n\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\n\nIf the attacker can control the value of “path”, they can set this value to `__proto__.myValue`. `myValue` is then assigned to the prototype of the class of the object.\n\n## Types of attacks\n\nThere are a few methods by which Prototype Pollution can be manipulated:\n\n| Type |Origin  |Short description |\n|--|--|--|\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\n\n## Affected environments\n\nThe following environments are susceptible to a Prototype Pollution attack:\n\n-   Application server\n    \n-   Web server\n\n-   Web browser\n    \n\n## How to prevent\n\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\n    \n2.  Require schema validation of JSON input.\n    \n3.  Avoid using unsafe recursive merge functions.\n    \n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\n    \n5.  As a best practice use `Map` instead of `Object`.\n\n### For more information on this vulnerability type:\n\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\nUpgrade `unset-value` to version 2.0.1 or higher.\n## References\n- [GitHub Commit](https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561)\n- [GitHub Issue](https://github.com/jonschlinkert/unset-value/issues/11)\n- [GitHub PR](https://github.com/jonschlinkert/unset-value/pull/12)\n- [GitHub Release](https://github.com/jonschlinkert/unset-value/releases)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-1321"
+        ]
+      },
+      "packageName": "unset-value",
+      "proprietary": false,
+      "creationTime": "2022-02-13T14:46:07.185334Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-02-13T14:44:04Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-02-13T15:26:38.063549Z",
+      "modificationTime": "2022-02-13T15:26:38.065734Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "XPlatGenerateReleaseNotesTask@*",
+        "handlebars-helpers@0.10.0",
+        "micromatch@3.1.10",
+        "extglob@2.0.4",
+        "expand-brackets@2.1.4",
+        "snapdragon@0.8.2",
+        "base@0.11.2",
+        "cache-base@1.0.1",
+        "unset-value@1.0.0"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "unset-value",
+      "version": "1.0.0"
+    }
+  ],
+  "ok": false,
+  "dependencyCount": 279,
+  "org": "global-devops-bootcamp",
+  "policy": "# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.25.0\nignore: {}\npatch: {}\n",
+  "isPrivate": true,
+  "licensesPolicy": {
+    "severities": {},
+    "orgLicenseRules": {
+      "AGPL-1.0": {
+        "licenseType": "AGPL-1.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "AGPL-3.0": {
+        "licenseType": "AGPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "Artistic-1.0": {
+        "licenseType": "Artistic-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "Artistic-2.0": {
+        "licenseType": "Artistic-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CDDL-1.0": {
+        "licenseType": "CDDL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CPOL-1.02": {
+        "licenseType": "CPOL-1.02",
+        "severity": "high",
+        "instructions": ""
+      },
+      "EPL-1.0": {
+        "licenseType": "EPL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "GPL-2.0": {
+        "licenseType": "GPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "GPL-3.0": {
+        "licenseType": "GPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "LGPL-2.0": {
+        "licenseType": "LGPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1": {
+        "licenseType": "LGPL-2.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1+": {
+        "licenseType": "LGPL-2.1+",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0": {
+        "licenseType": "LGPL-3.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0+": {
+        "licenseType": "LGPL-3.0+",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-1.1": {
+        "licenseType": "MPL-1.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-2.0": {
+        "licenseType": "MPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MS-RL": {
+        "licenseType": "MS-RL",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "SimPL-2.0": {
+        "licenseType": "SimPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      }
+    }
+  },
+  "packageManager": "npm",
+  "ignoreSettings": {
+    "adminOnly": false,
+    "reasonRequired": false,
+    "disregardFilesystemIgnores": false
+  },
+  "summary": "14 vulnerable dependency paths",
+  "remediation": {
+    "unresolved": [
+      {
+        "id": "SNYK-JS-AUTOLINKER-2438289",
+        "title": "Authentication Bypass by Spoofing",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+        "credit": [
+          "dbrgn"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<3.16.1"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "3.16.1"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 8.8,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "autolinker",
+        "references": [
+          {
+            "url": "https://github.com/gregjacobs/Autolinker.js/pull/382/commits/8039ed0e63e883d22f2192f57e9f67d383977100",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/gregjacobs/Autolinker.js/pull/386/commits/b34112671071cc9ad50b8fc20719651b972fd8e8",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/gregjacobs/Autolinker.js/issues/377",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://github.com/gregjacobs/Autolinker.js/pull/386",
+            "title": "GitHub PR"
+          }
+        ],
+        "cvssDetails": [],
+        "description": "## Overview\n[autolinker](https://www.npmjs.com/package/autolinker) is an Utility to Automatically Link URLs, Email Addresses, Phone Numbers, Twitter handles, and Hashtags in a given block of text/HTML.\n\nAffected versions of this package are vulnerable to Authentication Bypass by Spoofing when a `URL` string contains a Unicode `RTLO` character, two separate links are generated.\n## Remediation\nUpgrade `autolinker` to version 3.16.1 or higher.\n## References\n- [GitHub Commit](https://github.com/gregjacobs/Autolinker.js/pull/382/commits/8039ed0e63e883d22f2192f57e9f67d383977100)\n- [GitHub Commit](https://github.com/gregjacobs/Autolinker.js/pull/386/commits/b34112671071cc9ad50b8fc20719651b972fd8e8)\n- [GitHub Issue](https://github.com/gregjacobs/Autolinker.js/issues/377)\n- [GitHub PR](https://github.com/gregjacobs/Autolinker.js/pull/386)\n",
+        "identifiers": {
+          "CVE": [],
+          "CWE": [
+            "CWE-290"
+          ]
+        },
+        "packageName": "autolinker",
+        "proprietary": false,
+        "creationTime": "2022-03-31T13:50:52.048275Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-03-31T12:50:51Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-07-25T15:06:15Z",
+        "modificationTime": "2022-10-02T11:45:47.183814Z",
+        "socialTrendAlert": false,
+        "from": [
+          "XPlatGenerateReleaseNotesTask@*",
+          "handlebars-helpers@0.10.0",
+          "helper-md@0.2.2",
+          "remarkable@1.7.4",
+          "autolinker@0.28.1"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "autolinker",
+        "version": "0.28.1",
+        "severityWithCritical": "high"
+      },
+      {
+        "id": "SNYK-JS-AUTOLINKER-564438",
+        "title": "Cross-site Scripting (XSS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:L/I:L/A:N/E:P/RL:U/RC:C",
+        "credit": [
+          "rugged_info"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<3.14.0"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "3.14.0"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 4.6,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "autolinker",
+        "references": [
+          {
+            "url": "https://github.com/gregjacobs/Autolinker.js/commit/f21ea015366cfa62c4e45d4bd117681e82e9b2bf",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/gregjacobs/Autolinker.js/issues/197",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://hackerone.com/reports/592525",
+            "title": "HackerOne Report"
+          },
+          {
+            "url": "https://codepen.io/gvas/pen/LYPjRoK",
+            "title": "Sandbox PoC"
+          }
+        ],
+        "cvssDetails": [],
+        "description": "## Overview\n[autolinker](https://www.npmjs.com/package/autolinker) is an Utility to Automatically Link URLs, Email Addresses, Phone Numbers, Twitter handles, and Hashtags in a given block of text/HTML.\n\nAffected versions of this package are vulnerable to Cross-site Scripting (XSS) due to it not sanitizing user input passed to the `innerHTML` tags.\n## Details\n\nA cross-site scripting attack occurs when the attacker tricks a legitimate web-based application or site to accept a request as originating from a trusted source.\n\nThis is done by escaping the context of the web application; the web application then delivers that data to its users along with other trusted dynamic content, without validating it. The browser unknowingly executes malicious script on the client side (through client-side languages; usually JavaScript or HTML)  in order to perform actions that are otherwise typically blocked by the browser’s Same Origin Policy.\n\nInjecting malicious code is the most prevalent manner by which XSS is exploited; for this reason, escaping characters in order to prevent this manipulation is the top method for securing code against this vulnerability.\n\nEscaping means that the application is coded to mark key characters, and particularly key characters included in user input, to prevent those characters from being interpreted in a dangerous context. For example, in HTML, `<` can be coded as  `&lt`; and `>` can be coded as `&gt`; in order to be interpreted and displayed as themselves in text, while within the code itself, they are used for HTML tags. If malicious content is injected into an application that escapes special characters and that malicious content uses `<` and `>` as HTML tags, those characters are nonetheless not interpreted as HTML tags by the browser if they’ve been correctly escaped in the application code and in this way the attempted attack is diverted.\n \nThe most prominent use of XSS is to steal cookies (source: OWASP HttpOnly) and hijack user sessions, but XSS exploits have been used to expose sensitive information, enable access to privileged services and functionality and deliver malware. \n\n### Types of attacks\nThere are a few methods by which XSS can be manipulated:\n\n|Type|Origin|Description|\n|--|--|--|\n|**Stored**|Server|The malicious code is inserted in the application (usually as a link) by the attacker. The code is activated every time a user clicks the link.|\n|**Reflected**|Server|The attacker delivers a malicious link externally from the vulnerable web site application to a user. When clicked, malicious code is sent to the vulnerable web site, which reflects the attack back to the user’s browser.| \n|**DOM-based**|Client|The attacker forces the user’s browser to render a malicious page. The data in the page itself delivers the cross-site scripting data.|\n|**Mutated**| |The attacker injects code that appears safe, but is then rewritten and modified by the browser, while parsing the markup. An example is rebalancing unclosed quotation marks or even adding quotation marks to unquoted parameters.|\n\n### Affected environments\nThe following environments are susceptible to an XSS attack:\n\n* Web servers\n* Application servers\n* Web application environments\n\n### How to prevent\nThis section describes the top best practices designed to specifically protect your code: \n\n* Sanitize data input in an HTTP request before reflecting it back, ensuring all data is validated, filtered or escaped before echoing anything back to the user, such as the values of query parameters during searches. \n* Convert special characters such as `?`, `&`, `/`, `<`, `>` and spaces to their respective HTML or URL encoded equivalents. \n* Give users the option to disable client-side scripts.\n* Redirect invalid requests.\n* Detect simultaneous logins, including those from two separate IP addresses, and invalidate those sessions.\n* Use and enforce a Content Security Policy (source: Wikipedia) to disable any features that might be manipulated for an XSS attack.\n* Read the documentation for any of the libraries referenced in your code to understand which elements allow for embedded HTML.\n\n## Remediation\nUpgrade `autolinker` to version 3.14.0 or higher.\n## References\n- [GitHub Commit](https://github.com/gregjacobs/Autolinker.js/commit/f21ea015366cfa62c4e45d4bd117681e82e9b2bf)\n- [GitHub Issue](https://github.com/gregjacobs/Autolinker.js/issues/197)\n- [HackerOne Report](https://hackerone.com/reports/592525)\n- [Sandbox PoC](https://codepen.io/gvas/pen/LYPjRoK)\n",
+        "identifiers": {
+          "CVE": [],
+          "CWE": [
+            "CWE-79"
+          ]
+        },
+        "packageName": "autolinker",
+        "proprietary": false,
+        "creationTime": "2020-04-06T09:31:21.580101Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2017-07-15T11:32:37Z",
+        "packageManager": "npm",
+        "publicationTime": "2019-12-16T13:46:49Z",
+        "modificationTime": "2021-03-14T11:25:13.601207Z",
+        "socialTrendAlert": false,
+        "from": [
+          "XPlatGenerateReleaseNotesTask@*",
+          "handlebars-helpers@0.10.0",
+          "helper-md@0.2.2",
+          "remarkable@1.7.4",
+          "autolinker@0.28.1"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "autolinker",
+        "version": "0.28.1",
+        "severityWithCritical": "medium"
+      },
+      {
+        "id": "SNYK-JS-AUTOLINKER-73494",
+        "title": "Denial of Service (DoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:N/I:N/A:H",
+        "credit": [
+          "wheresrhys"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<3.0.0"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "3.0.0"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 4.9,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "autolinker",
+        "references": [
+          {
+            "url": "https://github.com/gregjacobs/Autolinker.js/issues/257",
+            "title": "GitHub Issue"
+          }
+        ],
+        "cvssDetails": [],
+        "description": "## Overview\n[autolinker](https://www.npmjs.com/package/autolinker) is an Utility to Automatically Link URLs, Email Addresses, Phone Numbers, Twitter handles, and Hashtags in a given block of text/HTML.\n\nAffected versions of this package are vulnerable to Denial of Service (DoS) due to an unterminated img src.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `autolinker` to version 3.0.0 or higher.\n## References\n- [GitHub Issue](https://github.com/gregjacobs/Autolinker.js/issues/257)\n",
+        "identifiers": {
+          "CVE": [],
+          "CWE": [
+            "CWE-400"
+          ]
+        },
+        "packageName": "autolinker",
+        "proprietary": false,
+        "creationTime": "2019-01-10T15:43:20.144029Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2019-01-08T16:51:36Z",
+        "packageManager": "npm",
+        "publicationTime": "2019-01-10T17:07:27Z",
+        "modificationTime": "2020-12-14T14:41:30.684288Z",
+        "socialTrendAlert": false,
+        "from": [
+          "XPlatGenerateReleaseNotesTask@*",
+          "handlebars-helpers@0.10.0",
+          "helper-md@0.2.2",
+          "remarkable@1.7.4",
+          "autolinker@0.28.1"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "autolinker",
+        "version": "0.28.1",
+        "severityWithCritical": "medium"
+      },
+      {
+        "id": "SNYK-JS-HIGHLIGHTJS-1048676",
+        "title": "Regular Expression Denial of Service (ReDoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            ">=9.0.0 <10.4.1"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "10.4.1"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 5.3,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "highlight.js",
+        "references": [
+          {
+            "url": "https://github.com/highlightjs/highlight.js/commit/373b9d862401162e832ce77305e49b859e110f9c",
+            "title": "GitHub Commit"
+          }
+        ],
+        "cvssDetails": [],
+        "description": "## Overview\n[highlight.js](https://www.npmjs.com/package/highlight.js) is a syntax highlighter written in JavaScript. It works in the browser as well as on the server. It works with pretty much any markup, doesn’t depend on any framework, and has automatic language detection.\n\nAffected versions of this package are vulnerable to Regular Expression Denial of Service (ReDoS) via Exponential and Polynomial catastrophic backtracking in multiple language highlighting.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `highlight.js` to version 10.4.1 or higher.\n## References\n- [GitHub Commit](https://github.com/highlightjs/highlight.js/commit/373b9d862401162e832ce77305e49b859e110f9c)\n",
+        "identifiers": {
+          "CVE": [],
+          "CWE": [
+            "CWE-400"
+          ],
+          "GHSA": [
+            "GHSA-7wwv-vh3v-89cq"
+          ]
+        },
+        "packageName": "highlight.js",
+        "proprietary": false,
+        "creationTime": "2020-12-06T09:34:39.383236Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2020-12-04T16:47:20Z",
+        "packageManager": "npm",
+        "publicationTime": "2020-12-06T16:34:07.195287Z",
+        "modificationTime": "2020-12-06T16:34:07.402949Z",
+        "socialTrendAlert": false,
+        "from": [
+          "XPlatGenerateReleaseNotesTask@*",
+          "handlebars-helpers@0.10.0",
+          "helper-markdown@1.0.0",
+          "highlight.js@9.18.5"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "highlight.js",
+        "version": "9.18.5",
+        "severityWithCritical": "medium"
+      },
+      {
+        "id": "SNYK-JS-LODASHTEMPLATE-1088054",
+        "title": "Command Injection",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H/E:P/RL:U/RC:C",
+        "credit": [
+          "Marc Hassan"
+        ],
+        "semver": {
+          "vulnerable": [
+            "*"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.2,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "lodash.template",
+        "references": [
+          {
+            "url": "https://github.com/lodash/lodash/commit/3469357cff396a26c363f8c1b5a91dde28ba4b1c",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/lodash/lodash/blob/ddfd9b11a0126db2302cb70ec9973b66baec0975/lodash.js%23L14851",
+            "title": "Vulnerable Code"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 7.2,
+            "modificationTime": "2022-09-14T01:10:48.257735Z"
+          }
+        ],
+        "description": "## Overview\n[lodash.template](https://www.npmjs.com/package/lodash.template) is a The Lodash method _.template exported as a Node.js module.\n\nAffected versions of this package are vulnerable to Command Injection via `template`.\r\n\r\n### PoC\r\n```js\r\nvar _ = require('lodash');\r\n\r\n_.template('', { variable: '){console.log(process.env)}; with(obj' })()\r\n```\n## Remediation\nThere is no fixed version for `lodash.template`.\n## References\n- [GitHub Commit](https://github.com/lodash/lodash/commit/3469357cff396a26c363f8c1b5a91dde28ba4b1c)\n- [Vulnerable Code](https://github.com/lodash/lodash/blob/ddfd9b11a0126db2302cb70ec9973b66baec0975/lodash.js#L14851)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2021-23337"
+          ],
+          "CWE": [
+            "CWE-78"
+          ],
+          "GHSA": [
+            "GHSA-35jh-r3h4-6jhm"
+          ]
+        },
+        "packageName": "lodash.template",
+        "proprietary": true,
+        "creationTime": "2021-03-22T12:03:39.360085Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2020-11-17T13:02:10Z",
+        "packageManager": "npm",
+        "publicationTime": "2021-02-15T11:50:50Z",
+        "modificationTime": "2022-09-14T01:10:48.257735Z",
+        "socialTrendAlert": false,
+        "from": [
+          "XPlatGenerateReleaseNotesTask@*",
+          "handlebars-helpers@0.10.0",
+          "helper-md@0.2.2",
+          "remarkable@1.7.4",
+          "autolinker@0.28.1",
+          "gulp-header@1.8.12",
+          "lodash.template@4.5.0"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "lodash.template",
+        "version": "4.5.0",
+        "severityWithCritical": "high"
+      },
+      {
+        "id": "SNYK-JS-UNSETVALUE-2400660",
+        "title": "Prototype Pollution",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "credit": [
+          "khizar"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<2.0.1"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "2.0.1"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "unset-value",
+        "references": [
+          {
+            "url": "https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/jonschlinkert/unset-value/issues/11",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://github.com/jonschlinkert/unset-value/pull/12",
+            "title": "GitHub PR"
+          },
+          {
+            "url": "https://github.com/jonschlinkert/unset-value/releases",
+            "title": "GitHub Release"
+          }
+        ],
+        "cvssDetails": [],
+        "description": "## Overview\n\nAffected versions of this package are vulnerable to Prototype Pollution via the `unset` function in `index.js`, because it allows access to object prototype properties.\n\n## Details\n\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `__proto__`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\n\nThere are two main ways in which the pollution of prototypes occurs:\n\n-   Unsafe `Object` recursive merge\n    \n-   Property definition by path\n    \n\n### Unsafe Object recursive merge\n\nThe logic of a vulnerable recursive merge function follows the following high-level model:\n```\nmerge (target, source)\n\n  foreach property of source\n\n    if property exists and is an object on both the target and the source\n\n      merge(target[property], source[property])\n\n    else\n\n      target[property] = source[property]\n```\n<br>  \n\nWhen the source object contains a property named `__proto__` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\n\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\n\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\n\n### Property definition by path\n\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\n\nIf the attacker can control the value of “path”, they can set this value to `__proto__.myValue`. `myValue` is then assigned to the prototype of the class of the object.\n\n## Types of attacks\n\nThere are a few methods by which Prototype Pollution can be manipulated:\n\n| Type |Origin  |Short description |\n|--|--|--|\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\n\n## Affected environments\n\nThe following environments are susceptible to a Prototype Pollution attack:\n\n-   Application server\n    \n-   Web server\n\n-   Web browser\n    \n\n## How to prevent\n\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\n    \n2.  Require schema validation of JSON input.\n    \n3.  Avoid using unsafe recursive merge functions.\n    \n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\n    \n5.  As a best practice use `Map` instead of `Object`.\n\n### For more information on this vulnerability type:\n\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\nUpgrade `unset-value` to version 2.0.1 or higher.\n## References\n- [GitHub Commit](https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561)\n- [GitHub Issue](https://github.com/jonschlinkert/unset-value/issues/11)\n- [GitHub PR](https://github.com/jonschlinkert/unset-value/pull/12)\n- [GitHub Release](https://github.com/jonschlinkert/unset-value/releases)\n",
+        "identifiers": {
+          "CVE": [],
+          "CWE": [
+            "CWE-1321"
+          ]
+        },
+        "packageName": "unset-value",
+        "proprietary": false,
+        "creationTime": "2022-02-13T14:46:07.185334Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-02-13T14:44:04Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-02-13T15:26:38.063549Z",
+        "modificationTime": "2022-02-13T15:26:38.065734Z",
+        "socialTrendAlert": false,
+        "from": [
+          "XPlatGenerateReleaseNotesTask@*",
+          "handlebars-helpers@0.10.0",
+          "micromatch@3.1.10",
+          "extglob@2.0.4",
+          "expand-brackets@2.1.4",
+          "snapdragon@0.8.2",
+          "base@0.11.2",
+          "cache-base@1.0.1",
+          "unset-value@1.0.0"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "unset-value",
+        "version": "1.0.0",
+        "severityWithCritical": "high"
+      }
+    ],
+    "upgrade": {},
+    "patch": {},
+    "ignore": {},
+    "pin": {}
+  },
+  "filesystemPolicy": false,
+  "filtered": {
+    "ignore": [],
+    "patch": []
+  },
+  "uniqueCount": 6,
+  "projectName": "XPlatGenerateReleaseNotesTask",
+  "displayTargetFile": "XplatGenerateReleaseNotesTask\\package-lock.json",
+  "hasUnknownVersions": false,
+  "path": "C:\\Users\\JesseHouwing\\source\\extension-securiry\\vsixs\\richardfennellBM\\BM-VSTS-XplatGenerateReleaseNotes\\4.1.2"
+}

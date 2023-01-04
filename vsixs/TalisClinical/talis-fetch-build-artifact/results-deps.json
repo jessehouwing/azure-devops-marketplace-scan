@@ -1,0 +1,365 @@
+{
+  "vulnerabilities": [
+    {
+      "id": "SNYK-JS-ADMZIP-1065796",
+      "title": "Directory Traversal",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+      "credit": [
+        "cthackers"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<0.5.2"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "0.5.2"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.4,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "adm-zip",
+      "references": [
+        {
+          "url": "https://github.com/cthackers/adm-zip/commit/119dcad6599adccc77982feb14a0c7440fa63013",
+          "title": "GitHub Commit"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n[adm-zip](https://www.npmjs.com/package/adm-zip) is a JavaScript implementation for zip data compression for NodeJS.\n\nAffected versions of this package are vulnerable to Directory Traversal. It could extract files outside the target folder.\n\n## Details\n\nA Directory Traversal attack (also known as path traversal) aims to access files and directories that are stored outside the intended folder. By manipulating files with \"dot-dot-slash (../)\" sequences and its variations, or by using absolute file paths, it may be possible to access arbitrary files and directories stored on file system, including application source code, configuration, and other critical system files.\n\nDirectory Traversal vulnerabilities can be generally divided into two types:\n\n- **Information Disclosure**: Allows the attacker to gain information about the folder structure or read the contents of sensitive files on the system.\n\n`st` is a module for serving static files on web pages, and contains a [vulnerability of this type](https://snyk.io/vuln/npm:st:20140206). In our example, we will serve files from the `public` route.\n\nIf an attacker requests the following URL from our server, it will in turn leak the sensitive private key of the root user.\n\n```\ncurl http://localhost:8080/public/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/root/.ssh/id_rsa\n```\n**Note** `%2e` is the URL encoded version of `.` (dot).\n\n- **Writing arbitrary files**: Allows the attacker to create or replace existing files. This type of vulnerability is also known as `Zip-Slip`. \n\nOne way to achieve this is by using a malicious `zip` archive that holds path traversal filenames. When each filename in the zip archive gets concatenated to the target extraction folder, without validation, the final path ends up outside of the target folder. If an executable or a configuration file is overwritten with a file containing malicious code, the problem can turn into an arbitrary code execution issue quite easily.\n\nThe following is an example of a `zip` archive with one benign file and one malicious file. Extracting the malicious file will result in traversing out of the target folder, ending up in `/root/.ssh/` overwriting the `authorized_keys` file:\n\n```\n2018-04-15 22:04:29 .....           19           19  good.txt\n2018-04-15 22:04:42 .....           20           20  ../../../../../../root/.ssh/authorized_keys\n```\n\n## Remediation\nUpgrade `adm-zip` to version 0.5.2 or higher.\n## References\n- [GitHub Commit](https://github.com/cthackers/adm-zip/commit/119dcad6599adccc77982feb14a0c7440fa63013)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-22"
+        ]
+      },
+      "packageName": "adm-zip",
+      "proprietary": false,
+      "creationTime": "2021-01-28T07:59:50.454879Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2021-01-28T07:59:22Z",
+      "packageManager": "npm",
+      "publicationTime": "2021-02-15T17:04:18.109270Z",
+      "modificationTime": "2021-02-15T17:04:18.111270Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "talis-fetch-build-artifact-task@1.0.3",
+        "adm-zip@0.4.16"
+      ],
+      "upgradePath": [
+        false,
+        "adm-zip@0.5.2"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "adm-zip",
+      "version": "0.4.16"
+    },
+    {
+      "id": "SNYK-JS-SHELLJS-2332187",
+      "title": "Improper Privilege Management",
+      "CVSSv3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H/E:P",
+      "credit": [
+        "haxatron"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<0.8.5"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "0.8.5"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.1,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "shelljs",
+      "references": [
+        {
+          "url": "https://github.com/shelljs/shelljs/commit/d919d22dd6de385edaa9d90313075a77f74b338c",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/shelljs/shelljs/issues/1058",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/shelljs/shelljs/pull/1060",
+          "title": "GitHub PR"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H",
+          "cvssV3BaseScore": 7.1,
+          "modificationTime": "2022-02-09T16:10:36.984666Z"
+        }
+      ],
+      "description": "## Overview\n[shelljs](None) is a wrapper for the Unix shell commands for Node.js.\n\nAffected versions of this package are vulnerable to Improper Privilege Management. When `ShellJS` is used to create shell scripts which may be running as `root`, users with low-level privileges on the system can leak sensitive information such as passwords (depending on implementation) from the standard output of the privileged process OR shutdown privileged `ShellJS` processes via the `exec` function when triggering EACCESS errors.\r\n\r\n**Note:** Thi only impacts the synchronous version of `shell.exec()`.\n## Remediation\nUpgrade `shelljs` to version 0.8.5 or higher.\n## References\n- [GitHub Commit](https://github.com/shelljs/shelljs/commit/d919d22dd6de385edaa9d90313075a77f74b338c)\n- [GitHub Issue](https://github.com/shelljs/shelljs/issues/1058)\n- [GitHub PR](https://github.com/shelljs/shelljs/pull/1060)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-0144"
+        ],
+        "CWE": [
+          "CWE-269"
+        ]
+      },
+      "packageName": "shelljs",
+      "proprietary": false,
+      "creationTime": "2022-01-11T12:52:23.829882Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-01-11T12:39:08Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-01-12T12:49:35.008405Z",
+      "modificationTime": "2022-02-09T16:10:36.984666Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "talis-fetch-build-artifact-task@1.0.3",
+        "vsts-task-lib@1.1.0",
+        "shelljs@0.3.0"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "shelljs",
+      "version": "0.3.0"
+    }
+  ],
+  "ok": false,
+  "dependencyCount": 32,
+  "org": "global-devops-bootcamp",
+  "policy": "# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.25.0\nignore: {}\npatch: {}\n",
+  "isPrivate": true,
+  "licensesPolicy": {
+    "severities": {},
+    "orgLicenseRules": {
+      "AGPL-1.0": {
+        "licenseType": "AGPL-1.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "AGPL-3.0": {
+        "licenseType": "AGPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "Artistic-1.0": {
+        "licenseType": "Artistic-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "Artistic-2.0": {
+        "licenseType": "Artistic-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CDDL-1.0": {
+        "licenseType": "CDDL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CPOL-1.02": {
+        "licenseType": "CPOL-1.02",
+        "severity": "high",
+        "instructions": ""
+      },
+      "EPL-1.0": {
+        "licenseType": "EPL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "GPL-2.0": {
+        "licenseType": "GPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "GPL-3.0": {
+        "licenseType": "GPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "LGPL-2.0": {
+        "licenseType": "LGPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1": {
+        "licenseType": "LGPL-2.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1+": {
+        "licenseType": "LGPL-2.1+",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0": {
+        "licenseType": "LGPL-3.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0+": {
+        "licenseType": "LGPL-3.0+",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-1.1": {
+        "licenseType": "MPL-1.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-2.0": {
+        "licenseType": "MPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MS-RL": {
+        "licenseType": "MS-RL",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "SimPL-2.0": {
+        "licenseType": "SimPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      }
+    }
+  },
+  "packageManager": "npm",
+  "ignoreSettings": {
+    "adminOnly": false,
+    "reasonRequired": false,
+    "disregardFilesystemIgnores": false
+  },
+  "summary": "2 vulnerable dependency paths",
+  "remediation": {
+    "unresolved": [
+      {
+        "id": "SNYK-JS-SHELLJS-2332187",
+        "title": "Improper Privilege Management",
+        "CVSSv3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H/E:P",
+        "credit": [
+          "haxatron"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<0.8.5"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "0.8.5"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.1,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "shelljs",
+        "references": [
+          {
+            "url": "https://github.com/shelljs/shelljs/commit/d919d22dd6de385edaa9d90313075a77f74b338c",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/shelljs/shelljs/issues/1058",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://github.com/shelljs/shelljs/pull/1060",
+            "title": "GitHub PR"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H",
+            "cvssV3BaseScore": 7.1,
+            "modificationTime": "2022-02-09T16:10:36.984666Z"
+          }
+        ],
+        "description": "## Overview\n[shelljs](None) is a wrapper for the Unix shell commands for Node.js.\n\nAffected versions of this package are vulnerable to Improper Privilege Management. When `ShellJS` is used to create shell scripts which may be running as `root`, users with low-level privileges on the system can leak sensitive information such as passwords (depending on implementation) from the standard output of the privileged process OR shutdown privileged `ShellJS` processes via the `exec` function when triggering EACCESS errors.\r\n\r\n**Note:** Thi only impacts the synchronous version of `shell.exec()`.\n## Remediation\nUpgrade `shelljs` to version 0.8.5 or higher.\n## References\n- [GitHub Commit](https://github.com/shelljs/shelljs/commit/d919d22dd6de385edaa9d90313075a77f74b338c)\n- [GitHub Issue](https://github.com/shelljs/shelljs/issues/1058)\n- [GitHub PR](https://github.com/shelljs/shelljs/pull/1060)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-0144"
+          ],
+          "CWE": [
+            "CWE-269"
+          ]
+        },
+        "packageName": "shelljs",
+        "proprietary": false,
+        "creationTime": "2022-01-11T12:52:23.829882Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-01-11T12:39:08Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-01-12T12:49:35.008405Z",
+        "modificationTime": "2022-02-09T16:10:36.984666Z",
+        "socialTrendAlert": false,
+        "from": [
+          "talis-fetch-build-artifact-task@1.0.3",
+          "vsts-task-lib@1.1.0",
+          "shelljs@0.3.0"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "shelljs",
+        "version": "0.3.0",
+        "severityWithCritical": "high"
+      }
+    ],
+    "upgrade": {
+      "adm-zip@0.4.16": {
+        "upgradeTo": "adm-zip@0.5.2",
+        "upgrades": [
+          "adm-zip@0.4.16"
+        ],
+        "vulns": [
+          "SNYK-JS-ADMZIP-1065796"
+        ]
+      }
+    },
+    "patch": {},
+    "ignore": {},
+    "pin": {}
+  },
+  "filesystemPolicy": false,
+  "filtered": {
+    "ignore": [],
+    "patch": []
+  },
+  "uniqueCount": 2,
+  "projectName": "talis-fetch-build-artifact-task",
+  "displayTargetFile": "talis-fetch-build-artifact-task\\package-lock.json",
+  "hasUnknownVersions": false,
+  "path": "C:\\Users\\JesseHouwing\\source\\extension-securiry\\vsixs\\TalisClinical\\talis-fetch-build-artifact\\1.0.3"
+}

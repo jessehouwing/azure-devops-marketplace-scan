@@ -1,0 +1,646 @@
+{
+  "vulnerabilities": [
+    {
+      "id": "SNYK-JS-MINIMATCH-3050818",
+      "title": "Regular Expression Denial of Service (ReDoS)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+      "credit": [
+        "Unknown"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<3.0.5"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "3.0.5"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "medium",
+      "cvssScore": 5.3,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "minimatch",
+      "references": [
+        {
+          "url": "https://github.com/isaacs/minimatch/commit/a8763f4388e51956be62dc6025cec1126beeb5e6",
+          "title": "GitHub Commit"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "Red Hat",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-11-27T21:40:17.490683Z"
+        },
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-10-20T01:10:31.056597Z"
+        }
+      ],
+      "description": "## Overview\n[minimatch](https://www.npmjs.com/package/minimatch) is a minimal matching utility.\n\nAffected versions of this package are vulnerable to Regular Expression Denial of Service (ReDoS) via the `braceExpand` function in `minimatch.js`.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `minimatch` to version 3.0.5 or higher.\n## References\n- [GitHub Commit](https://github.com/isaacs/minimatch/commit/a8763f4388e51956be62dc6025cec1126beeb5e6)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-3517"
+        ],
+        "CWE": [
+          "CWE-1333"
+        ]
+      },
+      "packageName": "minimatch",
+      "proprietary": false,
+      "creationTime": "2022-10-18T06:10:47.980262Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-10-18T06:00:25Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-10-18T06:29:18.078950Z",
+      "modificationTime": "2022-11-27T21:40:17.490683Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "medium",
+      "from": [
+        "buildandreleasetask@1.0.0",
+        "azure-pipelines-task-lib@2.12.0",
+        "minimatch@3.0.4"
+      ],
+      "upgradePath": [
+        false,
+        "azure-pipelines-task-lib@3.3.1",
+        "minimatch@3.0.5"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "minimatch",
+      "version": "3.0.4"
+    },
+    {
+      "id": "SNYK-JS-NODEFETCH-2342118",
+      "title": "Information Exposure",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+      "credit": [
+        "Unknown"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<2.6.7",
+          ">=3.0.0 <3.1.1"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "2.6.7",
+        "3.1.1"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "medium",
+      "cvssScore": 6.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "node-fetch",
+      "references": [
+        {
+          "url": "https://github.com/node-fetch/node-fetch/commit/1ef4b560a17e644a02a3bfdea7631ffeee578b35",
+          "title": "Github Commit"
+        },
+        {
+          "url": "https://github.com/node-fetch/node-fetch/commit/36e47e8a6406185921e4985dcbeff140d73eaa10",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/node-fetch/node-fetch/pull/1449/commits/5c32f002fdd65b1c6a8f1e3620210813d45c7e60",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/node-fetch/node-fetch/pull/1449",
+          "title": "GitHub PR"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "SUSE",
+          "severity": "medium",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:N/A:N",
+          "cvssV3BaseScore": 6.1,
+          "modificationTime": "2022-05-18T11:06:23.475047Z"
+        },
+        {
+          "assigner": "NVD",
+          "severity": "medium",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+          "cvssV3BaseScore": 6.1,
+          "modificationTime": "2022-10-29T01:10:37.609069Z"
+        },
+        {
+          "assigner": "Red Hat",
+          "severity": "medium",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:N/A:N",
+          "cvssV3BaseScore": 6.1,
+          "modificationTime": "2022-11-27T21:31:03.384329Z"
+        }
+      ],
+      "description": "## Overview\n[node-fetch](https://www.npmjs.com/package/node-fetch) is a light-weight module that brings window.fetch to node.js\n\nAffected versions of this package are vulnerable to Information Exposure when fetching a remote url with Cookie, if it get a `Location` response header, it will follow that url and try to fetch that url with provided cookie. This can lead to forwarding secure headers to 3th party.\n## Remediation\nUpgrade `node-fetch` to version 2.6.7, 3.1.1 or higher.\n## References\n- [Github Commit](https://github.com/node-fetch/node-fetch/commit/1ef4b560a17e644a02a3bfdea7631ffeee578b35)\n- [GitHub Commit](https://github.com/node-fetch/node-fetch/commit/36e47e8a6406185921e4985dcbeff140d73eaa10)\n- [GitHub Commit](https://github.com/node-fetch/node-fetch/pull/1449/commits/5c32f002fdd65b1c6a8f1e3620210813d45c7e60)\n- [GitHub PR](https://github.com/node-fetch/node-fetch/pull/1449)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-0235",
+          "CVE-2022-1365"
+        ],
+        "CWE": [
+          "CWE-200"
+        ]
+      },
+      "packageName": "node-fetch",
+      "proprietary": false,
+      "creationTime": "2022-01-17T12:08:00.675849Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-01-17T12:00:01Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-01-17T16:25:00Z",
+      "modificationTime": "2022-11-27T21:31:03.384329Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "medium",
+      "from": [
+        "buildandreleasetask@1.0.0",
+        "node-fetch@2.6.1"
+      ],
+      "upgradePath": [
+        false,
+        "node-fetch@2.6.7"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "node-fetch",
+      "version": "2.6.1"
+    },
+    {
+      "id": "SNYK-JS-QS-3153490",
+      "title": "Prototype Poisoning",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+      "credit": [
+        "BRAUN Nathanael",
+        "BRISSAUD Johan"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<6.2.4",
+          ">=6.3.0 <6.3.3",
+          ">=6.4.0 <6.4.1",
+          ">=6.5.0 <6.5.3",
+          ">=6.6.0 <6.6.1",
+          ">=6.7.0 <6.7.3",
+          ">=6.8.0 <6.8.3",
+          ">=6.9.0 <6.9.7",
+          ">=6.10.0 <6.10.3"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "6.2.4",
+        "6.3.3",
+        "6.4.1",
+        "6.5.3",
+        "6.6.1",
+        "6.7.3",
+        "6.8.3",
+        "6.9.7",
+        "6.10.3"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "qs",
+      "references": [
+        {
+          "url": "https://github.com/ljharb/qs/pull/428",
+          "title": "GitHub PR"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2150323",
+          "title": "RedHat Bugzilla Bug"
+        },
+        {
+          "url": "https://github.com/n8tz/CVE-2022-24999",
+          "title": "Researcher Advisory"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-11-29T01:11:13.913238Z"
+        },
+        {
+          "assigner": "Red Hat",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-12-03T13:46:25.900727Z"
+        }
+      ],
+      "description": "## Overview\n[qs](https://www.npmjs.com/package/qs) is a querystring parser that supports nesting and arrays, with a depth limit.\n\nAffected versions of this package are vulnerable to Prototype Poisoning which allows attackers to cause a Node process to hang, processing an Array object whose prototype has been replaced by one with an excessive length value.\r\n\r\n**Note:** In many typical Express use cases, an unauthenticated remote attacker can place the attack payload in the query string of the URL that is used to visit the application, such as `a[__proto__]=b&a[__proto__]&a[length]=100000000`.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `qs` to version 6.2.4, 6.3.3, 6.4.1, 6.5.3, 6.6.1, 6.7.3, 6.8.3, 6.9.7, 6.10.3 or higher.\n## References\n- [GitHub PR](https://github.com/ljharb/qs/pull/428)\n- [RedHat Bugzilla Bug](https://bugzilla.redhat.com/show_bug.cgi?id=2150323)\n- [Researcher Advisory](https://github.com/n8tz/CVE-2022-24999)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-24999"
+        ],
+        "CWE": [
+          "CWE-1321"
+        ]
+      },
+      "packageName": "qs",
+      "proprietary": false,
+      "creationTime": "2022-12-04T11:01:47.782869Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-11-26T00:00:00Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-12-04T12:24:32.307833Z",
+      "modificationTime": "2022-12-06T09:33:17.364321Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "buildandreleasetask@1.0.0",
+        "azure-pipelines-task-lib@2.12.0",
+        "sync-request@3.0.1",
+        "then-request@2.2.0",
+        "qs@6.9.4"
+      ],
+      "upgradePath": [
+        false,
+        "azure-pipelines-task-lib@2.12.0",
+        "sync-request@3.0.1",
+        "then-request@2.2.0",
+        "qs@6.9.7"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "qs",
+      "version": "6.9.4"
+    },
+    {
+      "id": "SNYK-JS-SHELLJS-2332187",
+      "title": "Improper Privilege Management",
+      "CVSSv3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H/E:P",
+      "credit": [
+        "haxatron"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<0.8.5"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "0.8.5"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.1,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "shelljs",
+      "references": [
+        {
+          "url": "https://github.com/shelljs/shelljs/commit/d919d22dd6de385edaa9d90313075a77f74b338c",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/shelljs/shelljs/issues/1058",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/shelljs/shelljs/pull/1060",
+          "title": "GitHub PR"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H",
+          "cvssV3BaseScore": 7.1,
+          "modificationTime": "2022-02-09T16:10:36.984666Z"
+        }
+      ],
+      "description": "## Overview\n[shelljs](None) is a wrapper for the Unix shell commands for Node.js.\n\nAffected versions of this package are vulnerable to Improper Privilege Management. When `ShellJS` is used to create shell scripts which may be running as `root`, users with low-level privileges on the system can leak sensitive information such as passwords (depending on implementation) from the standard output of the privileged process OR shutdown privileged `ShellJS` processes via the `exec` function when triggering EACCESS errors.\r\n\r\n**Note:** Thi only impacts the synchronous version of `shell.exec()`.\n## Remediation\nUpgrade `shelljs` to version 0.8.5 or higher.\n## References\n- [GitHub Commit](https://github.com/shelljs/shelljs/commit/d919d22dd6de385edaa9d90313075a77f74b338c)\n- [GitHub Issue](https://github.com/shelljs/shelljs/issues/1058)\n- [GitHub PR](https://github.com/shelljs/shelljs/pull/1060)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-0144"
+        ],
+        "CWE": [
+          "CWE-269"
+        ]
+      },
+      "packageName": "shelljs",
+      "proprietary": false,
+      "creationTime": "2022-01-11T12:52:23.829882Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-01-11T12:39:08Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-01-12T12:49:35.008405Z",
+      "modificationTime": "2022-02-09T16:10:36.984666Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "buildandreleasetask@1.0.0",
+        "azure-pipelines-task-lib@2.12.0",
+        "shelljs@0.3.0"
+      ],
+      "upgradePath": [
+        false,
+        "azure-pipelines-task-lib@3.1.0",
+        "shelljs@0.8.5"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "shelljs",
+      "version": "0.3.0"
+    }
+  ],
+  "ok": false,
+  "dependencyCount": 30,
+  "org": "global-devops-bootcamp",
+  "policy": "# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.25.0\nignore: {}\npatch: {}\n",
+  "isPrivate": true,
+  "licensesPolicy": {
+    "severities": {},
+    "orgLicenseRules": {
+      "AGPL-1.0": {
+        "licenseType": "AGPL-1.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "AGPL-3.0": {
+        "licenseType": "AGPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "Artistic-1.0": {
+        "licenseType": "Artistic-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "Artistic-2.0": {
+        "licenseType": "Artistic-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CDDL-1.0": {
+        "licenseType": "CDDL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CPOL-1.02": {
+        "licenseType": "CPOL-1.02",
+        "severity": "high",
+        "instructions": ""
+      },
+      "EPL-1.0": {
+        "licenseType": "EPL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "GPL-2.0": {
+        "licenseType": "GPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "GPL-3.0": {
+        "licenseType": "GPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "LGPL-2.0": {
+        "licenseType": "LGPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1": {
+        "licenseType": "LGPL-2.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1+": {
+        "licenseType": "LGPL-2.1+",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0": {
+        "licenseType": "LGPL-3.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0+": {
+        "licenseType": "LGPL-3.0+",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-1.1": {
+        "licenseType": "MPL-1.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-2.0": {
+        "licenseType": "MPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MS-RL": {
+        "licenseType": "MS-RL",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "SimPL-2.0": {
+        "licenseType": "SimPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      }
+    }
+  },
+  "packageManager": "npm",
+  "ignoreSettings": {
+    "adminOnly": false,
+    "reasonRequired": false,
+    "disregardFilesystemIgnores": false
+  },
+  "summary": "4 vulnerable dependency paths",
+  "remediation": {
+    "unresolved": [
+      {
+        "id": "SNYK-JS-QS-3153490",
+        "title": "Prototype Poisoning",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+        "credit": [
+          "BRAUN Nathanael",
+          "BRISSAUD Johan"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<6.2.4",
+            ">=6.3.0 <6.3.3",
+            ">=6.4.0 <6.4.1",
+            ">=6.5.0 <6.5.3",
+            ">=6.6.0 <6.6.1",
+            ">=6.7.0 <6.7.3",
+            ">=6.8.0 <6.8.3",
+            ">=6.9.0 <6.9.7",
+            ">=6.10.0 <6.10.3"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "6.2.4",
+          "6.3.3",
+          "6.4.1",
+          "6.5.3",
+          "6.6.1",
+          "6.7.3",
+          "6.8.3",
+          "6.9.7",
+          "6.10.3"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "qs",
+        "references": [
+          {
+            "url": "https://github.com/ljharb/qs/pull/428",
+            "title": "GitHub PR"
+          },
+          {
+            "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2150323",
+            "title": "RedHat Bugzilla Bug"
+          },
+          {
+            "url": "https://github.com/n8tz/CVE-2022-24999",
+            "title": "Researcher Advisory"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-11-29T01:11:13.913238Z"
+          },
+          {
+            "assigner": "Red Hat",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-12-03T13:46:25.900727Z"
+          }
+        ],
+        "description": "## Overview\n[qs](https://www.npmjs.com/package/qs) is a querystring parser that supports nesting and arrays, with a depth limit.\n\nAffected versions of this package are vulnerable to Prototype Poisoning which allows attackers to cause a Node process to hang, processing an Array object whose prototype has been replaced by one with an excessive length value.\r\n\r\n**Note:** In many typical Express use cases, an unauthenticated remote attacker can place the attack payload in the query string of the URL that is used to visit the application, such as `a[__proto__]=b&a[__proto__]&a[length]=100000000`.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `qs` to version 6.2.4, 6.3.3, 6.4.1, 6.5.3, 6.6.1, 6.7.3, 6.8.3, 6.9.7, 6.10.3 or higher.\n## References\n- [GitHub PR](https://github.com/ljharb/qs/pull/428)\n- [RedHat Bugzilla Bug](https://bugzilla.redhat.com/show_bug.cgi?id=2150323)\n- [Researcher Advisory](https://github.com/n8tz/CVE-2022-24999)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-24999"
+          ],
+          "CWE": [
+            "CWE-1321"
+          ]
+        },
+        "packageName": "qs",
+        "proprietary": false,
+        "creationTime": "2022-12-04T11:01:47.782869Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-11-26T00:00:00Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-12-04T12:24:32.307833Z",
+        "modificationTime": "2022-12-06T09:33:17.364321Z",
+        "socialTrendAlert": false,
+        "from": [
+          "buildandreleasetask@1.0.0",
+          "azure-pipelines-task-lib@2.12.0",
+          "sync-request@3.0.1",
+          "then-request@2.2.0",
+          "qs@6.9.4"
+        ],
+        "upgradePath": [
+          false,
+          "azure-pipelines-task-lib@2.12.0",
+          "sync-request@3.0.1",
+          "then-request@2.2.0",
+          "qs@6.9.7"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "qs",
+        "version": "6.9.4",
+        "severityWithCritical": "high"
+      }
+    ],
+    "upgrade": {
+      "azure-pipelines-task-lib@2.12.0": {
+        "upgradeTo": "azure-pipelines-task-lib@3.3.1",
+        "upgrades": [
+          "minimatch@3.0.4",
+          "shelljs@0.3.0"
+        ],
+        "vulns": [
+          "SNYK-JS-MINIMATCH-3050818",
+          "SNYK-JS-SHELLJS-2332187"
+        ]
+      },
+      "node-fetch@2.6.1": {
+        "upgradeTo": "node-fetch@2.6.7",
+        "upgrades": [
+          "node-fetch@2.6.1"
+        ],
+        "vulns": [
+          "SNYK-JS-NODEFETCH-2342118"
+        ]
+      }
+    },
+    "patch": {},
+    "ignore": {},
+    "pin": {}
+  },
+  "filesystemPolicy": false,
+  "filtered": {
+    "ignore": [],
+    "patch": []
+  },
+  "uniqueCount": 4,
+  "projectName": "buildandreleasetask",
+  "displayTargetFile": "buildAndReleaseTask\\package-lock.json",
+  "hasUnknownVersions": false,
+  "path": "C:\\Users\\JesseHouwing\\source\\extension-securiry\\vsixs\\PicoDataAttest\\build-release-task\\0.0.8"
+}

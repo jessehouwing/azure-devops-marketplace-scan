@@ -1,0 +1,3044 @@
+[
+  {
+    "vulnerabilities": [
+      {
+        "id": "SNYK-JS-ASYNC-2441827",
+        "title": "Prototype Pollution",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            ">=2.0.0 <2.6.4",
+            ">=3.0.0 <3.2.2"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "2.6.4",
+          "3.2.2"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "async",
+        "references": [
+          {
+            "url": "https://github.com/caolan/async/pull/1828",
+            "title": "GitHub Backport PR"
+          },
+          {
+            "url": "https://github.com/caolan/async/commit/8f7f90342a6571ba1c197d747ebed30c368096d2",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/caolan/async/commit/e1ecdbf79264f9ab488c7799f4c76996d5dca66d",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://jsfiddle.net/oz5twjd9/",
+            "title": "PoC"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 7.8,
+            "modificationTime": "2022-05-14T01:11:01.228151Z"
+          },
+          {
+            "assigner": "Red Hat",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 7.8,
+            "modificationTime": "2022-11-27T15:35:48.591671Z"
+          }
+        ],
+        "description": "## Overview\n\nAffected versions of this package are vulnerable to Prototype Pollution via the `mapValues()` method, due to improper check in `createObjectIterator` function.\r\n\r\n## PoC\r\n\r\n```js\r\n//when objects are parsed, all properties are created as own (the objects can come from outside sources (http requests/ file))\r\nconst hasOwn = JSON.parse('{\"__proto__\": {\"isAdmin\": true}}');\r\n\r\n//does not have the property,  because it's inside object's own \"__proto__\"\r\nconsole.log(hasOwn.isAdmin);\r\n\r\nasync.mapValues(hasOwn, (val, key, cb) => cb(null, val), (error, result) => {\r\n  // after the method executes, hasOwn.__proto__ value (isAdmin: true) replaces the prototype of the newly created object, leading to potential exploits.\r\n  console.log(result.isAdmin);\r\n});\r\n```\n\n## Details\n\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `__proto__`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\n\nThere are two main ways in which the pollution of prototypes occurs:\n\n-   Unsafe `Object` recursive merge\n    \n-   Property definition by path\n    \n\n### Unsafe Object recursive merge\n\nThe logic of a vulnerable recursive merge function follows the following high-level model:\n```\nmerge (target, source)\n\n  foreach property of source\n\n    if property exists and is an object on both the target and the source\n\n      merge(target[property], source[property])\n\n    else\n\n      target[property] = source[property]\n```\n<br>  \n\nWhen the source object contains a property named `__proto__` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\n\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\n\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\n\n### Property definition by path\n\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\n\nIf the attacker can control the value of “path”, they can set this value to `__proto__.myValue`. `myValue` is then assigned to the prototype of the class of the object.\n\n## Types of attacks\n\nThere are a few methods by which Prototype Pollution can be manipulated:\n\n| Type |Origin  |Short description |\n|--|--|--|\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\n\n## Affected environments\n\nThe following environments are susceptible to a Prototype Pollution attack:\n\n-   Application server\n    \n-   Web server\n\n-   Web browser\n    \n\n## How to prevent\n\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\n    \n2.  Require schema validation of JSON input.\n    \n3.  Avoid using unsafe recursive merge functions.\n    \n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\n    \n5.  As a best practice use `Map` instead of `Object`.\n\n### For more information on this vulnerability type:\n\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\nUpgrade `async` to version 2.6.4, 3.2.2 or higher.\n## References\n- [GitHub Backport PR](https://github.com/caolan/async/pull/1828)\n- [GitHub Commit](https://github.com/caolan/async/commit/8f7f90342a6571ba1c197d747ebed30c368096d2)\n- [GitHub Commit](https://github.com/caolan/async/commit/e1ecdbf79264f9ab488c7799f4c76996d5dca66d)\n- [PoC](https://jsfiddle.net/oz5twjd9/)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2021-43138"
+          ],
+          "CWE": [
+            "CWE-1321"
+          ]
+        },
+        "packageName": "async",
+        "proprietary": false,
+        "creationTime": "2022-04-07T07:58:38.528444Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-04-07T07:49:24Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-04-07T14:22:18Z",
+        "modificationTime": "2022-11-27T15:35:48.591671Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "artifact-engine@0.1.29",
+          "handlebars@4.0.14",
+          "async@2.6.3"
+        ],
+        "upgradePath": [
+          false,
+          "artifact-engine@0.1.29",
+          "handlebars@4.0.14",
+          "async@2.6.4"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "async",
+        "version": "2.6.3"
+      },
+      {
+        "id": "SNYK-JS-DECOMPRESSZIP-73598",
+        "title": "Arbitrary File Write via Archive Extraction (Zip Slip)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<0.2.2",
+            ">=0.3.0 <0.3.2"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "0.2.2",
+          "0.3.2"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "critical",
+        "cvssScore": 9.8,
+        "functions": [
+          {
+            "version": [
+              "<0.3.2"
+            ],
+            "functionId": {
+              "filePath": "lib/decompress-zip.js",
+              "className": null,
+              "functionName": "DecompressZip.prototype.extract"
+            }
+          }
+        ],
+        "malicious": false,
+        "moduleName": "decompress-zip",
+        "references": [
+          {
+            "url": "https://github.com/bower/decompress-zip/pull/63/commits/9a908bd30ec9d9b2009110691cfcbe2b96f07c95",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/bower/decompress-zip/pull/63",
+            "title": "GitHub PR"
+          },
+          {
+            "url": "https://www.npmjs.com/advisories/777",
+            "title": "NPM Security Advisory"
+          }
+        ],
+        "cvssDetails": [],
+        "description": "## Overview\n\n[decompress-zip](https://www.npmjs.com/package/decompress-zip) extracts the contents of the ZIP archive file.\n\n\nAffected versions of this package are vulnerable to Arbitrary File Write via Archive Extraction (Zip Slip).\nThe package will extract files outside of the scope of the specified target directory because there is no validation that file extraction stays within the defined target path.\n\n## Details\nIt is exploited using a specially crafted zip archive, that holds path traversal filenames. When exploited, a filename in a malicious archive is concatenated to the target extraction directory, which results in the final path ending up outside of the target folder. For instance, a zip may hold a file with a \"../../file.exe\" location and thus break out of the target folder. If an executable or a configuration file is overwritten with a file containing malicious code, the problem can turn into an arbitrary code execution issue quite easily.\r\n\r\nThe following is an example of a zip archive with one benign file and one malicious file. Extracting the malicous file will result in traversing out of the target folder, ending up in `/root/.ssh/` overwriting the `authorized_keys` file:\r\n\r\n```\r\n\r\n+2018-04-15 22:04:29 ..... 19 19 good.txt\r\n\r\n+2018-04-15 22:04:42 ..... 20 20 ../../../../../../root/.ssh/authorized_keys\r\n\r\n```\n\n## Remediation\n\nUpgrade `decompress-zip` to version 0.2.2, 0.3.2 or higher.\n\n\n## References\n\n- [GitHub Commit](https://github.com/bower/decompress-zip/pull/63/commits/9a908bd30ec9d9b2009110691cfcbe2b96f07c95)\n\n- [GitHub PR](https://github.com/bower/decompress-zip/pull/63)\n\n- [NPM Security Advisory](https://www.npmjs.com/advisories/777)\n",
+        "identifiers": {
+          "CVE": [],
+          "CWE": [
+            "CWE-29"
+          ],
+          "NSP": [
+            "777"
+          ],
+          "GHSA": [
+            "GHSA-73v8-v6g4-vrpm"
+          ]
+        },
+        "packageName": "decompress-zip",
+        "proprietary": false,
+        "creationTime": "2019-01-24T12:59:38.248803Z",
+        "functions_new": [
+          {
+            "version": [
+              "<0.3.2"
+            ],
+            "functionId": {
+              "filePath": "lib/decompress-zip.js",
+              "functionName": "DecompressZip.prototype.extract"
+            }
+          }
+        ],
+        "alternativeIds": [],
+        "disclosureTime": "2019-01-16T12:56:37Z",
+        "packageManager": "npm",
+        "publicationTime": "2019-01-24T12:56:38Z",
+        "modificationTime": "2020-12-14T14:41:23.876191Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "critical",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "decompress-zip@0.3.0"
+        ],
+        "upgradePath": [
+          false,
+          "decompress-zip@0.3.2"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "decompress-zip",
+        "version": "0.3.0"
+      },
+      {
+        "id": "SNYK-JS-HANDLEBARS-1056767",
+        "title": "Remote Code Execution (RCE)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RL:O/RC:C",
+        "credit": [
+          "Francois Lajeunesse-Robert"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<4.7.7"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "4.7.7"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "handlebars",
+        "references": [
+          {
+            "url": "https://github.com/handlebars-lang/handlebars.js/commit/b6d3de7123eebba603e321f04afdbae608e8fea8",
+            "title": "GitHub Commit"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 9.8,
+            "modificationTime": "2022-01-03T16:36:11.977987Z"
+          },
+          {
+            "assigner": "Red Hat",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 9.8,
+            "modificationTime": "2022-09-30T15:39:51.153853Z"
+          }
+        ],
+        "description": "## Overview\n[handlebars](https://www.npmjs.com/package/handlebars) is an extension to the Mustache templating language.\n\nAffected versions of this package are vulnerable to Remote Code Execution (RCE) when selecting certain compiling options to compile templates coming from an untrusted source.\r\n\r\n### POC\r\n```\r\n<script src=\"https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js\"></script> \r\n<script> \r\n// compile the template \r\nvar s = ` \r\n{{#with (__lookupGetter__ \"__proto__\")}} \r\n{{#with (./constructor.getOwnPropertyDescriptor . \"valueOf\")}} \r\n{{#with ../constructor.prototype}} \r\n{{../../constructor.defineProperty . \"hasOwnProperty\" ..}} \r\n{{/with}} \r\n{{/with}} \r\n{{/with}} \r\n{{#with \"constructor\"}} \r\n{{#with split}} \r\n{{pop (push \"alert('Vulnerable Handlebars JS when compiling in strict mode');\")}} \r\n{{#with .}} \r\n{{#with (concat (lookup join (slice 0 1)))}} \r\n{{#each (slice 2 3)}} \r\n{{#with (apply 0 ../..)}} \r\n{{.}} \r\n{{/with}} \r\n{{/each}} \r\n{{/with}} \r\n{{/with}} \r\n{{/with}} \r\n{{/with}} \r\n`;\r\nvar template = Handlebars.compile(s, { \r\nstrict: true \r\n}); \r\n// execute the compiled template and print the output to the console console.log(template({})); \r\n</script>\r\n```\n## Remediation\nUpgrade `handlebars` to version 4.7.7 or higher.\n## References\n- [GitHub Commit](https://github.com/handlebars-lang/handlebars.js/commit/b6d3de7123eebba603e321f04afdbae608e8fea8)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2021-23369"
+          ],
+          "CWE": [
+            "CWE-94"
+          ],
+          "GHSA": [
+            "GHSA-f2jv-r9rf-7988"
+          ]
+        },
+        "packageName": "handlebars",
+        "proprietary": true,
+        "creationTime": "2021-01-08T17:25:21.189033Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2021-01-08T17:08:45Z",
+        "packageManager": "npm",
+        "publicationTime": "2021-02-15T11:50:51Z",
+        "modificationTime": "2022-09-30T15:39:51.153853Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "artifact-engine@0.1.29",
+          "handlebars@4.0.14"
+        ],
+        "upgradePath": [
+          false,
+          "artifact-engine@1.0.0",
+          "handlebars@4.7.7"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "handlebars",
+        "version": "4.0.14"
+      },
+      {
+        "id": "SNYK-JS-HANDLEBARS-1279029",
+        "title": "Prototype Pollution",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L/E:P/RL:O/RC:C",
+        "credit": [
+          "Francois Lajeunesse-Robert"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<4.7.7"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "4.7.7"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 5.6,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "handlebars",
+        "references": [
+          {
+            "url": "https://github.com/handlebars-lang/handlebars.js/commit/f0589701698268578199be25285b2ebea1c1e427",
+            "title": "GitHub Commit"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 9.8,
+            "modificationTime": "2022-01-03T16:36:21.120401Z"
+          },
+          {
+            "assigner": "Red Hat",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 9.8,
+            "modificationTime": "2022-09-30T15:39:59.643258Z"
+          }
+        ],
+        "description": "## Overview\n[handlebars](https://www.npmjs.com/package/handlebars) is an extension to the Mustache templating language.\n\nAffected versions of this package are vulnerable to Prototype Pollution when selecting certain compiling options to compile templates coming from an untrusted source.\r\n\r\n### POC\r\n```\r\n<script src=\"https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js\"></script> \r\n<script> \r\n// compile the template \r\n\r\nvar s2 = `{{'a/.\") || alert(\"Vulnerable Handlebars JS when compiling in compat mode'}}`; \r\nvar template = Handlebars.compile(s2, { \r\ncompat: true \r\n}); \r\n// execute the compiled template and print the output to the console console.log(template({})); \r\n</script>\r\n```\n\n## Details\n\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `__proto__`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\n\nThere are two main ways in which the pollution of prototypes occurs:\n\n-   Unsafe `Object` recursive merge\n    \n-   Property definition by path\n    \n\n### Unsafe Object recursive merge\n\nThe logic of a vulnerable recursive merge function follows the following high-level model:\n```\nmerge (target, source)\n\n  foreach property of source\n\n    if property exists and is an object on both the target and the source\n\n      merge(target[property], source[property])\n\n    else\n\n      target[property] = source[property]\n```\n<br>  \n\nWhen the source object contains a property named `__proto__` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\n\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\n\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\n\n### Property definition by path\n\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\n\nIf the attacker can control the value of “path”, they can set this value to `__proto__.myValue`. `myValue` is then assigned to the prototype of the class of the object.\n\n## Types of attacks\n\nThere are a few methods by which Prototype Pollution can be manipulated:\n\n| Type |Origin  |Short description |\n|--|--|--|\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\n\n## Affected environments\n\nThe following environments are susceptible to a Prototype Pollution attack:\n\n-   Application server\n    \n-   Web server\n\n-   Web browser\n    \n\n## How to prevent\n\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\n    \n2.  Require schema validation of JSON input.\n    \n3.  Avoid using unsafe recursive merge functions.\n    \n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\n    \n5.  As a best practice use `Map` instead of `Object`.\n\n### For more information on this vulnerability type:\n\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\nUpgrade `handlebars` to version 4.7.7 or higher.\n## References\n- [GitHub Commit](https://github.com/handlebars-lang/handlebars.js/commit/f0589701698268578199be25285b2ebea1c1e427)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2021-23383"
+          ],
+          "CWE": [
+            "CWE-1321"
+          ]
+        },
+        "packageName": "handlebars",
+        "proprietary": true,
+        "creationTime": "2021-05-04T08:31:48.515713Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2021-01-08T08:30:14Z",
+        "packageManager": "npm",
+        "publicationTime": "2021-05-04T08:56:24.293243Z",
+        "modificationTime": "2022-09-30T15:39:59.643258Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "medium",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "artifact-engine@0.1.29",
+          "handlebars@4.0.14"
+        ],
+        "upgradePath": [
+          false,
+          "artifact-engine@1.0.0",
+          "handlebars@4.7.7"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "handlebars",
+        "version": "4.0.14"
+      },
+      {
+        "id": "SNYK-JS-HANDLEBARS-469063",
+        "title": "Prototype Pollution",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:L",
+        "credit": [
+          "itszn"
+        ],
+        "semver": {
+          "vulnerable": [
+            ">=4.0.0 <4.3.0",
+            "<3.0.8"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "4.3.0",
+          "3.0.8"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.3,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "handlebars",
+        "references": [
+          {
+            "url": "https://github.com/handlebars-lang/handlebars.js/commit/156061eb7707575293613d7fdf90e2bdaac029ee",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/wycats/handlebars.js/commit/213c0bbe3c4bd83a534d67384e5afa0000347ff6",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/wycats/handlebars.js/issues/1558",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://www.npmjs.com/advisories/1164",
+            "title": "Reference"
+          },
+          {
+            "url": "https://github.com/wycats/handlebars.js/blob/master/release-notes.md%23v430---september-24th-2019",
+            "title": "Release Notes"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 9.8,
+            "modificationTime": "2022-06-04T01:11:03.527804Z"
+          }
+        ],
+        "description": "## Overview\n\n[handlebars](https://www.npmjs.com/package/handlebars) is a extension to the Mustache templating language.\n\n\nAffected versions of this package are vulnerable to Prototype Pollution.\nTemplates may alter an Object's `__proto__` and `__defineGetter__` properties, which may allow an attacker to execute arbitrary code on the server through crafted payloads.\n\n## Details\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `_proto_`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\r\n\r\nThere are two main ways in which the pollution of prototypes occurs:\r\n\r\n-   Unsafe `Object` recursive merge\r\n    \r\n-   Property definition by path\r\n    \r\n\r\n### Unsafe Object recursive merge\r\n\r\nThe logic of a vulnerable recursive merge function follows the following high-level model:\r\n```\r\nmerge (target, source)\r\n\r\n  foreach property of source\r\n\r\n    if property exists and is an object on both the target and the source\r\n\r\n      merge(target[property], source[property])\r\n\r\n    else\r\n\r\n      target[property] = source[property]\r\n```\r\n<br>  \r\n\r\nWhen the source object contains a property named `_proto_` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\r\n\r\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\r\n\r\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\r\n\r\n### Property definition by path\r\n\r\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\r\n\r\nIf the attacker can control the value of “path”, they can set this value to `_proto_.myValue`. `myValue` is then assigned to the prototype of the class of the object.\r\n\r\n## Types of attacks\r\n\r\nThere are a few methods by which Prototype Pollution can be manipulated:\r\n\r\n| Type |Origin  |Short description |\r\n|--|--|--|\r\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\r\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\r\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\r\n\r\n## Affected environments\r\n\r\nThe following environments are susceptible to a Prototype Pollution attack:\r\n\r\n-   Application server\r\n    \r\n-   Web server\r\n    \r\n\r\n## How to prevent\r\n\r\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\r\n    \r\n2.  Require schema validation of JSON input.\r\n    \r\n3.  Avoid using unsafe recursive merge functions.\r\n    \r\n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\r\n    \r\n5.  As a best practice use `Map` instead of `Object`.\r\n\r\n### For more information on this vulnerability type:\r\n\r\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\n\nUpgrade `handlebars` to version 4.3.0, 3.0.8 or higher.\n\n\n## References\n\n- [GitHub Commit](https://github.com/handlebars-lang/handlebars.js/commit/156061eb7707575293613d7fdf90e2bdaac029ee)\n\n- [GitHub Commit](https://github.com/wycats/handlebars.js/commit/213c0bbe3c4bd83a534d67384e5afa0000347ff6)\n\n- [GitHub Issue](https://github.com/wycats/handlebars.js/issues/1558)\n\n- [Reference](https://www.npmjs.com/advisories/1164)\n\n- [Release Notes](https://github.com/wycats/handlebars.js/blob/master/release-notes.md#v430---september-24th-2019)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2019-19919"
+          ],
+          "CWE": [
+            "CWE-1321"
+          ],
+          "NSP": [
+            "1164"
+          ],
+          "GHSA": [
+            "GHSA-w457-6q6x-cgp9"
+          ]
+        },
+        "packageName": "handlebars",
+        "proprietary": false,
+        "creationTime": "2019-09-25T13:12:40.749568Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2019-09-24T15:14:43Z",
+        "packageManager": "npm",
+        "publicationTime": "2019-09-25T14:33:59Z",
+        "modificationTime": "2022-10-24T13:24:56.491897Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "artifact-engine@0.1.29",
+          "handlebars@4.0.14"
+        ],
+        "upgradePath": [
+          false,
+          "artifact-engine@1.0.0",
+          "handlebars@4.7.7"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "handlebars",
+        "version": "4.0.14"
+      },
+      {
+        "id": "SNYK-JS-HANDLEBARS-480388",
+        "title": "Denial of Service (DoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            ">=4.0.0 <4.4.5"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "4.4.5"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "handlebars",
+        "references": [
+          {
+            "url": "https://github.com/wycats/handlebars.js/commit/8d5530ee2c3ea9f0aee3fde310b9f36887d00b8b",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/wycats/handlebars.js/issues/1579",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://www.npmjs.com/advisories/1300",
+            "title": "NPM Security Advisory"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-01-03T17:58:13.115911Z"
+          }
+        ],
+        "description": "## Overview\n[handlebars](https://www.npmjs.com/package/handlebars) is an extension to the Mustache templating language.\n\nAffected versions of this package are vulnerable to Denial of Service (DoS). The package's parser may be forced into an endless loop while processing specially-crafted templates, which may allow attackers to exhaust system resources leading to Denial of Service.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `handlebars` to version 4.4.5 or higher.\n## References\n- [GitHub Commit](https://github.com/wycats/handlebars.js/commit/8d5530ee2c3ea9f0aee3fde310b9f36887d00b8b)\n- [GitHub Issue](https://github.com/wycats/handlebars.js/issues/1579)\n- [NPM Security Advisory](https://www.npmjs.com/advisories/1300)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2019-20922"
+          ],
+          "CWE": [
+            "CWE-400"
+          ],
+          "NSP": [
+            "1300"
+          ],
+          "GHSA": [
+            "GHSA-f52g-6jhx-586p"
+          ]
+        },
+        "packageName": "handlebars",
+        "proprietary": false,
+        "creationTime": "2019-11-05T12:16:29.016014Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2019-10-30T15:57:14Z",
+        "packageManager": "npm",
+        "publicationTime": "2019-11-05T12:19:43Z",
+        "modificationTime": "2022-02-11T09:51:32.219466Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "artifact-engine@0.1.29",
+          "handlebars@4.0.14"
+        ],
+        "upgradePath": [
+          false,
+          "artifact-engine@1.0.0",
+          "handlebars@4.7.7"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "handlebars",
+        "version": "4.0.14"
+      },
+      {
+        "id": "SNYK-JS-HANDLEBARS-534478",
+        "title": "Arbitrary Code Execution",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:L/A:L",
+        "credit": [
+          "Francois Lajeunesse-Robert"
+        ],
+        "semver": {
+          "vulnerable": [
+            ">=4.0.0 <4.5.3",
+            "<3.0.8"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "4.5.3",
+          "3.0.8"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 8.1,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "handlebars",
+        "references": [
+          {
+            "url": "https://www.npmjs.com/advisories/1316",
+            "title": "NPM Security Advisory #1"
+          },
+          {
+            "url": "https://www.npmjs.com/advisories/1324",
+            "title": "NPM Security Advisory #2"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:L/A:L",
+            "cvssV3BaseScore": 8.1,
+            "modificationTime": "2022-01-03T17:58:32.511409Z"
+          }
+        ],
+        "description": "## Overview\n[handlebars](https://www.npmjs.com/package/handlebars) is an extension to the Mustache templating language.\n\nAffected versions of this package are vulnerable to Arbitrary Code Execution. The package's lookup helper doesn't validate templates correctly, allowing attackers to submit templates that execute arbitrary JavaScript in the system.\n## Remediation\nUpgrade `handlebars` to version 4.5.3, 3.0.8 or higher.\n## References\n- [NPM Security Advisory #1](https://www.npmjs.com/advisories/1316)\n- [NPM Security Advisory #2](https://www.npmjs.com/advisories/1324)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2019-20920"
+          ],
+          "CWE": [
+            "CWE-94"
+          ],
+          "NSP": [
+            "1316",
+            "1324"
+          ],
+          "GHSA": [
+            "GHSA-q2c6-c6pm-g3gh",
+            "GHSA-2cf5-4w76-r9qv"
+          ]
+        },
+        "packageName": "handlebars",
+        "proprietary": false,
+        "creationTime": "2019-11-15T15:45:34.906048Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2019-11-14T15:29:41Z",
+        "packageManager": "npm",
+        "publicationTime": "2019-11-15T15:48:43Z",
+        "modificationTime": "2022-02-11T12:35:29.725892Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "artifact-engine@0.1.29",
+          "handlebars@4.0.14"
+        ],
+        "upgradePath": [
+          false,
+          "artifact-engine@1.0.0",
+          "handlebars@4.7.7"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "handlebars",
+        "version": "4.0.14"
+      },
+      {
+        "id": "SNYK-JS-HANDLEBARS-534988",
+        "title": "Prototype Pollution",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "credit": [
+          "Vladyslav Babkin"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<3.0.8",
+            ">=4.0.0 <4.5.3"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "3.0.8",
+          "4.5.3"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "critical",
+        "cvssScore": 9.8,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "handlebars",
+        "references": [
+          {
+            "url": "https://github.com/wycats/handlebars.js/commit/198887808780bbef9dba67a8af68ece091d5baa7",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://www.npmjs.com/advisories/1325",
+            "title": "NPM Security Advisory"
+          }
+        ],
+        "cvssDetails": [],
+        "description": "## Overview\n\n[handlebars](https://www.npmjs.com/package/handlebars) is an extension to the Mustache templating language.\n\n\nAffected versions of this package are vulnerable to Prototype Pollution.\nIt is possible to add or modify properties to the Object prototype through a malicious template. This may allow attackers to crash the application or execute Arbitrary Code in specific conditions.\n\n## Details\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `_proto_`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\r\n\r\nThere are two main ways in which the pollution of prototypes occurs:\r\n\r\n-   Unsafe `Object` recursive merge\r\n    \r\n-   Property definition by path\r\n    \r\n\r\n### Unsafe Object recursive merge\r\n\r\nThe logic of a vulnerable recursive merge function follows the following high-level model:\r\n```\r\nmerge (target, source)\r\n\r\n  foreach property of source\r\n\r\n    if property exists and is an object on both the target and the source\r\n\r\n      merge(target[property], source[property])\r\n\r\n    else\r\n\r\n      target[property] = source[property]\r\n```\r\n<br>  \r\n\r\nWhen the source object contains a property named `_proto_` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\r\n\r\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\r\n\r\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\r\n\r\n### Property definition by path\r\n\r\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\r\n\r\nIf the attacker can control the value of “path”, they can set this value to `_proto_.myValue`. `myValue` is then assigned to the prototype of the class of the object.\r\n\r\n## Types of attacks\r\n\r\nThere are a few methods by which Prototype Pollution can be manipulated:\r\n\r\n| Type |Origin  |Short description |\r\n|--|--|--|\r\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\r\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\r\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\r\n\r\n## Affected environments\r\n\r\nThe following environments are susceptible to a Prototype Pollution attack:\r\n\r\n-   Application server\r\n    \r\n-   Web server\r\n    \r\n\r\n## How to prevent\r\n\r\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\r\n    \r\n2.  Require schema validation of JSON input.\r\n    \r\n3.  Avoid using unsafe recursive merge functions.\r\n    \r\n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\r\n    \r\n5.  As a best practice use `Map` instead of `Object`.\r\n\r\n### For more information on this vulnerability type:\r\n\r\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\n\nUpgrade `handlebars` to version 3.0.8, 4.5.3 or higher.\n\n\n## References\n\n- [GitHub Commit](https://github.com/wycats/handlebars.js/commit/198887808780bbef9dba67a8af68ece091d5baa7)\n\n- [NPM Security Advisory](https://www.npmjs.com/advisories/1325)\n",
+        "identifiers": {
+          "CVE": [],
+          "CWE": [
+            "CWE-1321"
+          ],
+          "NSP": [
+            "1325"
+          ],
+          "GHSA": [
+            "GHSA-g9r4-xpmj-mj65"
+          ]
+        },
+        "packageName": "handlebars",
+        "proprietary": false,
+        "creationTime": "2019-11-20T09:54:27.277624Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2019-11-18T19:42:01Z",
+        "packageManager": "npm",
+        "publicationTime": "2019-11-20T09:55:17Z",
+        "modificationTime": "2022-10-24T13:18:46.917855Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "critical",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "artifact-engine@0.1.29",
+          "handlebars@4.0.14"
+        ],
+        "upgradePath": [
+          false,
+          "artifact-engine@1.0.0",
+          "handlebars@4.7.7"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "handlebars",
+        "version": "4.0.14"
+      },
+      {
+        "id": "SNYK-JS-HANDLEBARS-567742",
+        "title": "Prototype Pollution",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:H/A:N/E:P/RL:O/RC:C",
+        "credit": [
+          "macasun"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<4.6.0"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "4.6.0"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 6.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "handlebars",
+        "references": [
+          {
+            "url": "https://github.com/handlebars-lang/handlebars.js/pull/1633",
+            "title": "GitHub PR"
+          },
+          {
+            "url": "https://hackerone.com/reports/726364",
+            "title": "HackerOne Report"
+          }
+        ],
+        "cvssDetails": [],
+        "description": "## Overview\n[handlebars](https://www.npmjs.com/package/handlebars) is an extension to the Mustache templating language.\n\nAffected versions of this package are vulnerable to Prototype Pollution. Prototype access to the template engine allows for potential code execution.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `handlebars` to version 4.6.0 or higher.\n## References\n- [GitHub PR](https://github.com/handlebars-lang/handlebars.js/pull/1633)\n- [HackerOne Report](https://hackerone.com/reports/726364)\n",
+        "identifiers": {
+          "CVE": [],
+          "CWE": [
+            "CWE-1321"
+          ]
+        },
+        "packageName": "handlebars",
+        "proprietary": false,
+        "creationTime": "2020-04-28T14:26:34.538485Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2020-04-27T22:13:11Z",
+        "packageManager": "npm",
+        "publicationTime": "2020-04-28T14:28:34Z",
+        "modificationTime": "2022-08-25T12:14:40.909034Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "medium",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "artifact-engine@0.1.29",
+          "handlebars@4.0.14"
+        ],
+        "upgradePath": [
+          false,
+          "artifact-engine@1.0.0",
+          "handlebars@4.7.7"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "handlebars",
+        "version": "4.0.14"
+      },
+      {
+        "id": "SNYK-JS-LODASH-1018905",
+        "title": "Regular Expression Denial of Service (ReDoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L/E:P",
+        "credit": [
+          "Liyuan Chen"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<4.17.21"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "4.17.21"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 5.3,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "lodash",
+        "references": [
+          {
+            "url": "https://github.com/lodash/lodash/commit/c4847ebe7d14540bb28a8b932a9ce1b9ecbfee1a",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/lodash/lodash/pull/5065",
+            "title": "GitHub Fix PR"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+            "cvssV3BaseScore": 5.3,
+            "modificationTime": "2022-09-14T01:10:48.134557Z"
+          }
+        ],
+        "description": "## Overview\n[lodash](https://www.npmjs.com/package/lodash) is a modern JavaScript utility library delivering modularity, performance, & extras.\n\nAffected versions of this package are vulnerable to Regular Expression Denial of Service (ReDoS) via the `toNumber`, `trim` and `trimEnd` functions.\r\n\r\n### POC\r\n```\r\nvar lo = require('lodash');\r\n\r\nfunction build_blank (n) {\r\nvar ret = \"1\"\r\nfor (var i = 0; i < n; i++) {\r\nret += \" \"\r\n}\r\n\r\nreturn ret + \"1\";\r\n}\r\n\r\nvar s = build_blank(50000)\r\nvar time0 = Date.now();\r\nlo.trim(s)\r\nvar time_cost0 = Date.now() - time0;\r\nconsole.log(\"time_cost0: \" + time_cost0)\r\n\r\nvar time1 = Date.now();\r\nlo.toNumber(s)\r\nvar time_cost1 = Date.now() - time1;\r\nconsole.log(\"time_cost1: \" + time_cost1)\r\n\r\nvar time2 = Date.now();\r\nlo.trimEnd(s)\r\nvar time_cost2 = Date.now() - time2;\r\nconsole.log(\"time_cost2: \" + time_cost2)\r\n```\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `lodash` to version 4.17.21 or higher.\n## References\n- [GitHub Commit](https://github.com/lodash/lodash/commit/c4847ebe7d14540bb28a8b932a9ce1b9ecbfee1a)\n- [GitHub Fix PR](https://github.com/lodash/lodash/pull/5065)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2020-28500"
+          ],
+          "CWE": [
+            "CWE-400"
+          ]
+        },
+        "packageName": "lodash",
+        "proprietary": true,
+        "creationTime": "2020-10-16T16:48:40.985673Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2020-10-16T16:47:34Z",
+        "packageManager": "npm",
+        "publicationTime": "2021-02-15T11:50:49Z",
+        "modificationTime": "2022-09-14T01:10:48.134557Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "medium",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "artifact-engine@0.1.29",
+          "handlebars@4.0.14",
+          "async@2.6.3",
+          "lodash@4.17.20"
+        ],
+        "upgradePath": [
+          false,
+          "artifact-engine@0.1.29",
+          "handlebars@4.0.14",
+          "async@2.6.3",
+          "lodash@4.17.21"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "lodash",
+        "version": "4.17.20"
+      },
+      {
+        "id": "SNYK-JS-LODASH-1040724",
+        "title": "Command Injection",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H/E:P/RL:U/RC:C",
+        "credit": [
+          "Marc Hassan"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<4.17.21"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "4.17.21"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.2,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "lodash",
+        "references": [
+          {
+            "url": "https://github.com/lodash/lodash/commit/3469357cff396a26c363f8c1b5a91dde28ba4b1c",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/lodash/lodash/blob/ddfd9b11a0126db2302cb70ec9973b66baec0975/lodash.js%23L14851",
+            "title": "Vulnerable Code"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 7.2,
+            "modificationTime": "2022-09-14T01:10:48.257735Z"
+          }
+        ],
+        "description": "## Overview\n[lodash](https://www.npmjs.com/package/lodash) is a modern JavaScript utility library delivering modularity, performance, & extras.\n\nAffected versions of this package are vulnerable to Command Injection via `template`.\r\n\r\n### PoC\r\n```js\r\nvar _ = require('lodash');\r\n\r\n_.template('', { variable: '){console.log(process.env)}; with(obj' })()\r\n```\n## Remediation\nUpgrade `lodash` to version 4.17.21 or higher.\n## References\n- [GitHub Commit](https://github.com/lodash/lodash/commit/3469357cff396a26c363f8c1b5a91dde28ba4b1c)\n- [Vulnerable Code](https://github.com/lodash/lodash/blob/ddfd9b11a0126db2302cb70ec9973b66baec0975/lodash.js#L14851)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2021-23337"
+          ],
+          "CWE": [
+            "CWE-78"
+          ],
+          "GHSA": [
+            "GHSA-35jh-r3h4-6jhm"
+          ]
+        },
+        "packageName": "lodash",
+        "proprietary": true,
+        "creationTime": "2020-11-17T14:07:17.048472Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2020-11-17T13:02:10Z",
+        "packageManager": "npm",
+        "publicationTime": "2021-02-15T11:50:50Z",
+        "modificationTime": "2022-09-14T01:10:48.257735Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "artifact-engine@0.1.29",
+          "handlebars@4.0.14",
+          "async@2.6.3",
+          "lodash@4.17.20"
+        ],
+        "upgradePath": [
+          false,
+          "artifact-engine@0.1.29",
+          "handlebars@4.0.14",
+          "async@2.6.3",
+          "lodash@4.17.21"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "lodash",
+        "version": "4.17.20"
+      },
+      {
+        "id": "SNYK-JS-MINIMATCH-3050818",
+        "title": "Regular Expression Denial of Service (ReDoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<3.0.5"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "3.0.5"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 5.3,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "minimatch",
+        "references": [
+          {
+            "url": "https://github.com/isaacs/minimatch/commit/a8763f4388e51956be62dc6025cec1126beeb5e6",
+            "title": "GitHub Commit"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "Red Hat",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-11-27T21:40:17.490683Z"
+          },
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-10-20T01:10:31.056597Z"
+          }
+        ],
+        "description": "## Overview\n[minimatch](https://www.npmjs.com/package/minimatch) is a minimal matching utility.\n\nAffected versions of this package are vulnerable to Regular Expression Denial of Service (ReDoS) via the `braceExpand` function in `minimatch.js`.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `minimatch` to version 3.0.5 or higher.\n## References\n- [GitHub Commit](https://github.com/isaacs/minimatch/commit/a8763f4388e51956be62dc6025cec1126beeb5e6)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-3517"
+          ],
+          "CWE": [
+            "CWE-1333"
+          ]
+        },
+        "packageName": "minimatch",
+        "proprietary": false,
+        "creationTime": "2022-10-18T06:10:47.980262Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-10-18T06:00:25Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-10-18T06:29:18.078950Z",
+        "modificationTime": "2022-11-27T21:40:17.490683Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "medium",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "azure-pipelines-task-lib@2.12.0",
+          "minimatch@3.0.4"
+        ],
+        "upgradePath": [
+          false,
+          "azure-pipelines-task-lib@3.3.1",
+          "minimatch@3.0.5"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "minimatch",
+        "version": "3.0.4"
+      },
+      {
+        "id": "SNYK-JS-MINIMATCH-3050818",
+        "title": "Regular Expression Denial of Service (ReDoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<3.0.5"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "3.0.5"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 5.3,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "minimatch",
+        "references": [
+          {
+            "url": "https://github.com/isaacs/minimatch/commit/a8763f4388e51956be62dc6025cec1126beeb5e6",
+            "title": "GitHub Commit"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "Red Hat",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-11-27T21:40:17.490683Z"
+          },
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-10-20T01:10:31.056597Z"
+          }
+        ],
+        "description": "## Overview\n[minimatch](https://www.npmjs.com/package/minimatch) is a minimal matching utility.\n\nAffected versions of this package are vulnerable to Regular Expression Denial of Service (ReDoS) via the `braceExpand` function in `minimatch.js`.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `minimatch` to version 3.0.5 or higher.\n## References\n- [GitHub Commit](https://github.com/isaacs/minimatch/commit/a8763f4388e51956be62dc6025cec1126beeb5e6)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-3517"
+          ],
+          "CWE": [
+            "CWE-1333"
+          ]
+        },
+        "packageName": "minimatch",
+        "proprietary": false,
+        "creationTime": "2022-10-18T06:10:47.980262Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-10-18T06:00:25Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-10-18T06:29:18.078950Z",
+        "modificationTime": "2022-11-27T21:40:17.490683Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "medium",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "artifact-engine@0.1.29",
+          "azure-pipelines-task-lib@2.8.0",
+          "minimatch@3.0.4"
+        ],
+        "upgradePath": [
+          false,
+          "artifact-engine@1.0.0",
+          "azure-pipelines-task-lib@3.3.1",
+          "minimatch@3.0.5"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "minimatch",
+        "version": "3.0.4"
+      },
+      {
+        "id": "SNYK-JS-MINIMATCH-3050818",
+        "title": "Regular Expression Denial of Service (ReDoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<3.0.5"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "3.0.5"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 5.3,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "minimatch",
+        "references": [
+          {
+            "url": "https://github.com/isaacs/minimatch/commit/a8763f4388e51956be62dc6025cec1126beeb5e6",
+            "title": "GitHub Commit"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "Red Hat",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-11-27T21:40:17.490683Z"
+          },
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-10-20T01:10:31.056597Z"
+          }
+        ],
+        "description": "## Overview\n[minimatch](https://www.npmjs.com/package/minimatch) is a minimal matching utility.\n\nAffected versions of this package are vulnerable to Regular Expression Denial of Service (ReDoS) via the `braceExpand` function in `minimatch.js`.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `minimatch` to version 3.0.5 or higher.\n## References\n- [GitHub Commit](https://github.com/isaacs/minimatch/commit/a8763f4388e51956be62dc6025cec1126beeb5e6)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-3517"
+          ],
+          "CWE": [
+            "CWE-1333"
+          ]
+        },
+        "packageName": "minimatch",
+        "proprietary": false,
+        "creationTime": "2022-10-18T06:10:47.980262Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-10-18T06:00:25Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-10-18T06:29:18.078950Z",
+        "modificationTime": "2022-11-27T21:40:17.490683Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "medium",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "artifact-engine@0.1.29",
+          "minimatch@3.0.2"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "name": "minimatch",
+        "version": "3.0.2"
+      },
+      {
+        "id": "SNYK-JS-MINIMIST-2429795",
+        "title": "Prototype Pollution",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:L/E:P",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<1.2.6"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "1.2.6"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "low",
+        "cvssScore": 3.7,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "minimist",
+        "references": [
+          {
+            "url": "https://github.com/substack/minimist/commit/c2b981977fa834b223b408cfb860f933c9811e4d",
+            "title": "Fix Commit"
+          },
+          {
+            "url": "https://github.com/substack/minimist/issues/164",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://github.com/substack/minimist/blob/master/index.js%23L69",
+            "title": "Vulnerable Code"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "SUSE",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
+            "cvssV3BaseScore": 5.6,
+            "modificationTime": "2022-05-18T11:05:33.152638Z"
+          },
+          {
+            "assigner": "NVD",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 9.8,
+            "modificationTime": "2022-04-13T01:10:15.021168Z"
+          },
+          {
+            "assigner": "Red Hat",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 8.1,
+            "modificationTime": "2022-11-25T14:17:13.977821Z"
+          }
+        ],
+        "description": "## Overview\n[minimist](https://www.npmjs.com/package/minimist) is a parse argument options module.\n\nAffected versions of this package are vulnerable to Prototype Pollution due to a missing handler to `Function.prototype`.\r\n\r\n**Notes:** \r\n\r\n- This vulnerability is a bypass to [CVE-2020-7598](https://security.snyk.io/vuln/SNYK-JS-MINIMIST-559764)\r\n\r\n- The reason for the different CVSS between CVE-2021-44906 to CVE-2020-7598, is that CVE-2020-7598 can pollute objects, while CVE-2021-44906 can pollute only function.\r\n\r\n\r\n## PoC by Snyk\r\n```js\r\nrequire('minimist')('--_.constructor.constructor.prototype.foo bar'.split(' '));\r\nconsole.log((function(){}).foo); // bar\r\n```\n\n## Details\n\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `__proto__`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\n\nThere are two main ways in which the pollution of prototypes occurs:\n\n-   Unsafe `Object` recursive merge\n    \n-   Property definition by path\n    \n\n### Unsafe Object recursive merge\n\nThe logic of a vulnerable recursive merge function follows the following high-level model:\n```\nmerge (target, source)\n\n  foreach property of source\n\n    if property exists and is an object on both the target and the source\n\n      merge(target[property], source[property])\n\n    else\n\n      target[property] = source[property]\n```\n<br>  \n\nWhen the source object contains a property named `__proto__` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\n\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\n\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\n\n### Property definition by path\n\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\n\nIf the attacker can control the value of “path”, they can set this value to `__proto__.myValue`. `myValue` is then assigned to the prototype of the class of the object.\n\n## Types of attacks\n\nThere are a few methods by which Prototype Pollution can be manipulated:\n\n| Type |Origin  |Short description |\n|--|--|--|\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\n\n## Affected environments\n\nThe following environments are susceptible to a Prototype Pollution attack:\n\n-   Application server\n    \n-   Web server\n\n-   Web browser\n    \n\n## How to prevent\n\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\n    \n2.  Require schema validation of JSON input.\n    \n3.  Avoid using unsafe recursive merge functions.\n    \n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\n    \n5.  As a best practice use `Map` instead of `Object`.\n\n### For more information on this vulnerability type:\n\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\nUpgrade `minimist` to version 1.2.6 or higher.\n## References\n- [Fix Commit](https://github.com/substack/minimist/commit/c2b981977fa834b223b408cfb860f933c9811e4d)\n- [GitHub Issue](https://github.com/substack/minimist/issues/164)\n- [Vulnerable Code](https://github.com/substack/minimist/blob/master/index.js#L69)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2021-44906"
+          ],
+          "CWE": [
+            "CWE-1321"
+          ],
+          "SNYK": [
+            "SNYK-JS-MINIMIST-559764"
+          ]
+        },
+        "packageName": "minimist",
+        "proprietary": false,
+        "creationTime": "2022-03-18T13:02:08.840039Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-03-18T12:24:05Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-03-21T12:09:35Z",
+        "modificationTime": "2022-11-25T14:17:13.977821Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "low",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "artifact-engine@0.1.29",
+          "handlebars@4.0.14",
+          "optimist@0.6.1",
+          "minimist@0.0.10"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "name": "minimist",
+        "version": "0.0.10"
+      },
+      {
+        "id": "SNYK-JS-MINIMIST-559764",
+        "title": "Prototype Pollution",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L/E:P/RL:O/RC:C",
+        "credit": [
+          "Snyk Security Team"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<0.2.1",
+            ">=1.0.0 <1.2.3"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "0.2.1",
+          "1.2.3"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 5.6,
+        "functions": [
+          {
+            "version": [
+              "<0.2.1",
+              ">=1.0.0 <1.1.1"
+            ],
+            "functionId": {
+              "filePath": "index.js",
+              "className": null,
+              "functionName": "setKey"
+            }
+          },
+          {
+            "version": [
+              "<0.2.1",
+              ">=1.1.1 <1.2.3"
+            ],
+            "functionId": {
+              "filePath": "index.js",
+              "className": null,
+              "functionName": "module.exports.setKey"
+            }
+          }
+        ],
+        "malicious": false,
+        "moduleName": "minimist",
+        "references": [
+          {
+            "url": "https://gist.github.com/Kirill89/47feb345b09bf081317f08dd43403a8a",
+            "title": "Command Injection PoC"
+          },
+          {
+            "url": "https://github.com/substack/minimist/commit/63e7ed05aa4b1889ec2f3b196426db4500cbda94",
+            "title": "GitHub Fix Commit #1"
+          },
+          {
+            "url": "https://github.com/substack/minimist/commit/38a4d1caead72ef99e824bb420a2528eec03d9ab",
+            "title": "GitHub Fix Commit #2"
+          },
+          {
+            "url": "https://snyk.io/blog/prototype-pollution-minimist/",
+            "title": "Snyk Research Blog"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "SUSE",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 8.1,
+            "modificationTime": "2022-05-03T23:19:09.248741Z"
+          },
+          {
+            "assigner": "Red Hat",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
+            "cvssV3BaseScore": 5.6,
+            "modificationTime": "2022-09-01T16:53:55.159376Z"
+          },
+          {
+            "assigner": "NVD",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
+            "cvssV3BaseScore": 5.6,
+            "modificationTime": "2022-04-23T01:11:18.536458Z"
+          }
+        ],
+        "description": "## Overview\n[minimist](https://www.npmjs.com/package/minimist) is a parse argument options module.\n\nAffected versions of this package are vulnerable to Prototype Pollution. The library could be tricked into adding or modifying properties of `Object.prototype` using a `constructor` or `__proto__` payload.\r\n\r\n## PoC by Snyk\r\n```\r\nrequire('minimist')('--__proto__.injected0 value0'.split(' '));\r\nconsole.log(({}).injected0 === 'value0'); // true\r\n\r\nrequire('minimist')('--constructor.prototype.injected1 value1'.split(' '));\r\nconsole.log(({}).injected1 === 'value1'); // true\r\n```\n\n## Details\n\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `__proto__`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\n\nThere are two main ways in which the pollution of prototypes occurs:\n\n-   Unsafe `Object` recursive merge\n    \n-   Property definition by path\n    \n\n### Unsafe Object recursive merge\n\nThe logic of a vulnerable recursive merge function follows the following high-level model:\n```\nmerge (target, source)\n\n  foreach property of source\n\n    if property exists and is an object on both the target and the source\n\n      merge(target[property], source[property])\n\n    else\n\n      target[property] = source[property]\n```\n<br>  \n\nWhen the source object contains a property named `__proto__` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\n\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\n\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\n\n### Property definition by path\n\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\n\nIf the attacker can control the value of “path”, they can set this value to `__proto__.myValue`. `myValue` is then assigned to the prototype of the class of the object.\n\n## Types of attacks\n\nThere are a few methods by which Prototype Pollution can be manipulated:\n\n| Type |Origin  |Short description |\n|--|--|--|\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\n\n## Affected environments\n\nThe following environments are susceptible to a Prototype Pollution attack:\n\n-   Application server\n    \n-   Web server\n\n-   Web browser\n    \n\n## How to prevent\n\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\n    \n2.  Require schema validation of JSON input.\n    \n3.  Avoid using unsafe recursive merge functions.\n    \n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\n    \n5.  As a best practice use `Map` instead of `Object`.\n\n### For more information on this vulnerability type:\n\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\nUpgrade `minimist` to version 0.2.1, 1.2.3 or higher.\n## References\n- [Command Injection PoC](https://gist.github.com/Kirill89/47feb345b09bf081317f08dd43403a8a)\n- [GitHub Fix Commit #1](https://github.com/substack/minimist/commit/63e7ed05aa4b1889ec2f3b196426db4500cbda94)\n- [GitHub Fix Commit #2](https://github.com/substack/minimist/commit/38a4d1caead72ef99e824bb420a2528eec03d9ab)\n- [Snyk Research Blog](https://snyk.io/blog/prototype-pollution-minimist/)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2020-7598"
+          ],
+          "CWE": [
+            "CWE-1321"
+          ],
+          "NSP": [
+            "1179"
+          ],
+          "GHSA": [
+            "GHSA-vh95-rmgr-6w4m"
+          ]
+        },
+        "packageName": "minimist",
+        "proprietary": true,
+        "creationTime": "2020-03-11T08:25:47.093051Z",
+        "functions_new": [
+          {
+            "version": [
+              "<0.2.1",
+              ">=1.0.0 <1.1.1"
+            ],
+            "functionId": {
+              "filePath": "index.js",
+              "functionName": "setKey"
+            }
+          },
+          {
+            "version": [
+              "<0.2.1",
+              ">=1.1.1 <1.2.3"
+            ],
+            "functionId": {
+              "filePath": "index.js",
+              "functionName": "module.exports.setKey"
+            }
+          }
+        ],
+        "alternativeIds": [],
+        "disclosureTime": "2020-03-10T08:22:24Z",
+        "packageManager": "npm",
+        "publicationTime": "2020-03-11T08:22:19Z",
+        "modificationTime": "2022-09-01T16:53:55.159376Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "medium",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "artifact-engine@0.1.29",
+          "handlebars@4.0.14",
+          "optimist@0.6.1",
+          "minimist@0.0.10"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "name": "minimist",
+        "version": "0.0.10"
+      },
+      {
+        "id": "SNYK-JS-QS-3153490",
+        "title": "Prototype Poisoning",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+        "credit": [
+          "BRAUN Nathanael",
+          "BRISSAUD Johan"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<6.2.4",
+            ">=6.3.0 <6.3.3",
+            ">=6.4.0 <6.4.1",
+            ">=6.5.0 <6.5.3",
+            ">=6.6.0 <6.6.1",
+            ">=6.7.0 <6.7.3",
+            ">=6.8.0 <6.8.3",
+            ">=6.9.0 <6.9.7",
+            ">=6.10.0 <6.10.3"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "6.2.4",
+          "6.3.3",
+          "6.4.1",
+          "6.5.3",
+          "6.6.1",
+          "6.7.3",
+          "6.8.3",
+          "6.9.7",
+          "6.10.3"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "qs",
+        "references": [
+          {
+            "url": "https://github.com/ljharb/qs/pull/428",
+            "title": "GitHub PR"
+          },
+          {
+            "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2150323",
+            "title": "RedHat Bugzilla Bug"
+          },
+          {
+            "url": "https://github.com/n8tz/CVE-2022-24999",
+            "title": "Researcher Advisory"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-11-29T01:11:13.913238Z"
+          },
+          {
+            "assigner": "Red Hat",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-12-03T13:46:25.900727Z"
+          }
+        ],
+        "description": "## Overview\n[qs](https://www.npmjs.com/package/qs) is a querystring parser that supports nesting and arrays, with a depth limit.\n\nAffected versions of this package are vulnerable to Prototype Poisoning which allows attackers to cause a Node process to hang, processing an Array object whose prototype has been replaced by one with an excessive length value.\r\n\r\n**Note:** In many typical Express use cases, an unauthenticated remote attacker can place the attack payload in the query string of the URL that is used to visit the application, such as `a[__proto__]=b&a[__proto__]&a[length]=100000000`.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `qs` to version 6.2.4, 6.3.3, 6.4.1, 6.5.3, 6.6.1, 6.7.3, 6.8.3, 6.9.7, 6.10.3 or higher.\n## References\n- [GitHub PR](https://github.com/ljharb/qs/pull/428)\n- [RedHat Bugzilla Bug](https://bugzilla.redhat.com/show_bug.cgi?id=2150323)\n- [Researcher Advisory](https://github.com/n8tz/CVE-2022-24999)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-24999"
+          ],
+          "CWE": [
+            "CWE-1321"
+          ]
+        },
+        "packageName": "qs",
+        "proprietary": false,
+        "creationTime": "2022-12-04T11:01:47.782869Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-11-26T00:00:00Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-12-04T12:24:32.307833Z",
+        "modificationTime": "2022-12-06T09:33:17.364321Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "azure-pipelines-task-lib@2.12.0",
+          "sync-request@3.0.1",
+          "then-request@2.2.0",
+          "qs@6.9.4"
+        ],
+        "upgradePath": [
+          false,
+          "azure-pipelines-task-lib@2.12.0",
+          "sync-request@3.0.1",
+          "then-request@2.2.0",
+          "qs@6.9.7"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "qs",
+        "version": "6.9.4"
+      },
+      {
+        "id": "SNYK-JS-SHELLJS-2332187",
+        "title": "Improper Privilege Management",
+        "CVSSv3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H/E:P",
+        "credit": [
+          "haxatron"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<0.8.5"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "0.8.5"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.1,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "shelljs",
+        "references": [
+          {
+            "url": "https://github.com/shelljs/shelljs/commit/d919d22dd6de385edaa9d90313075a77f74b338c",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/shelljs/shelljs/issues/1058",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://github.com/shelljs/shelljs/pull/1060",
+            "title": "GitHub PR"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H",
+            "cvssV3BaseScore": 7.1,
+            "modificationTime": "2022-02-09T16:10:36.984666Z"
+          }
+        ],
+        "description": "## Overview\n[shelljs](None) is a wrapper for the Unix shell commands for Node.js.\n\nAffected versions of this package are vulnerable to Improper Privilege Management. When `ShellJS` is used to create shell scripts which may be running as `root`, users with low-level privileges on the system can leak sensitive information such as passwords (depending on implementation) from the standard output of the privileged process OR shutdown privileged `ShellJS` processes via the `exec` function when triggering EACCESS errors.\r\n\r\n**Note:** Thi only impacts the synchronous version of `shell.exec()`.\n## Remediation\nUpgrade `shelljs` to version 0.8.5 or higher.\n## References\n- [GitHub Commit](https://github.com/shelljs/shelljs/commit/d919d22dd6de385edaa9d90313075a77f74b338c)\n- [GitHub Issue](https://github.com/shelljs/shelljs/issues/1058)\n- [GitHub PR](https://github.com/shelljs/shelljs/pull/1060)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-0144"
+          ],
+          "CWE": [
+            "CWE-269"
+          ]
+        },
+        "packageName": "shelljs",
+        "proprietary": false,
+        "creationTime": "2022-01-11T12:52:23.829882Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-01-11T12:39:08Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-01-12T12:49:35.008405Z",
+        "modificationTime": "2022-02-09T16:10:36.984666Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "azure-pipelines-task-lib@2.12.0",
+          "shelljs@0.3.0"
+        ],
+        "upgradePath": [
+          false,
+          "azure-pipelines-task-lib@3.1.0",
+          "shelljs@0.8.5"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "shelljs",
+        "version": "0.3.0"
+      },
+      {
+        "id": "SNYK-JS-SHELLJS-2332187",
+        "title": "Improper Privilege Management",
+        "CVSSv3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H/E:P",
+        "credit": [
+          "haxatron"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<0.8.5"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "0.8.5"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.1,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "shelljs",
+        "references": [
+          {
+            "url": "https://github.com/shelljs/shelljs/commit/d919d22dd6de385edaa9d90313075a77f74b338c",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/shelljs/shelljs/issues/1058",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://github.com/shelljs/shelljs/pull/1060",
+            "title": "GitHub PR"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H",
+            "cvssV3BaseScore": 7.1,
+            "modificationTime": "2022-02-09T16:10:36.984666Z"
+          }
+        ],
+        "description": "## Overview\n[shelljs](None) is a wrapper for the Unix shell commands for Node.js.\n\nAffected versions of this package are vulnerable to Improper Privilege Management. When `ShellJS` is used to create shell scripts which may be running as `root`, users with low-level privileges on the system can leak sensitive information such as passwords (depending on implementation) from the standard output of the privileged process OR shutdown privileged `ShellJS` processes via the `exec` function when triggering EACCESS errors.\r\n\r\n**Note:** Thi only impacts the synchronous version of `shell.exec()`.\n## Remediation\nUpgrade `shelljs` to version 0.8.5 or higher.\n## References\n- [GitHub Commit](https://github.com/shelljs/shelljs/commit/d919d22dd6de385edaa9d90313075a77f74b338c)\n- [GitHub Issue](https://github.com/shelljs/shelljs/issues/1058)\n- [GitHub PR](https://github.com/shelljs/shelljs/pull/1060)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-0144"
+          ],
+          "CWE": [
+            "CWE-269"
+          ]
+        },
+        "packageName": "shelljs",
+        "proprietary": false,
+        "creationTime": "2022-01-11T12:52:23.829882Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-01-11T12:39:08Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-01-12T12:49:35.008405Z",
+        "modificationTime": "2022-02-09T16:10:36.984666Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "artifact-engine@0.1.29",
+          "azure-pipelines-task-lib@2.8.0",
+          "shelljs@0.3.0"
+        ],
+        "upgradePath": [
+          false,
+          "artifact-engine@1.0.0",
+          "azure-pipelines-task-lib@3.1.0",
+          "shelljs@0.8.5"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "shelljs",
+        "version": "0.3.0"
+      },
+      {
+        "id": "SNYK-JS-UGLIFYJS-1727251",
+        "title": "Regular Expression Denial of Service (ReDoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+        "credit": [
+          "ready-research"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<3.14.3"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "3.14.3"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 5.3,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "uglify-js",
+        "references": [
+          {
+            "url": "https://github.com/mishoo/UglifyJS/commit/157521066fc43cff2feab7ffc1ecea603617606b",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/mishoo/UglifyJS/issues/5133",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://github.com/mishoo/UglifyJS/pull/5134",
+            "title": "GitHub PR"
+          },
+          {
+            "url": "https://github.com/mishoo/UglifyJS/pull/5135",
+            "title": "GitHub PR"
+          }
+        ],
+        "cvssDetails": [],
+        "description": "## Overview\n[uglify-js](http://npmjs.com/package/uglify-js) is a JavaScript parser, minifier, compressor and beautifier toolkit.\n\nAffected versions of this package are vulnerable to Regular Expression Denial of Service (ReDoS) via the `string_template` and the `decode_template` functions.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `uglify-js` to version 3.14.3 or higher.\n## References\n- [GitHub Commit](https://github.com/mishoo/UglifyJS/commit/157521066fc43cff2feab7ffc1ecea603617606b)\n- [GitHub Issue](https://github.com/mishoo/UglifyJS/issues/5133)\n- [GitHub PR](https://github.com/mishoo/UglifyJS/pull/5134)\n- [GitHub PR](https://github.com/mishoo/UglifyJS/pull/5135)\n",
+        "identifiers": {
+          "CVE": [],
+          "CWE": [
+            "CWE-1333"
+          ]
+        },
+        "packageName": "uglify-js",
+        "proprietary": false,
+        "creationTime": "2021-09-30T14:25:50.130236Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2021-09-30T14:22:21Z",
+        "packageManager": "npm",
+        "publicationTime": "2021-11-09T18:42:15.313328Z",
+        "modificationTime": "2021-11-09T18:42:15.332622Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "medium",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "artifact-engine@0.1.29",
+          "handlebars@4.0.14",
+          "uglify-js@3.12.1"
+        ],
+        "upgradePath": [
+          false,
+          "artifact-engine@0.1.29",
+          "handlebars@4.0.14",
+          "uglify-js@3.14.3"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "uglify-js",
+        "version": "3.12.1"
+      },
+      {
+        "id": "SNYK-JS-UNDERSCORE-1080984",
+        "title": "Arbitrary Code Injection",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:H/I:L/A:L/E:P/RL:O/RC:C",
+        "credit": [
+          "Alessio Della Libera (@d3lla)"
+        ],
+        "semver": {
+          "vulnerable": [
+            ">=1.13.0-0 <1.13.0-2",
+            ">=1.3.2 <1.12.1"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "1.13.0-2",
+          "1.12.1"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 5.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "underscore",
+        "references": [
+          {
+            "url": "https://github.com/jashkenas/underscore/blob/cb5f6fc6c2400649d942f1e36f9e5191fb7a1bf1/modules/template.js%23L71",
+            "title": "GitHub Additional Information"
+          },
+          {
+            "url": "https://github.com/jashkenas/underscore/commit/4c73526d43838ad6ab43a6134728776632adeb66",
+            "title": "GitHub Commit"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 7.2,
+            "modificationTime": "2022-01-03T16:36:04.101845Z"
+          },
+          {
+            "assigner": "Red Hat",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 7.2,
+            "modificationTime": "2022-10-25T21:48:12.836942Z"
+          }
+        ],
+        "description": "## Overview\n[underscore](https://www.npmjs.org/package/underscore) is a JavaScript's functional programming helper library.\n\nAffected versions of this package are vulnerable to Arbitrary Code Injection via the `template` function, particularly when the `variable` option is taken from `_.templateSettings` as it is not sanitized.\r\n\r\n### PoC\r\n```\r\nconst _ = require('underscore');\r\n_.templateSettings.variable = \"a = this.process.mainModule.require('child_process').execSync('touch HELLO')\";\r\nconst t = _.template(\"\")();\r\n```\n## Remediation\nUpgrade `underscore` to version 1.13.0-2, 1.12.1 or higher.\n## References\n- [GitHub Additional Information](https://github.com/jashkenas/underscore/blob/cb5f6fc6c2400649d942f1e36f9e5191fb7a1bf1/modules/template.js#L71)\n- [GitHub Commit](https://github.com/jashkenas/underscore/commit/4c73526d43838ad6ab43a6134728776632adeb66)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2021-23358"
+          ],
+          "CWE": [
+            "CWE-94"
+          ],
+          "GHSA": [
+            "GHSA-cf4h-3jhx-xvhq"
+          ]
+        },
+        "packageName": "underscore",
+        "proprietary": true,
+        "creationTime": "2021-03-02T19:52:38.855110Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2021-03-02T19:51:03Z",
+        "packageManager": "npm",
+        "publicationTime": "2021-03-29T14:54:59Z",
+        "modificationTime": "2022-11-09T15:25:01.208322Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "medium",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "azure-devops-node-api@7.2.0",
+          "underscore@1.8.3"
+        ],
+        "upgradePath": [
+          false,
+          "azure-devops-node-api@10.2.2"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "underscore",
+        "version": "1.8.3"
+      },
+      {
+        "id": "SNYK-JS-UNDERSCORE-1080984",
+        "title": "Arbitrary Code Injection",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:H/I:L/A:L/E:P/RL:O/RC:C",
+        "credit": [
+          "Alessio Della Libera (@d3lla)"
+        ],
+        "semver": {
+          "vulnerable": [
+            ">=1.13.0-0 <1.13.0-2",
+            ">=1.3.2 <1.12.1"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "1.13.0-2",
+          "1.12.1"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 5.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "underscore",
+        "references": [
+          {
+            "url": "https://github.com/jashkenas/underscore/blob/cb5f6fc6c2400649d942f1e36f9e5191fb7a1bf1/modules/template.js%23L71",
+            "title": "GitHub Additional Information"
+          },
+          {
+            "url": "https://github.com/jashkenas/underscore/commit/4c73526d43838ad6ab43a6134728776632adeb66",
+            "title": "GitHub Commit"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 7.2,
+            "modificationTime": "2022-01-03T16:36:04.101845Z"
+          },
+          {
+            "assigner": "Red Hat",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 7.2,
+            "modificationTime": "2022-10-25T21:48:12.836942Z"
+          }
+        ],
+        "description": "## Overview\n[underscore](https://www.npmjs.org/package/underscore) is a JavaScript's functional programming helper library.\n\nAffected versions of this package are vulnerable to Arbitrary Code Injection via the `template` function, particularly when the `variable` option is taken from `_.templateSettings` as it is not sanitized.\r\n\r\n### PoC\r\n```\r\nconst _ = require('underscore');\r\n_.templateSettings.variable = \"a = this.process.mainModule.require('child_process').execSync('touch HELLO')\";\r\nconst t = _.template(\"\")();\r\n```\n## Remediation\nUpgrade `underscore` to version 1.13.0-2, 1.12.1 or higher.\n## References\n- [GitHub Additional Information](https://github.com/jashkenas/underscore/blob/cb5f6fc6c2400649d942f1e36f9e5191fb7a1bf1/modules/template.js#L71)\n- [GitHub Commit](https://github.com/jashkenas/underscore/commit/4c73526d43838ad6ab43a6134728776632adeb66)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2021-23358"
+          ],
+          "CWE": [
+            "CWE-94"
+          ],
+          "GHSA": [
+            "GHSA-cf4h-3jhx-xvhq"
+          ]
+        },
+        "packageName": "underscore",
+        "proprietary": true,
+        "creationTime": "2021-03-02T19:52:38.855110Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2021-03-02T19:51:03Z",
+        "packageManager": "npm",
+        "publicationTime": "2021-03-29T14:54:59Z",
+        "modificationTime": "2022-11-09T15:25:01.208322Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "medium",
+        "from": [
+          "downloadartifacts@0.0.2",
+          "azure-devops-node-api@7.2.0",
+          "typed-rest-client@1.2.0",
+          "underscore@1.8.3"
+        ],
+        "upgradePath": [
+          false,
+          "azure-devops-node-api@10.1.1",
+          "typed-rest-client@1.8.4",
+          "underscore@1.12.1"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "underscore",
+        "version": "1.8.3"
+      }
+    ],
+    "ok": false,
+    "dependencyCount": 60,
+    "org": "global-devops-bootcamp",
+    "policy": "# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.25.0\nignore: {}\npatch: {}\n",
+    "isPrivate": true,
+    "licensesPolicy": {
+      "severities": {},
+      "orgLicenseRules": {
+        "AGPL-1.0": {
+          "licenseType": "AGPL-1.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "AGPL-3.0": {
+          "licenseType": "AGPL-3.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "Artistic-1.0": {
+          "licenseType": "Artistic-1.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "Artistic-2.0": {
+          "licenseType": "Artistic-2.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "CDDL-1.0": {
+          "licenseType": "CDDL-1.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "CPOL-1.02": {
+          "licenseType": "CPOL-1.02",
+          "severity": "high",
+          "instructions": ""
+        },
+        "EPL-1.0": {
+          "licenseType": "EPL-1.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "GPL-2.0": {
+          "licenseType": "GPL-2.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "GPL-3.0": {
+          "licenseType": "GPL-3.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "LGPL-2.0": {
+          "licenseType": "LGPL-2.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-2.1": {
+          "licenseType": "LGPL-2.1",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-2.1+": {
+          "licenseType": "LGPL-2.1+",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-3.0": {
+          "licenseType": "LGPL-3.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-3.0+": {
+          "licenseType": "LGPL-3.0+",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "MPL-1.1": {
+          "licenseType": "MPL-1.1",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "MPL-2.0": {
+          "licenseType": "MPL-2.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "MS-RL": {
+          "licenseType": "MS-RL",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "SimPL-2.0": {
+          "licenseType": "SimPL-2.0",
+          "severity": "high",
+          "instructions": ""
+        }
+      }
+    },
+    "packageManager": "npm",
+    "ignoreSettings": {
+      "adminOnly": false,
+      "reasonRequired": false,
+      "disregardFilesystemIgnores": false
+    },
+    "summary": "22 vulnerable dependency paths",
+    "remediation": {
+      "unresolved": [
+        {
+          "id": "SNYK-JS-ASYNC-2441827",
+          "title": "Prototype Pollution",
+          "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+          "credit": [
+            "Unknown"
+          ],
+          "semver": {
+            "vulnerable": [
+              ">=2.0.0 <2.6.4",
+              ">=3.0.0 <3.2.2"
+            ]
+          },
+          "exploit": "Proof of Concept",
+          "fixedIn": [
+            "2.6.4",
+            "3.2.2"
+          ],
+          "patches": [],
+          "insights": {
+            "triageAdvice": null
+          },
+          "language": "js",
+          "severity": "high",
+          "cvssScore": 7.5,
+          "functions": [],
+          "malicious": false,
+          "moduleName": "async",
+          "references": [
+            {
+              "url": "https://github.com/caolan/async/pull/1828",
+              "title": "GitHub Backport PR"
+            },
+            {
+              "url": "https://github.com/caolan/async/commit/8f7f90342a6571ba1c197d747ebed30c368096d2",
+              "title": "GitHub Commit"
+            },
+            {
+              "url": "https://github.com/caolan/async/commit/e1ecdbf79264f9ab488c7799f4c76996d5dca66d",
+              "title": "GitHub Commit"
+            },
+            {
+              "url": "https://jsfiddle.net/oz5twjd9/",
+              "title": "PoC"
+            }
+          ],
+          "cvssDetails": [
+            {
+              "assigner": "NVD",
+              "severity": "high",
+              "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "cvssV3BaseScore": 7.8,
+              "modificationTime": "2022-05-14T01:11:01.228151Z"
+            },
+            {
+              "assigner": "Red Hat",
+              "severity": "high",
+              "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "cvssV3BaseScore": 7.8,
+              "modificationTime": "2022-11-27T15:35:48.591671Z"
+            }
+          ],
+          "description": "## Overview\n\nAffected versions of this package are vulnerable to Prototype Pollution via the `mapValues()` method, due to improper check in `createObjectIterator` function.\r\n\r\n## PoC\r\n\r\n```js\r\n//when objects are parsed, all properties are created as own (the objects can come from outside sources (http requests/ file))\r\nconst hasOwn = JSON.parse('{\"__proto__\": {\"isAdmin\": true}}');\r\n\r\n//does not have the property,  because it's inside object's own \"__proto__\"\r\nconsole.log(hasOwn.isAdmin);\r\n\r\nasync.mapValues(hasOwn, (val, key, cb) => cb(null, val), (error, result) => {\r\n  // after the method executes, hasOwn.__proto__ value (isAdmin: true) replaces the prototype of the newly created object, leading to potential exploits.\r\n  console.log(result.isAdmin);\r\n});\r\n```\n\n## Details\n\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `__proto__`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\n\nThere are two main ways in which the pollution of prototypes occurs:\n\n-   Unsafe `Object` recursive merge\n    \n-   Property definition by path\n    \n\n### Unsafe Object recursive merge\n\nThe logic of a vulnerable recursive merge function follows the following high-level model:\n```\nmerge (target, source)\n\n  foreach property of source\n\n    if property exists and is an object on both the target and the source\n\n      merge(target[property], source[property])\n\n    else\n\n      target[property] = source[property]\n```\n<br>  \n\nWhen the source object contains a property named `__proto__` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\n\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\n\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\n\n### Property definition by path\n\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\n\nIf the attacker can control the value of “path”, they can set this value to `__proto__.myValue`. `myValue` is then assigned to the prototype of the class of the object.\n\n## Types of attacks\n\nThere are a few methods by which Prototype Pollution can be manipulated:\n\n| Type |Origin  |Short description |\n|--|--|--|\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\n\n## Affected environments\n\nThe following environments are susceptible to a Prototype Pollution attack:\n\n-   Application server\n    \n-   Web server\n\n-   Web browser\n    \n\n## How to prevent\n\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\n    \n2.  Require schema validation of JSON input.\n    \n3.  Avoid using unsafe recursive merge functions.\n    \n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\n    \n5.  As a best practice use `Map` instead of `Object`.\n\n### For more information on this vulnerability type:\n\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\nUpgrade `async` to version 2.6.4, 3.2.2 or higher.\n## References\n- [GitHub Backport PR](https://github.com/caolan/async/pull/1828)\n- [GitHub Commit](https://github.com/caolan/async/commit/8f7f90342a6571ba1c197d747ebed30c368096d2)\n- [GitHub Commit](https://github.com/caolan/async/commit/e1ecdbf79264f9ab488c7799f4c76996d5dca66d)\n- [PoC](https://jsfiddle.net/oz5twjd9/)\n",
+          "identifiers": {
+            "CVE": [
+              "CVE-2021-43138"
+            ],
+            "CWE": [
+              "CWE-1321"
+            ]
+          },
+          "packageName": "async",
+          "proprietary": false,
+          "creationTime": "2022-04-07T07:58:38.528444Z",
+          "functions_new": [],
+          "alternativeIds": [],
+          "disclosureTime": "2022-04-07T07:49:24Z",
+          "packageManager": "npm",
+          "publicationTime": "2022-04-07T14:22:18Z",
+          "modificationTime": "2022-11-27T15:35:48.591671Z",
+          "socialTrendAlert": false,
+          "from": [
+            "downloadartifacts@0.0.2",
+            "artifact-engine@0.1.29",
+            "handlebars@4.0.14",
+            "async@2.6.3"
+          ],
+          "upgradePath": [
+            false,
+            "artifact-engine@0.1.29",
+            "handlebars@4.0.14",
+            "async@2.6.4"
+          ],
+          "isUpgradable": true,
+          "isPatchable": false,
+          "isPinnable": false,
+          "isRuntime": false,
+          "name": "async",
+          "version": "2.6.3",
+          "severityWithCritical": "high"
+        },
+        {
+          "id": "SNYK-JS-LODASH-1018905",
+          "title": "Regular Expression Denial of Service (ReDoS)",
+          "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L/E:P",
+          "credit": [
+            "Liyuan Chen"
+          ],
+          "semver": {
+            "vulnerable": [
+              "<4.17.21"
+            ]
+          },
+          "exploit": "Proof of Concept",
+          "fixedIn": [
+            "4.17.21"
+          ],
+          "patches": [],
+          "insights": {
+            "triageAdvice": null
+          },
+          "language": "js",
+          "severity": "medium",
+          "cvssScore": 5.3,
+          "functions": [],
+          "malicious": false,
+          "moduleName": "lodash",
+          "references": [
+            {
+              "url": "https://github.com/lodash/lodash/commit/c4847ebe7d14540bb28a8b932a9ce1b9ecbfee1a",
+              "title": "GitHub Commit"
+            },
+            {
+              "url": "https://github.com/lodash/lodash/pull/5065",
+              "title": "GitHub Fix PR"
+            }
+          ],
+          "cvssDetails": [
+            {
+              "assigner": "NVD",
+              "severity": "medium",
+              "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+              "cvssV3BaseScore": 5.3,
+              "modificationTime": "2022-09-14T01:10:48.134557Z"
+            }
+          ],
+          "description": "## Overview\n[lodash](https://www.npmjs.com/package/lodash) is a modern JavaScript utility library delivering modularity, performance, & extras.\n\nAffected versions of this package are vulnerable to Regular Expression Denial of Service (ReDoS) via the `toNumber`, `trim` and `trimEnd` functions.\r\n\r\n### POC\r\n```\r\nvar lo = require('lodash');\r\n\r\nfunction build_blank (n) {\r\nvar ret = \"1\"\r\nfor (var i = 0; i < n; i++) {\r\nret += \" \"\r\n}\r\n\r\nreturn ret + \"1\";\r\n}\r\n\r\nvar s = build_blank(50000)\r\nvar time0 = Date.now();\r\nlo.trim(s)\r\nvar time_cost0 = Date.now() - time0;\r\nconsole.log(\"time_cost0: \" + time_cost0)\r\n\r\nvar time1 = Date.now();\r\nlo.toNumber(s)\r\nvar time_cost1 = Date.now() - time1;\r\nconsole.log(\"time_cost1: \" + time_cost1)\r\n\r\nvar time2 = Date.now();\r\nlo.trimEnd(s)\r\nvar time_cost2 = Date.now() - time2;\r\nconsole.log(\"time_cost2: \" + time_cost2)\r\n```\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `lodash` to version 4.17.21 or higher.\n## References\n- [GitHub Commit](https://github.com/lodash/lodash/commit/c4847ebe7d14540bb28a8b932a9ce1b9ecbfee1a)\n- [GitHub Fix PR](https://github.com/lodash/lodash/pull/5065)\n",
+          "identifiers": {
+            "CVE": [
+              "CVE-2020-28500"
+            ],
+            "CWE": [
+              "CWE-400"
+            ]
+          },
+          "packageName": "lodash",
+          "proprietary": true,
+          "creationTime": "2020-10-16T16:48:40.985673Z",
+          "functions_new": [],
+          "alternativeIds": [],
+          "disclosureTime": "2020-10-16T16:47:34Z",
+          "packageManager": "npm",
+          "publicationTime": "2021-02-15T11:50:49Z",
+          "modificationTime": "2022-09-14T01:10:48.134557Z",
+          "socialTrendAlert": false,
+          "from": [
+            "downloadartifacts@0.0.2",
+            "artifact-engine@0.1.29",
+            "handlebars@4.0.14",
+            "async@2.6.3",
+            "lodash@4.17.20"
+          ],
+          "upgradePath": [
+            false,
+            "artifact-engine@0.1.29",
+            "handlebars@4.0.14",
+            "async@2.6.3",
+            "lodash@4.17.21"
+          ],
+          "isUpgradable": true,
+          "isPatchable": false,
+          "isPinnable": false,
+          "isRuntime": false,
+          "name": "lodash",
+          "version": "4.17.20",
+          "severityWithCritical": "medium"
+        },
+        {
+          "id": "SNYK-JS-LODASH-1040724",
+          "title": "Command Injection",
+          "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H/E:P/RL:U/RC:C",
+          "credit": [
+            "Marc Hassan"
+          ],
+          "semver": {
+            "vulnerable": [
+              "<4.17.21"
+            ]
+          },
+          "exploit": "Proof of Concept",
+          "fixedIn": [
+            "4.17.21"
+          ],
+          "patches": [],
+          "insights": {
+            "triageAdvice": null
+          },
+          "language": "js",
+          "severity": "high",
+          "cvssScore": 7.2,
+          "functions": [],
+          "malicious": false,
+          "moduleName": "lodash",
+          "references": [
+            {
+              "url": "https://github.com/lodash/lodash/commit/3469357cff396a26c363f8c1b5a91dde28ba4b1c",
+              "title": "GitHub Commit"
+            },
+            {
+              "url": "https://github.com/lodash/lodash/blob/ddfd9b11a0126db2302cb70ec9973b66baec0975/lodash.js%23L14851",
+              "title": "Vulnerable Code"
+            }
+          ],
+          "cvssDetails": [
+            {
+              "assigner": "NVD",
+              "severity": "high",
+              "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
+              "cvssV3BaseScore": 7.2,
+              "modificationTime": "2022-09-14T01:10:48.257735Z"
+            }
+          ],
+          "description": "## Overview\n[lodash](https://www.npmjs.com/package/lodash) is a modern JavaScript utility library delivering modularity, performance, & extras.\n\nAffected versions of this package are vulnerable to Command Injection via `template`.\r\n\r\n### PoC\r\n```js\r\nvar _ = require('lodash');\r\n\r\n_.template('', { variable: '){console.log(process.env)}; with(obj' })()\r\n```\n## Remediation\nUpgrade `lodash` to version 4.17.21 or higher.\n## References\n- [GitHub Commit](https://github.com/lodash/lodash/commit/3469357cff396a26c363f8c1b5a91dde28ba4b1c)\n- [Vulnerable Code](https://github.com/lodash/lodash/blob/ddfd9b11a0126db2302cb70ec9973b66baec0975/lodash.js#L14851)\n",
+          "identifiers": {
+            "CVE": [
+              "CVE-2021-23337"
+            ],
+            "CWE": [
+              "CWE-78"
+            ],
+            "GHSA": [
+              "GHSA-35jh-r3h4-6jhm"
+            ]
+          },
+          "packageName": "lodash",
+          "proprietary": true,
+          "creationTime": "2020-11-17T14:07:17.048472Z",
+          "functions_new": [],
+          "alternativeIds": [],
+          "disclosureTime": "2020-11-17T13:02:10Z",
+          "packageManager": "npm",
+          "publicationTime": "2021-02-15T11:50:50Z",
+          "modificationTime": "2022-09-14T01:10:48.257735Z",
+          "socialTrendAlert": false,
+          "from": [
+            "downloadartifacts@0.0.2",
+            "artifact-engine@0.1.29",
+            "handlebars@4.0.14",
+            "async@2.6.3",
+            "lodash@4.17.20"
+          ],
+          "upgradePath": [
+            false,
+            "artifact-engine@0.1.29",
+            "handlebars@4.0.14",
+            "async@2.6.3",
+            "lodash@4.17.21"
+          ],
+          "isUpgradable": true,
+          "isPatchable": false,
+          "isPinnable": false,
+          "isRuntime": false,
+          "name": "lodash",
+          "version": "4.17.20",
+          "severityWithCritical": "high"
+        },
+        {
+          "id": "SNYK-JS-MINIMIST-2429795",
+          "title": "Prototype Pollution",
+          "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:L/E:P",
+          "credit": [
+            "Unknown"
+          ],
+          "semver": {
+            "vulnerable": [
+              "<1.2.6"
+            ]
+          },
+          "exploit": "Proof of Concept",
+          "fixedIn": [
+            "1.2.6"
+          ],
+          "patches": [],
+          "insights": {
+            "triageAdvice": null
+          },
+          "language": "js",
+          "severity": "low",
+          "cvssScore": 3.7,
+          "functions": [],
+          "malicious": false,
+          "moduleName": "minimist",
+          "references": [
+            {
+              "url": "https://github.com/substack/minimist/commit/c2b981977fa834b223b408cfb860f933c9811e4d",
+              "title": "Fix Commit"
+            },
+            {
+              "url": "https://github.com/substack/minimist/issues/164",
+              "title": "GitHub Issue"
+            },
+            {
+              "url": "https://github.com/substack/minimist/blob/master/index.js%23L69",
+              "title": "Vulnerable Code"
+            }
+          ],
+          "cvssDetails": [
+            {
+              "assigner": "SUSE",
+              "severity": "medium",
+              "cvssV3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
+              "cvssV3BaseScore": 5.6,
+              "modificationTime": "2022-05-18T11:05:33.152638Z"
+            },
+            {
+              "assigner": "NVD",
+              "severity": "critical",
+              "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+              "cvssV3BaseScore": 9.8,
+              "modificationTime": "2022-04-13T01:10:15.021168Z"
+            },
+            {
+              "assigner": "Red Hat",
+              "severity": "high",
+              "cvssV3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+              "cvssV3BaseScore": 8.1,
+              "modificationTime": "2022-11-25T14:17:13.977821Z"
+            }
+          ],
+          "description": "## Overview\n[minimist](https://www.npmjs.com/package/minimist) is a parse argument options module.\n\nAffected versions of this package are vulnerable to Prototype Pollution due to a missing handler to `Function.prototype`.\r\n\r\n**Notes:** \r\n\r\n- This vulnerability is a bypass to [CVE-2020-7598](https://security.snyk.io/vuln/SNYK-JS-MINIMIST-559764)\r\n\r\n- The reason for the different CVSS between CVE-2021-44906 to CVE-2020-7598, is that CVE-2020-7598 can pollute objects, while CVE-2021-44906 can pollute only function.\r\n\r\n\r\n## PoC by Snyk\r\n```js\r\nrequire('minimist')('--_.constructor.constructor.prototype.foo bar'.split(' '));\r\nconsole.log((function(){}).foo); // bar\r\n```\n\n## Details\n\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `__proto__`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\n\nThere are two main ways in which the pollution of prototypes occurs:\n\n-   Unsafe `Object` recursive merge\n    \n-   Property definition by path\n    \n\n### Unsafe Object recursive merge\n\nThe logic of a vulnerable recursive merge function follows the following high-level model:\n```\nmerge (target, source)\n\n  foreach property of source\n\n    if property exists and is an object on both the target and the source\n\n      merge(target[property], source[property])\n\n    else\n\n      target[property] = source[property]\n```\n<br>  \n\nWhen the source object contains a property named `__proto__` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\n\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\n\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\n\n### Property definition by path\n\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\n\nIf the attacker can control the value of “path”, they can set this value to `__proto__.myValue`. `myValue` is then assigned to the prototype of the class of the object.\n\n## Types of attacks\n\nThere are a few methods by which Prototype Pollution can be manipulated:\n\n| Type |Origin  |Short description |\n|--|--|--|\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\n\n## Affected environments\n\nThe following environments are susceptible to a Prototype Pollution attack:\n\n-   Application server\n    \n-   Web server\n\n-   Web browser\n    \n\n## How to prevent\n\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\n    \n2.  Require schema validation of JSON input.\n    \n3.  Avoid using unsafe recursive merge functions.\n    \n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\n    \n5.  As a best practice use `Map` instead of `Object`.\n\n### For more information on this vulnerability type:\n\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\nUpgrade `minimist` to version 1.2.6 or higher.\n## References\n- [Fix Commit](https://github.com/substack/minimist/commit/c2b981977fa834b223b408cfb860f933c9811e4d)\n- [GitHub Issue](https://github.com/substack/minimist/issues/164)\n- [Vulnerable Code](https://github.com/substack/minimist/blob/master/index.js#L69)\n",
+          "identifiers": {
+            "CVE": [
+              "CVE-2021-44906"
+            ],
+            "CWE": [
+              "CWE-1321"
+            ],
+            "SNYK": [
+              "SNYK-JS-MINIMIST-559764"
+            ]
+          },
+          "packageName": "minimist",
+          "proprietary": false,
+          "creationTime": "2022-03-18T13:02:08.840039Z",
+          "functions_new": [],
+          "alternativeIds": [],
+          "disclosureTime": "2022-03-18T12:24:05Z",
+          "packageManager": "npm",
+          "publicationTime": "2022-03-21T12:09:35Z",
+          "modificationTime": "2022-11-25T14:17:13.977821Z",
+          "socialTrendAlert": false,
+          "from": [
+            "downloadartifacts@0.0.2",
+            "artifact-engine@0.1.29",
+            "handlebars@4.0.14",
+            "optimist@0.6.1",
+            "minimist@0.0.10"
+          ],
+          "upgradePath": [],
+          "isUpgradable": false,
+          "isPatchable": false,
+          "isPinnable": false,
+          "isRuntime": false,
+          "name": "minimist",
+          "version": "0.0.10",
+          "severityWithCritical": "low"
+        },
+        {
+          "id": "SNYK-JS-MINIMIST-559764",
+          "title": "Prototype Pollution",
+          "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L/E:P/RL:O/RC:C",
+          "credit": [
+            "Snyk Security Team"
+          ],
+          "semver": {
+            "vulnerable": [
+              "<0.2.1",
+              ">=1.0.0 <1.2.3"
+            ]
+          },
+          "exploit": "Proof of Concept",
+          "fixedIn": [
+            "0.2.1",
+            "1.2.3"
+          ],
+          "patches": [],
+          "insights": {
+            "triageAdvice": null
+          },
+          "language": "js",
+          "severity": "medium",
+          "cvssScore": 5.6,
+          "functions": [
+            {
+              "version": [
+                "<0.2.1",
+                ">=1.0.0 <1.1.1"
+              ],
+              "functionId": {
+                "filePath": "index.js",
+                "className": null,
+                "functionName": "setKey"
+              }
+            },
+            {
+              "version": [
+                "<0.2.1",
+                ">=1.1.1 <1.2.3"
+              ],
+              "functionId": {
+                "filePath": "index.js",
+                "className": null,
+                "functionName": "module.exports.setKey"
+              }
+            }
+          ],
+          "malicious": false,
+          "moduleName": "minimist",
+          "references": [
+            {
+              "url": "https://gist.github.com/Kirill89/47feb345b09bf081317f08dd43403a8a",
+              "title": "Command Injection PoC"
+            },
+            {
+              "url": "https://github.com/substack/minimist/commit/63e7ed05aa4b1889ec2f3b196426db4500cbda94",
+              "title": "GitHub Fix Commit #1"
+            },
+            {
+              "url": "https://github.com/substack/minimist/commit/38a4d1caead72ef99e824bb420a2528eec03d9ab",
+              "title": "GitHub Fix Commit #2"
+            },
+            {
+              "url": "https://snyk.io/blog/prototype-pollution-minimist/",
+              "title": "Snyk Research Blog"
+            }
+          ],
+          "cvssDetails": [
+            {
+              "assigner": "SUSE",
+              "severity": "high",
+              "cvssV3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+              "cvssV3BaseScore": 8.1,
+              "modificationTime": "2022-05-03T23:19:09.248741Z"
+            },
+            {
+              "assigner": "Red Hat",
+              "severity": "medium",
+              "cvssV3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
+              "cvssV3BaseScore": 5.6,
+              "modificationTime": "2022-09-01T16:53:55.159376Z"
+            },
+            {
+              "assigner": "NVD",
+              "severity": "medium",
+              "cvssV3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
+              "cvssV3BaseScore": 5.6,
+              "modificationTime": "2022-04-23T01:11:18.536458Z"
+            }
+          ],
+          "description": "## Overview\n[minimist](https://www.npmjs.com/package/minimist) is a parse argument options module.\n\nAffected versions of this package are vulnerable to Prototype Pollution. The library could be tricked into adding or modifying properties of `Object.prototype` using a `constructor` or `__proto__` payload.\r\n\r\n## PoC by Snyk\r\n```\r\nrequire('minimist')('--__proto__.injected0 value0'.split(' '));\r\nconsole.log(({}).injected0 === 'value0'); // true\r\n\r\nrequire('minimist')('--constructor.prototype.injected1 value1'.split(' '));\r\nconsole.log(({}).injected1 === 'value1'); // true\r\n```\n\n## Details\n\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `__proto__`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\n\nThere are two main ways in which the pollution of prototypes occurs:\n\n-   Unsafe `Object` recursive merge\n    \n-   Property definition by path\n    \n\n### Unsafe Object recursive merge\n\nThe logic of a vulnerable recursive merge function follows the following high-level model:\n```\nmerge (target, source)\n\n  foreach property of source\n\n    if property exists and is an object on both the target and the source\n\n      merge(target[property], source[property])\n\n    else\n\n      target[property] = source[property]\n```\n<br>  \n\nWhen the source object contains a property named `__proto__` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\n\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\n\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\n\n### Property definition by path\n\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\n\nIf the attacker can control the value of “path”, they can set this value to `__proto__.myValue`. `myValue` is then assigned to the prototype of the class of the object.\n\n## Types of attacks\n\nThere are a few methods by which Prototype Pollution can be manipulated:\n\n| Type |Origin  |Short description |\n|--|--|--|\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\n\n## Affected environments\n\nThe following environments are susceptible to a Prototype Pollution attack:\n\n-   Application server\n    \n-   Web server\n\n-   Web browser\n    \n\n## How to prevent\n\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\n    \n2.  Require schema validation of JSON input.\n    \n3.  Avoid using unsafe recursive merge functions.\n    \n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\n    \n5.  As a best practice use `Map` instead of `Object`.\n\n### For more information on this vulnerability type:\n\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\nUpgrade `minimist` to version 0.2.1, 1.2.3 or higher.\n## References\n- [Command Injection PoC](https://gist.github.com/Kirill89/47feb345b09bf081317f08dd43403a8a)\n- [GitHub Fix Commit #1](https://github.com/substack/minimist/commit/63e7ed05aa4b1889ec2f3b196426db4500cbda94)\n- [GitHub Fix Commit #2](https://github.com/substack/minimist/commit/38a4d1caead72ef99e824bb420a2528eec03d9ab)\n- [Snyk Research Blog](https://snyk.io/blog/prototype-pollution-minimist/)\n",
+          "identifiers": {
+            "CVE": [
+              "CVE-2020-7598"
+            ],
+            "CWE": [
+              "CWE-1321"
+            ],
+            "NSP": [
+              "1179"
+            ],
+            "GHSA": [
+              "GHSA-vh95-rmgr-6w4m"
+            ]
+          },
+          "packageName": "minimist",
+          "proprietary": true,
+          "creationTime": "2020-03-11T08:25:47.093051Z",
+          "functions_new": [
+            {
+              "version": [
+                "<0.2.1",
+                ">=1.0.0 <1.1.1"
+              ],
+              "functionId": {
+                "filePath": "index.js",
+                "functionName": "setKey"
+              }
+            },
+            {
+              "version": [
+                "<0.2.1",
+                ">=1.1.1 <1.2.3"
+              ],
+              "functionId": {
+                "filePath": "index.js",
+                "functionName": "module.exports.setKey"
+              }
+            }
+          ],
+          "alternativeIds": [],
+          "disclosureTime": "2020-03-10T08:22:24Z",
+          "packageManager": "npm",
+          "publicationTime": "2020-03-11T08:22:19Z",
+          "modificationTime": "2022-09-01T16:53:55.159376Z",
+          "socialTrendAlert": false,
+          "from": [
+            "downloadartifacts@0.0.2",
+            "artifact-engine@0.1.29",
+            "handlebars@4.0.14",
+            "optimist@0.6.1",
+            "minimist@0.0.10"
+          ],
+          "upgradePath": [],
+          "isUpgradable": false,
+          "isPatchable": false,
+          "isPinnable": false,
+          "isRuntime": false,
+          "name": "minimist",
+          "version": "0.0.10",
+          "severityWithCritical": "medium"
+        },
+        {
+          "id": "SNYK-JS-QS-3153490",
+          "title": "Prototype Poisoning",
+          "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+          "credit": [
+            "BRAUN Nathanael",
+            "BRISSAUD Johan"
+          ],
+          "semver": {
+            "vulnerable": [
+              "<6.2.4",
+              ">=6.3.0 <6.3.3",
+              ">=6.4.0 <6.4.1",
+              ">=6.5.0 <6.5.3",
+              ">=6.6.0 <6.6.1",
+              ">=6.7.0 <6.7.3",
+              ">=6.8.0 <6.8.3",
+              ">=6.9.0 <6.9.7",
+              ">=6.10.0 <6.10.3"
+            ]
+          },
+          "exploit": "Proof of Concept",
+          "fixedIn": [
+            "6.2.4",
+            "6.3.3",
+            "6.4.1",
+            "6.5.3",
+            "6.6.1",
+            "6.7.3",
+            "6.8.3",
+            "6.9.7",
+            "6.10.3"
+          ],
+          "patches": [],
+          "insights": {
+            "triageAdvice": null
+          },
+          "language": "js",
+          "severity": "high",
+          "cvssScore": 7.5,
+          "functions": [],
+          "malicious": false,
+          "moduleName": "qs",
+          "references": [
+            {
+              "url": "https://github.com/ljharb/qs/pull/428",
+              "title": "GitHub PR"
+            },
+            {
+              "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2150323",
+              "title": "RedHat Bugzilla Bug"
+            },
+            {
+              "url": "https://github.com/n8tz/CVE-2022-24999",
+              "title": "Researcher Advisory"
+            }
+          ],
+          "cvssDetails": [
+            {
+              "assigner": "NVD",
+              "severity": "high",
+              "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "cvssV3BaseScore": 7.5,
+              "modificationTime": "2022-11-29T01:11:13.913238Z"
+            },
+            {
+              "assigner": "Red Hat",
+              "severity": "high",
+              "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "cvssV3BaseScore": 7.5,
+              "modificationTime": "2022-12-03T13:46:25.900727Z"
+            }
+          ],
+          "description": "## Overview\n[qs](https://www.npmjs.com/package/qs) is a querystring parser that supports nesting and arrays, with a depth limit.\n\nAffected versions of this package are vulnerable to Prototype Poisoning which allows attackers to cause a Node process to hang, processing an Array object whose prototype has been replaced by one with an excessive length value.\r\n\r\n**Note:** In many typical Express use cases, an unauthenticated remote attacker can place the attack payload in the query string of the URL that is used to visit the application, such as `a[__proto__]=b&a[__proto__]&a[length]=100000000`.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `qs` to version 6.2.4, 6.3.3, 6.4.1, 6.5.3, 6.6.1, 6.7.3, 6.8.3, 6.9.7, 6.10.3 or higher.\n## References\n- [GitHub PR](https://github.com/ljharb/qs/pull/428)\n- [RedHat Bugzilla Bug](https://bugzilla.redhat.com/show_bug.cgi?id=2150323)\n- [Researcher Advisory](https://github.com/n8tz/CVE-2022-24999)\n",
+          "identifiers": {
+            "CVE": [
+              "CVE-2022-24999"
+            ],
+            "CWE": [
+              "CWE-1321"
+            ]
+          },
+          "packageName": "qs",
+          "proprietary": false,
+          "creationTime": "2022-12-04T11:01:47.782869Z",
+          "functions_new": [],
+          "alternativeIds": [],
+          "disclosureTime": "2022-11-26T00:00:00Z",
+          "packageManager": "npm",
+          "publicationTime": "2022-12-04T12:24:32.307833Z",
+          "modificationTime": "2022-12-06T09:33:17.364321Z",
+          "socialTrendAlert": false,
+          "from": [
+            "downloadartifacts@0.0.2",
+            "azure-pipelines-task-lib@2.12.0",
+            "sync-request@3.0.1",
+            "then-request@2.2.0",
+            "qs@6.9.4"
+          ],
+          "upgradePath": [
+            false,
+            "azure-pipelines-task-lib@2.12.0",
+            "sync-request@3.0.1",
+            "then-request@2.2.0",
+            "qs@6.9.7"
+          ],
+          "isUpgradable": true,
+          "isPatchable": false,
+          "isPinnable": false,
+          "isRuntime": false,
+          "name": "qs",
+          "version": "6.9.4",
+          "severityWithCritical": "high"
+        },
+        {
+          "id": "SNYK-JS-UGLIFYJS-1727251",
+          "title": "Regular Expression Denial of Service (ReDoS)",
+          "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+          "credit": [
+            "ready-research"
+          ],
+          "semver": {
+            "vulnerable": [
+              "<3.14.3"
+            ]
+          },
+          "exploit": "Not Defined",
+          "fixedIn": [
+            "3.14.3"
+          ],
+          "patches": [],
+          "insights": {
+            "triageAdvice": null
+          },
+          "language": "js",
+          "severity": "medium",
+          "cvssScore": 5.3,
+          "functions": [],
+          "malicious": false,
+          "moduleName": "uglify-js",
+          "references": [
+            {
+              "url": "https://github.com/mishoo/UglifyJS/commit/157521066fc43cff2feab7ffc1ecea603617606b",
+              "title": "GitHub Commit"
+            },
+            {
+              "url": "https://github.com/mishoo/UglifyJS/issues/5133",
+              "title": "GitHub Issue"
+            },
+            {
+              "url": "https://github.com/mishoo/UglifyJS/pull/5134",
+              "title": "GitHub PR"
+            },
+            {
+              "url": "https://github.com/mishoo/UglifyJS/pull/5135",
+              "title": "GitHub PR"
+            }
+          ],
+          "cvssDetails": [],
+          "description": "## Overview\n[uglify-js](http://npmjs.com/package/uglify-js) is a JavaScript parser, minifier, compressor and beautifier toolkit.\n\nAffected versions of this package are vulnerable to Regular Expression Denial of Service (ReDoS) via the `string_template` and the `decode_template` functions.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `uglify-js` to version 3.14.3 or higher.\n## References\n- [GitHub Commit](https://github.com/mishoo/UglifyJS/commit/157521066fc43cff2feab7ffc1ecea603617606b)\n- [GitHub Issue](https://github.com/mishoo/UglifyJS/issues/5133)\n- [GitHub PR](https://github.com/mishoo/UglifyJS/pull/5134)\n- [GitHub PR](https://github.com/mishoo/UglifyJS/pull/5135)\n",
+          "identifiers": {
+            "CVE": [],
+            "CWE": [
+              "CWE-1333"
+            ]
+          },
+          "packageName": "uglify-js",
+          "proprietary": false,
+          "creationTime": "2021-09-30T14:25:50.130236Z",
+          "functions_new": [],
+          "alternativeIds": [],
+          "disclosureTime": "2021-09-30T14:22:21Z",
+          "packageManager": "npm",
+          "publicationTime": "2021-11-09T18:42:15.313328Z",
+          "modificationTime": "2021-11-09T18:42:15.332622Z",
+          "socialTrendAlert": false,
+          "from": [
+            "downloadartifacts@0.0.2",
+            "artifact-engine@0.1.29",
+            "handlebars@4.0.14",
+            "uglify-js@3.12.1"
+          ],
+          "upgradePath": [
+            false,
+            "artifact-engine@0.1.29",
+            "handlebars@4.0.14",
+            "uglify-js@3.14.3"
+          ],
+          "isUpgradable": true,
+          "isPatchable": false,
+          "isPinnable": false,
+          "isRuntime": false,
+          "name": "uglify-js",
+          "version": "3.12.1",
+          "severityWithCritical": "medium"
+        }
+      ],
+      "upgrade": {
+        "artifact-engine@0.1.29": {
+          "upgradeTo": "artifact-engine@1.0.0",
+          "upgrades": [
+            "handlebars@4.0.14",
+            "handlebars@4.0.14",
+            "handlebars@4.0.14",
+            "handlebars@4.0.14",
+            "handlebars@4.0.14",
+            "handlebars@4.0.14",
+            "handlebars@4.0.14",
+            "minimatch@3.0.4",
+            "shelljs@0.3.0"
+          ],
+          "vulns": [
+            "SNYK-JS-HANDLEBARS-1056767",
+            "SNYK-JS-HANDLEBARS-1279029",
+            "SNYK-JS-HANDLEBARS-469063",
+            "SNYK-JS-HANDLEBARS-480388",
+            "SNYK-JS-HANDLEBARS-534478",
+            "SNYK-JS-HANDLEBARS-534988",
+            "SNYK-JS-HANDLEBARS-567742",
+            "SNYK-JS-MINIMATCH-3050818",
+            "SNYK-JS-SHELLJS-2332187"
+          ]
+        },
+        "azure-devops-node-api@7.2.0": {
+          "upgradeTo": "azure-devops-node-api@10.2.2",
+          "upgrades": [
+            "underscore@1.8.3"
+          ],
+          "vulns": [
+            "SNYK-JS-UNDERSCORE-1080984"
+          ]
+        },
+        "azure-pipelines-task-lib@2.12.0": {
+          "upgradeTo": "azure-pipelines-task-lib@3.3.1",
+          "upgrades": [
+            "minimatch@3.0.4",
+            "shelljs@0.3.0"
+          ],
+          "vulns": [
+            "SNYK-JS-MINIMATCH-3050818",
+            "SNYK-JS-SHELLJS-2332187"
+          ]
+        },
+        "decompress-zip@0.3.0": {
+          "upgradeTo": "decompress-zip@0.3.2",
+          "upgrades": [
+            "decompress-zip@0.3.0"
+          ],
+          "vulns": [
+            "SNYK-JS-DECOMPRESSZIP-73598"
+          ]
+        }
+      },
+      "patch": {},
+      "ignore": {},
+      "pin": {}
+    },
+    "filesystemPolicy": false,
+    "filtered": {
+      "ignore": [],
+      "patch": []
+    },
+    "uniqueCount": 18,
+    "projectName": "downloadartifacts",
+    "foundProjectCount": 1,
+    "displayTargetFile": "DownloadArtifacts\\package-lock.json",
+    "hasUnknownVersions": false,
+    "path": "C:\\Users\\JesseHouwing\\source\\extension-securiry\\vsixs\\qicu\\download-artifacts-6666\\0.0.6"
+  },
+  {
+    "vulnerabilities": [],
+    "ok": true,
+    "dependencyCount": 0,
+    "org": "global-devops-bootcamp",
+    "policy": "# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.25.0\nignore: {}\npatch: {}\n",
+    "isPrivate": true,
+    "licensesPolicy": {
+      "severities": {},
+      "orgLicenseRules": {
+        "AGPL-1.0": {
+          "licenseType": "AGPL-1.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "AGPL-3.0": {
+          "licenseType": "AGPL-3.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "Artistic-1.0": {
+          "licenseType": "Artistic-1.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "Artistic-2.0": {
+          "licenseType": "Artistic-2.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "CDDL-1.0": {
+          "licenseType": "CDDL-1.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "CPOL-1.02": {
+          "licenseType": "CPOL-1.02",
+          "severity": "high",
+          "instructions": ""
+        },
+        "EPL-1.0": {
+          "licenseType": "EPL-1.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "GPL-2.0": {
+          "licenseType": "GPL-2.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "GPL-3.0": {
+          "licenseType": "GPL-3.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "LGPL-2.0": {
+          "licenseType": "LGPL-2.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-2.1": {
+          "licenseType": "LGPL-2.1",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-2.1+": {
+          "licenseType": "LGPL-2.1+",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-3.0": {
+          "licenseType": "LGPL-3.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-3.0+": {
+          "licenseType": "LGPL-3.0+",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "MPL-1.1": {
+          "licenseType": "MPL-1.1",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "MPL-2.0": {
+          "licenseType": "MPL-2.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "MS-RL": {
+          "licenseType": "MS-RL",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "SimPL-2.0": {
+          "licenseType": "SimPL-2.0",
+          "severity": "high",
+          "instructions": ""
+        }
+      }
+    },
+    "packageManager": "npm",
+    "ignoreSettings": {
+      "adminOnly": false,
+      "reasonRequired": false,
+      "disregardFilesystemIgnores": false
+    },
+    "summary": "No known vulnerabilities",
+    "filesystemPolicy": false,
+    "uniqueCount": 0,
+    "projectName": "download-build-artifacts-tests",
+    "foundProjectCount": 1,
+    "displayTargetFile": "DownloadArtifacts\\Tests\\package-lock.json",
+    "hasUnknownVersions": false,
+    "path": "C:\\Users\\JesseHouwing\\source\\extension-securiry\\vsixs\\qicu\\download-artifacts-6666\\0.0.6"
+  }
+]

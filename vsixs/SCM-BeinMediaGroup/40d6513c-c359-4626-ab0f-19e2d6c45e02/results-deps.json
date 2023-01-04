@@ -1,0 +1,303 @@
+{
+  "vulnerabilities": [
+    {
+      "id": "SNYK-JS-DECODEURICOMPONENT-3149970",
+      "title": "Denial of Service (DoS)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+      "credit": [
+        "KatsuragiCSL"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<0.2.2"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "0.2.2"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "decode-uri-component",
+      "references": [
+        {
+          "url": "https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/SamVerschueren/decode-uri-component/issues/5",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/sindresorhus/query-string/issues/345",
+          "title": "GitHub Issue"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-12-02T01:11:11.714842Z"
+        }
+      ],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Denial of Service (DoS) due to improper input validation, when the hash string `# kun%ea%ba%5a%ba` is being parsed by `decodeUriComponent`.\r\n\r\n## PoC\r\n```js\r\nconst decodeUriComponent = require('decode-uri-component');\r\n\r\nvar x = decodeUriComponent('%ea%ba%5a%ba');\r\n\r\nconsole.log(x);\r\n```\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `decode-uri-component` to version 0.2.2 or higher.\n## References\n- [GitHub Commit](https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152)\n- [GitHub Issue](https://github.com/SamVerschueren/decode-uri-component/issues/5)\n- [GitHub Issue](https://github.com/sindresorhus/query-string/issues/345)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-38900"
+        ],
+        "CWE": [
+          "CWE-400"
+        ]
+      },
+      "packageName": "decode-uri-component",
+      "proprietary": false,
+      "creationTime": "2022-11-28T14:24:36.010219Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-11-28T14:06:23Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-11-28T16:12:34.614831Z",
+      "modificationTime": "2022-12-02T09:02:03.162272Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "test-pipeline-trigger@1.0.0",
+        "jira-connector@3.1.0",
+        "query-string@6.14.1",
+        "decode-uri-component@0.2.0"
+      ],
+      "upgradePath": [
+        false,
+        "jira-connector@3.1.0",
+        "query-string@6.14.1",
+        "decode-uri-component@0.2.2"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "decode-uri-component",
+      "version": "0.2.0"
+    }
+  ],
+  "ok": false,
+  "dependencyCount": 316,
+  "org": "global-devops-bootcamp",
+  "policy": "# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.25.0\nignore: {}\npatch: {}\n",
+  "isPrivate": true,
+  "licensesPolicy": {
+    "severities": {},
+    "orgLicenseRules": {
+      "AGPL-1.0": {
+        "licenseType": "AGPL-1.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "AGPL-3.0": {
+        "licenseType": "AGPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "Artistic-1.0": {
+        "licenseType": "Artistic-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "Artistic-2.0": {
+        "licenseType": "Artistic-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CDDL-1.0": {
+        "licenseType": "CDDL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CPOL-1.02": {
+        "licenseType": "CPOL-1.02",
+        "severity": "high",
+        "instructions": ""
+      },
+      "EPL-1.0": {
+        "licenseType": "EPL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "GPL-2.0": {
+        "licenseType": "GPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "GPL-3.0": {
+        "licenseType": "GPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "LGPL-2.0": {
+        "licenseType": "LGPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1": {
+        "licenseType": "LGPL-2.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1+": {
+        "licenseType": "LGPL-2.1+",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0": {
+        "licenseType": "LGPL-3.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0+": {
+        "licenseType": "LGPL-3.0+",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-1.1": {
+        "licenseType": "MPL-1.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-2.0": {
+        "licenseType": "MPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MS-RL": {
+        "licenseType": "MS-RL",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "SimPL-2.0": {
+        "licenseType": "SimPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      }
+    }
+  },
+  "packageManager": "npm",
+  "ignoreSettings": {
+    "adminOnly": false,
+    "reasonRequired": false,
+    "disregardFilesystemIgnores": false
+  },
+  "summary": "1 vulnerable dependency path",
+  "remediation": {
+    "unresolved": [
+      {
+        "id": "SNYK-JS-DECODEURICOMPONENT-3149970",
+        "title": "Denial of Service (DoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+        "credit": [
+          "KatsuragiCSL"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<0.2.2"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "0.2.2"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "decode-uri-component",
+        "references": [
+          {
+            "url": "https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/SamVerschueren/decode-uri-component/issues/5",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://github.com/sindresorhus/query-string/issues/345",
+            "title": "GitHub Issue"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-12-02T01:11:11.714842Z"
+          }
+        ],
+        "description": "## Overview\n\nAffected versions of this package are vulnerable to Denial of Service (DoS) due to improper input validation, when the hash string `# kun%ea%ba%5a%ba` is being parsed by `decodeUriComponent`.\r\n\r\n## PoC\r\n```js\r\nconst decodeUriComponent = require('decode-uri-component');\r\n\r\nvar x = decodeUriComponent('%ea%ba%5a%ba');\r\n\r\nconsole.log(x);\r\n```\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `decode-uri-component` to version 0.2.2 or higher.\n## References\n- [GitHub Commit](https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152)\n- [GitHub Issue](https://github.com/SamVerschueren/decode-uri-component/issues/5)\n- [GitHub Issue](https://github.com/sindresorhus/query-string/issues/345)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-38900"
+          ],
+          "CWE": [
+            "CWE-400"
+          ]
+        },
+        "packageName": "decode-uri-component",
+        "proprietary": false,
+        "creationTime": "2022-11-28T14:24:36.010219Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-11-28T14:06:23Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-11-28T16:12:34.614831Z",
+        "modificationTime": "2022-12-02T09:02:03.162272Z",
+        "socialTrendAlert": false,
+        "from": [
+          "test-pipeline-trigger@1.0.0",
+          "jira-connector@3.1.0",
+          "query-string@6.14.1",
+          "decode-uri-component@0.2.0"
+        ],
+        "upgradePath": [
+          false,
+          "jira-connector@3.1.0",
+          "query-string@6.14.1",
+          "decode-uri-component@0.2.2"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "decode-uri-component",
+        "version": "0.2.0",
+        "severityWithCritical": "high"
+      }
+    ],
+    "upgrade": {},
+    "patch": {},
+    "ignore": {},
+    "pin": {}
+  },
+  "filesystemPolicy": false,
+  "filtered": {
+    "ignore": [],
+    "patch": []
+  },
+  "uniqueCount": 1,
+  "projectName": "test-pipeline-trigger",
+  "displayTargetFile": "src\\package-lock.json",
+  "hasUnknownVersions": false,
+  "path": "C:\\Users\\JesseHouwing\\source\\extension-securiry\\vsixs\\SCM-BeinMediaGroup\\40d6513c-c359-4626-ab0f-19e2d6c45e02\\0.2.4"
+}

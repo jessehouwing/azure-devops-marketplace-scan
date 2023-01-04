@@ -1,0 +1,1525 @@
+{
+  "vulnerabilities": [
+    {
+      "id": "SNYK-JS-DECODEURICOMPONENT-3149970",
+      "title": "Denial of Service (DoS)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+      "credit": [
+        "KatsuragiCSL"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<0.2.2"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "0.2.2"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "decode-uri-component",
+      "references": [
+        {
+          "url": "https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/SamVerschueren/decode-uri-component/issues/5",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/sindresorhus/query-string/issues/345",
+          "title": "GitHub Issue"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-12-02T01:11:11.714842Z"
+        }
+      ],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Denial of Service (DoS) due to improper input validation, when the hash string `# kun%ea%ba%5a%ba` is being parsed by `decodeUriComponent`.\r\n\r\n## PoC\r\n```js\r\nconst decodeUriComponent = require('decode-uri-component');\r\n\r\nvar x = decodeUriComponent('%ea%ba%5a%ba');\r\n\r\nconsole.log(x);\r\n```\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `decode-uri-component` to version 0.2.2 or higher.\n## References\n- [GitHub Commit](https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152)\n- [GitHub Issue](https://github.com/SamVerschueren/decode-uri-component/issues/5)\n- [GitHub Issue](https://github.com/sindresorhus/query-string/issues/345)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-38900"
+        ],
+        "CWE": [
+          "CWE-400"
+        ]
+      },
+      "packageName": "decode-uri-component",
+      "proprietary": false,
+      "creationTime": "2022-11-28T14:24:36.010219Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-11-28T14:06:23Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-11-28T16:12:34.614831Z",
+      "modificationTime": "2022-12-02T09:02:03.162272Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "cxsast@2022.4.1",
+        "snapdragon@0.12.1",
+        "source-map-resolve@0.6.0",
+        "decode-uri-component@0.2.0"
+      ],
+      "upgradePath": [
+        false,
+        "snapdragon@0.12.1",
+        "source-map-resolve@0.6.0",
+        "decode-uri-component@0.2.2"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "decode-uri-component",
+      "version": "0.2.0"
+    },
+    {
+      "id": "SNYK-JS-DECODEURICOMPONENT-3149970",
+      "title": "Denial of Service (DoS)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+      "credit": [
+        "KatsuragiCSL"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<0.2.2"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "0.2.2"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "decode-uri-component",
+      "references": [
+        {
+          "url": "https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/SamVerschueren/decode-uri-component/issues/5",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/sindresorhus/query-string/issues/345",
+          "title": "GitHub Issue"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-12-02T01:11:11.714842Z"
+        }
+      ],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Denial of Service (DoS) due to improper input validation, when the hash string `# kun%ea%ba%5a%ba` is being parsed by `decodeUriComponent`.\r\n\r\n## PoC\r\n```js\r\nconst decodeUriComponent = require('decode-uri-component');\r\n\r\nvar x = decodeUriComponent('%ea%ba%5a%ba');\r\n\r\nconsole.log(x);\r\n```\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `decode-uri-component` to version 0.2.2 or higher.\n## References\n- [GitHub Commit](https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152)\n- [GitHub Issue](https://github.com/SamVerschueren/decode-uri-component/issues/5)\n- [GitHub Issue](https://github.com/sindresorhus/query-string/issues/345)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-38900"
+        ],
+        "CWE": [
+          "CWE-400"
+        ]
+      },
+      "packageName": "decode-uri-component",
+      "proprietary": false,
+      "creationTime": "2022-11-28T14:24:36.010219Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-11-28T14:06:23Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-11-28T16:12:34.614831Z",
+      "modificationTime": "2022-12-02T09:02:03.162272Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "cxsast@2022.4.1",
+        "@checkmarx/cx-common-js-client@0.1.79",
+        "snapdragon@0.12.1",
+        "source-map-resolve@0.6.0",
+        "decode-uri-component@0.2.0"
+      ],
+      "upgradePath": [
+        false,
+        "@checkmarx/cx-common-js-client@0.1.79",
+        "snapdragon@0.12.1",
+        "source-map-resolve@0.6.0",
+        "decode-uri-component@0.2.2"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "decode-uri-component",
+      "version": "0.2.0"
+    },
+    {
+      "id": "SNYK-JS-DECODEURICOMPONENT-3149970",
+      "title": "Denial of Service (DoS)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+      "credit": [
+        "KatsuragiCSL"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<0.2.2"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "0.2.2"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "decode-uri-component",
+      "references": [
+        {
+          "url": "https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/SamVerschueren/decode-uri-component/issues/5",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/sindresorhus/query-string/issues/345",
+          "title": "GitHub Issue"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-12-02T01:11:11.714842Z"
+        }
+      ],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Denial of Service (DoS) due to improper input validation, when the hash string `# kun%ea%ba%5a%ba` is being parsed by `decodeUriComponent`.\r\n\r\n## PoC\r\n```js\r\nconst decodeUriComponent = require('decode-uri-component');\r\n\r\nvar x = decodeUriComponent('%ea%ba%5a%ba');\r\n\r\nconsole.log(x);\r\n```\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `decode-uri-component` to version 0.2.2 or higher.\n## References\n- [GitHub Commit](https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152)\n- [GitHub Issue](https://github.com/SamVerschueren/decode-uri-component/issues/5)\n- [GitHub Issue](https://github.com/sindresorhus/query-string/issues/345)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-38900"
+        ],
+        "CWE": [
+          "CWE-400"
+        ]
+      },
+      "packageName": "decode-uri-component",
+      "proprietary": false,
+      "creationTime": "2022-11-28T14:24:36.010219Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-11-28T14:06:23Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-11-28T16:12:34.614831Z",
+      "modificationTime": "2022-12-02T09:02:03.162272Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "cxsast@2022.4.1",
+        "@checkmarx/cx-common-js-client@0.1.79",
+        "micromatch@3.1.10",
+        "snapdragon@0.8.2",
+        "source-map-resolve@0.5.3",
+        "decode-uri-component@0.2.0"
+      ],
+      "upgradePath": [
+        false,
+        "@checkmarx/cx-common-js-client@0.1.79",
+        "micromatch@3.1.10",
+        "snapdragon@0.8.2",
+        "source-map-resolve@0.5.3",
+        "decode-uri-component@0.2.2"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "decode-uri-component",
+      "version": "0.2.0"
+    },
+    {
+      "id": "SNYK-JS-DECODEURICOMPONENT-3149970",
+      "title": "Denial of Service (DoS)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+      "credit": [
+        "KatsuragiCSL"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<0.2.2"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "0.2.2"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "decode-uri-component",
+      "references": [
+        {
+          "url": "https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/SamVerschueren/decode-uri-component/issues/5",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/sindresorhus/query-string/issues/345",
+          "title": "GitHub Issue"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-12-02T01:11:11.714842Z"
+        }
+      ],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Denial of Service (DoS) due to improper input validation, when the hash string `# kun%ea%ba%5a%ba` is being parsed by `decodeUriComponent`.\r\n\r\n## PoC\r\n```js\r\nconst decodeUriComponent = require('decode-uri-component');\r\n\r\nvar x = decodeUriComponent('%ea%ba%5a%ba');\r\n\r\nconsole.log(x);\r\n```\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `decode-uri-component` to version 0.2.2 or higher.\n## References\n- [GitHub Commit](https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152)\n- [GitHub Issue](https://github.com/SamVerschueren/decode-uri-component/issues/5)\n- [GitHub Issue](https://github.com/sindresorhus/query-string/issues/345)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-38900"
+        ],
+        "CWE": [
+          "CWE-400"
+        ]
+      },
+      "packageName": "decode-uri-component",
+      "proprietary": false,
+      "creationTime": "2022-11-28T14:24:36.010219Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-11-28T14:06:23Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-11-28T16:12:34.614831Z",
+      "modificationTime": "2022-12-02T09:02:03.162272Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "cxsast@2022.4.1",
+        "@checkmarx/cx-common-js-client@0.1.79",
+        "micromatch@3.1.10",
+        "braces@2.3.2",
+        "snapdragon@0.8.2",
+        "source-map-resolve@0.5.3",
+        "decode-uri-component@0.2.0"
+      ],
+      "upgradePath": [
+        false,
+        "@checkmarx/cx-common-js-client@0.1.79",
+        "micromatch@3.1.10",
+        "braces@2.3.2",
+        "snapdragon@0.8.2",
+        "source-map-resolve@0.5.3",
+        "decode-uri-component@0.2.2"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "decode-uri-component",
+      "version": "0.2.0"
+    },
+    {
+      "id": "SNYK-JS-DECODEURICOMPONENT-3149970",
+      "title": "Denial of Service (DoS)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+      "credit": [
+        "KatsuragiCSL"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<0.2.2"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "0.2.2"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "decode-uri-component",
+      "references": [
+        {
+          "url": "https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/SamVerschueren/decode-uri-component/issues/5",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/sindresorhus/query-string/issues/345",
+          "title": "GitHub Issue"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-12-02T01:11:11.714842Z"
+        }
+      ],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Denial of Service (DoS) due to improper input validation, when the hash string `# kun%ea%ba%5a%ba` is being parsed by `decodeUriComponent`.\r\n\r\n## PoC\r\n```js\r\nconst decodeUriComponent = require('decode-uri-component');\r\n\r\nvar x = decodeUriComponent('%ea%ba%5a%ba');\r\n\r\nconsole.log(x);\r\n```\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `decode-uri-component` to version 0.2.2 or higher.\n## References\n- [GitHub Commit](https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152)\n- [GitHub Issue](https://github.com/SamVerschueren/decode-uri-component/issues/5)\n- [GitHub Issue](https://github.com/sindresorhus/query-string/issues/345)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-38900"
+        ],
+        "CWE": [
+          "CWE-400"
+        ]
+      },
+      "packageName": "decode-uri-component",
+      "proprietary": false,
+      "creationTime": "2022-11-28T14:24:36.010219Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-11-28T14:06:23Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-11-28T16:12:34.614831Z",
+      "modificationTime": "2022-12-02T09:02:03.162272Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "cxsast@2022.4.1",
+        "@checkmarx/cx-common-js-client@0.1.79",
+        "micromatch@3.1.10",
+        "extglob@2.0.4",
+        "snapdragon@0.8.2",
+        "source-map-resolve@0.5.3",
+        "decode-uri-component@0.2.0"
+      ],
+      "upgradePath": [
+        false,
+        "@checkmarx/cx-common-js-client@0.1.79",
+        "micromatch@3.1.10",
+        "extglob@2.0.4",
+        "snapdragon@0.8.2",
+        "source-map-resolve@0.5.3",
+        "decode-uri-component@0.2.2"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "decode-uri-component",
+      "version": "0.2.0"
+    },
+    {
+      "id": "SNYK-JS-DECODEURICOMPONENT-3149970",
+      "title": "Denial of Service (DoS)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+      "credit": [
+        "KatsuragiCSL"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<0.2.2"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "0.2.2"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "decode-uri-component",
+      "references": [
+        {
+          "url": "https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/SamVerschueren/decode-uri-component/issues/5",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/sindresorhus/query-string/issues/345",
+          "title": "GitHub Issue"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-12-02T01:11:11.714842Z"
+        }
+      ],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Denial of Service (DoS) due to improper input validation, when the hash string `# kun%ea%ba%5a%ba` is being parsed by `decodeUriComponent`.\r\n\r\n## PoC\r\n```js\r\nconst decodeUriComponent = require('decode-uri-component');\r\n\r\nvar x = decodeUriComponent('%ea%ba%5a%ba');\r\n\r\nconsole.log(x);\r\n```\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `decode-uri-component` to version 0.2.2 or higher.\n## References\n- [GitHub Commit](https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152)\n- [GitHub Issue](https://github.com/SamVerschueren/decode-uri-component/issues/5)\n- [GitHub Issue](https://github.com/sindresorhus/query-string/issues/345)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-38900"
+        ],
+        "CWE": [
+          "CWE-400"
+        ]
+      },
+      "packageName": "decode-uri-component",
+      "proprietary": false,
+      "creationTime": "2022-11-28T14:24:36.010219Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-11-28T14:06:23Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-11-28T16:12:34.614831Z",
+      "modificationTime": "2022-12-02T09:02:03.162272Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "cxsast@2022.4.1",
+        "@checkmarx/cx-common-js-client@0.1.79",
+        "micromatch@3.1.10",
+        "nanomatch@1.2.13",
+        "snapdragon@0.8.2",
+        "source-map-resolve@0.5.3",
+        "decode-uri-component@0.2.0"
+      ],
+      "upgradePath": [
+        false,
+        "@checkmarx/cx-common-js-client@0.1.79",
+        "micromatch@3.1.10",
+        "nanomatch@1.2.13",
+        "snapdragon@0.8.2",
+        "source-map-resolve@0.5.3",
+        "decode-uri-component@0.2.2"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "decode-uri-component",
+      "version": "0.2.0"
+    },
+    {
+      "id": "SNYK-JS-DECODEURICOMPONENT-3149970",
+      "title": "Denial of Service (DoS)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+      "credit": [
+        "KatsuragiCSL"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<0.2.2"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "0.2.2"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "decode-uri-component",
+      "references": [
+        {
+          "url": "https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/SamVerschueren/decode-uri-component/issues/5",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/sindresorhus/query-string/issues/345",
+          "title": "GitHub Issue"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-12-02T01:11:11.714842Z"
+        }
+      ],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Denial of Service (DoS) due to improper input validation, when the hash string `# kun%ea%ba%5a%ba` is being parsed by `decodeUriComponent`.\r\n\r\n## PoC\r\n```js\r\nconst decodeUriComponent = require('decode-uri-component');\r\n\r\nvar x = decodeUriComponent('%ea%ba%5a%ba');\r\n\r\nconsole.log(x);\r\n```\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `decode-uri-component` to version 0.2.2 or higher.\n## References\n- [GitHub Commit](https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152)\n- [GitHub Issue](https://github.com/SamVerschueren/decode-uri-component/issues/5)\n- [GitHub Issue](https://github.com/sindresorhus/query-string/issues/345)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-38900"
+        ],
+        "CWE": [
+          "CWE-400"
+        ]
+      },
+      "packageName": "decode-uri-component",
+      "proprietary": false,
+      "creationTime": "2022-11-28T14:24:36.010219Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-11-28T14:06:23Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-11-28T16:12:34.614831Z",
+      "modificationTime": "2022-12-02T09:02:03.162272Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "cxsast@2022.4.1",
+        "@checkmarx/cx-common-js-client@0.1.79",
+        "micromatch@3.1.10",
+        "extglob@2.0.4",
+        "expand-brackets@2.1.4",
+        "snapdragon@0.8.2",
+        "source-map-resolve@0.5.3",
+        "decode-uri-component@0.2.0"
+      ],
+      "upgradePath": [
+        false,
+        "@checkmarx/cx-common-js-client@0.1.79",
+        "micromatch@3.1.10",
+        "extglob@2.0.4",
+        "expand-brackets@2.1.4",
+        "snapdragon@0.8.2",
+        "source-map-resolve@0.5.3",
+        "decode-uri-component@0.2.2"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "decode-uri-component",
+      "version": "0.2.0"
+    },
+    {
+      "id": "SNYK-JS-PACRESOLVER-1564857",
+      "title": "Remote Code Execution (RCE)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H/E:P",
+      "credit": [
+        "Tim Perry"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<5.0.0"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "5.0.0"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 8.1,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "pac-resolver",
+      "references": [
+        {
+          "url": "https://github.com/TooTallNate/node-degenerator/commit/ccc3445354135398b6eb1a04c7d27c13b833f2d5",
+          "title": "GitHub Commit #1"
+        },
+        {
+          "url": "https://github.com/TooTallNate/node-degenerator/commit/9d25bb67d957bc2e5425fea7bf7a58b3fc64ff9e",
+          "title": "GitHub Commit #2"
+        },
+        {
+          "url": "https://github.com/TooTallNate/node-pac-resolver/releases/tag/5.0.0",
+          "title": "Github Release"
+        },
+        {
+          "url": "https://httptoolkit.tech/blog/npm-pac-proxy-agent-vulnerability/",
+          "title": "Researcher Blog"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "critical",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cvssV3BaseScore": 9.8,
+          "modificationTime": "2022-01-03T16:36:10.371971Z"
+        }
+      ],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Remote Code Execution (RCE). This can occur when used with untrusted input, due to unsafe PAC file handling.\r\n\r\nIn order to exploit this vulnerability in practice, this either requires an attacker on your local network, a specific vulnerable configuration, or some second vulnerability that allows an attacker to set your config values.\r\n\r\n**NOTE:** The fix for this vulnerability is applied in the `node-degenerator` library, a dependency is written by the same maintainer. \r\n\r\n\r\n### PoC\r\n```js\r\nconst pac = require('pac-resolver');\r\n\r\n// Should keep running forever (if not vulnerable):\r\nsetInterval(() => {\r\n    console.log(\"Still running\");\r\n}, 1000);\r\n\r\n// Parsing a malicious PAC file unexpectedly executes unsandboxed code:\r\npac(`\r\n    // Real PAC config:\r\n    function FindProxyForURL(url, host) {\r\n        return \"DIRECT\";\r\n    }\r\n\r\n    // But also run arbitrary code:\r\n    var f = this.constructor.constructor(\\`\r\n        // Running outside the sandbox:\r\n        console.log('Read env vars:', process.env);\r\n        console.log('!!! PAC file is running arbitrary code !!!');\r\n        console.log('Can read & could exfiltrate env vars ^');\r\n        console.log('Can kill parsing process, like so:');\r\n        process.exit(100); // Kill the vulnerable process\r\n        // etc etc\r\n    \\`);\r\n\r\n    f();\r\n\r\n```\n## Remediation\nUpgrade `pac-resolver` to version 5.0.0 or higher.\n## References\n- [GitHub Commit #1](https://github.com/TooTallNate/node-degenerator/commit/ccc3445354135398b6eb1a04c7d27c13b833f2d5)\n- [GitHub Commit #2](https://github.com/TooTallNate/node-degenerator/commit/9d25bb67d957bc2e5425fea7bf7a58b3fc64ff9e)\n- [Github Release](https://github.com/TooTallNate/node-pac-resolver/releases/tag/5.0.0)\n- [Researcher Blog](https://httptoolkit.tech/blog/npm-pac-proxy-agent-vulnerability/)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2021-23406"
+        ],
+        "CWE": [
+          "CWE-94"
+        ]
+      },
+      "packageName": "pac-resolver",
+      "proprietary": true,
+      "creationTime": "2021-08-15T12:18:11.115775Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2021-05-30T13:37:37Z",
+      "packageManager": "npm",
+      "publicationTime": "2021-08-22T13:26:31Z",
+      "modificationTime": "2022-03-13T12:34:39.028969Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "cxsast@2022.4.1",
+        "@checkmarx/cx-common-js-client@0.1.79",
+        "proxy-agent@4.0.1",
+        "pac-proxy-agent@4.1.0",
+        "pac-resolver@4.2.0"
+      ],
+      "upgradePath": [
+        false,
+        "@checkmarx/cx-common-js-client@0.1.610"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "pac-resolver",
+      "version": "4.2.0"
+    },
+    {
+      "id": "SNYK-JS-PACRESOLVER-1564857",
+      "title": "Remote Code Execution (RCE)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H/E:P",
+      "credit": [
+        "Tim Perry"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<5.0.0"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "5.0.0"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 8.1,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "pac-resolver",
+      "references": [
+        {
+          "url": "https://github.com/TooTallNate/node-degenerator/commit/ccc3445354135398b6eb1a04c7d27c13b833f2d5",
+          "title": "GitHub Commit #1"
+        },
+        {
+          "url": "https://github.com/TooTallNate/node-degenerator/commit/9d25bb67d957bc2e5425fea7bf7a58b3fc64ff9e",
+          "title": "GitHub Commit #2"
+        },
+        {
+          "url": "https://github.com/TooTallNate/node-pac-resolver/releases/tag/5.0.0",
+          "title": "Github Release"
+        },
+        {
+          "url": "https://httptoolkit.tech/blog/npm-pac-proxy-agent-vulnerability/",
+          "title": "Researcher Blog"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "critical",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cvssV3BaseScore": 9.8,
+          "modificationTime": "2022-01-03T16:36:10.371971Z"
+        }
+      ],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Remote Code Execution (RCE). This can occur when used with untrusted input, due to unsafe PAC file handling.\r\n\r\nIn order to exploit this vulnerability in practice, this either requires an attacker on your local network, a specific vulnerable configuration, or some second vulnerability that allows an attacker to set your config values.\r\n\r\n**NOTE:** The fix for this vulnerability is applied in the `node-degenerator` library, a dependency is written by the same maintainer. \r\n\r\n\r\n### PoC\r\n```js\r\nconst pac = require('pac-resolver');\r\n\r\n// Should keep running forever (if not vulnerable):\r\nsetInterval(() => {\r\n    console.log(\"Still running\");\r\n}, 1000);\r\n\r\n// Parsing a malicious PAC file unexpectedly executes unsandboxed code:\r\npac(`\r\n    // Real PAC config:\r\n    function FindProxyForURL(url, host) {\r\n        return \"DIRECT\";\r\n    }\r\n\r\n    // But also run arbitrary code:\r\n    var f = this.constructor.constructor(\\`\r\n        // Running outside the sandbox:\r\n        console.log('Read env vars:', process.env);\r\n        console.log('!!! PAC file is running arbitrary code !!!');\r\n        console.log('Can read & could exfiltrate env vars ^');\r\n        console.log('Can kill parsing process, like so:');\r\n        process.exit(100); // Kill the vulnerable process\r\n        // etc etc\r\n    \\`);\r\n\r\n    f();\r\n\r\n```\n## Remediation\nUpgrade `pac-resolver` to version 5.0.0 or higher.\n## References\n- [GitHub Commit #1](https://github.com/TooTallNate/node-degenerator/commit/ccc3445354135398b6eb1a04c7d27c13b833f2d5)\n- [GitHub Commit #2](https://github.com/TooTallNate/node-degenerator/commit/9d25bb67d957bc2e5425fea7bf7a58b3fc64ff9e)\n- [Github Release](https://github.com/TooTallNate/node-pac-resolver/releases/tag/5.0.0)\n- [Researcher Blog](https://httptoolkit.tech/blog/npm-pac-proxy-agent-vulnerability/)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2021-23406"
+        ],
+        "CWE": [
+          "CWE-94"
+        ]
+      },
+      "packageName": "pac-resolver",
+      "proprietary": true,
+      "creationTime": "2021-08-15T12:18:11.115775Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2021-05-30T13:37:37Z",
+      "packageManager": "npm",
+      "publicationTime": "2021-08-22T13:26:31Z",
+      "modificationTime": "2022-03-13T12:34:39.028969Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "cxsast@2022.4.1",
+        "@checkmarx/cx-common-js-client@0.1.79",
+        "superagent-proxy@2.1.0",
+        "proxy-agent@4.0.1",
+        "pac-proxy-agent@4.1.0",
+        "pac-resolver@4.2.0"
+      ],
+      "upgradePath": [
+        false,
+        "@checkmarx/cx-common-js-client@0.1.610"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "pac-resolver",
+      "version": "4.2.0"
+    },
+    {
+      "id": "SNYK-JS-UNSETVALUE-2400660",
+      "title": "Prototype Pollution",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+      "credit": [
+        "khizar"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<2.0.1"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "2.0.1"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "unset-value",
+      "references": [
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/issues/11",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12",
+          "title": "GitHub PR"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/releases",
+          "title": "GitHub Release"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Prototype Pollution via the `unset` function in `index.js`, because it allows access to object prototype properties.\n\n## Details\n\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `__proto__`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\n\nThere are two main ways in which the pollution of prototypes occurs:\n\n-   Unsafe `Object` recursive merge\n    \n-   Property definition by path\n    \n\n### Unsafe Object recursive merge\n\nThe logic of a vulnerable recursive merge function follows the following high-level model:\n```\nmerge (target, source)\n\n  foreach property of source\n\n    if property exists and is an object on both the target and the source\n\n      merge(target[property], source[property])\n\n    else\n\n      target[property] = source[property]\n```\n<br>  \n\nWhen the source object contains a property named `__proto__` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\n\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\n\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\n\n### Property definition by path\n\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\n\nIf the attacker can control the value of “path”, they can set this value to `__proto__.myValue`. `myValue` is then assigned to the prototype of the class of the object.\n\n## Types of attacks\n\nThere are a few methods by which Prototype Pollution can be manipulated:\n\n| Type |Origin  |Short description |\n|--|--|--|\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\n\n## Affected environments\n\nThe following environments are susceptible to a Prototype Pollution attack:\n\n-   Application server\n    \n-   Web server\n\n-   Web browser\n    \n\n## How to prevent\n\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\n    \n2.  Require schema validation of JSON input.\n    \n3.  Avoid using unsafe recursive merge functions.\n    \n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\n    \n5.  As a best practice use `Map` instead of `Object`.\n\n### For more information on this vulnerability type:\n\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\nUpgrade `unset-value` to version 2.0.1 or higher.\n## References\n- [GitHub Commit](https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561)\n- [GitHub Issue](https://github.com/jonschlinkert/unset-value/issues/11)\n- [GitHub PR](https://github.com/jonschlinkert/unset-value/pull/12)\n- [GitHub Release](https://github.com/jonschlinkert/unset-value/releases)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-1321"
+        ]
+      },
+      "packageName": "unset-value",
+      "proprietary": false,
+      "creationTime": "2022-02-13T14:46:07.185334Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-02-13T14:44:04Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-02-13T15:26:38.063549Z",
+      "modificationTime": "2022-02-13T15:26:38.065734Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "cxsast@2022.4.1",
+        "@checkmarx/cx-common-js-client@0.1.79",
+        "micromatch@3.1.10",
+        "snapdragon@0.8.2",
+        "base@0.11.2",
+        "cache-base@1.0.1",
+        "unset-value@1.0.0"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "unset-value",
+      "version": "1.0.0"
+    },
+    {
+      "id": "SNYK-JS-UNSETVALUE-2400660",
+      "title": "Prototype Pollution",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+      "credit": [
+        "khizar"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<2.0.1"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "2.0.1"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "unset-value",
+      "references": [
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/issues/11",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12",
+          "title": "GitHub PR"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/releases",
+          "title": "GitHub Release"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Prototype Pollution via the `unset` function in `index.js`, because it allows access to object prototype properties.\n\n## Details\n\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `__proto__`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\n\nThere are two main ways in which the pollution of prototypes occurs:\n\n-   Unsafe `Object` recursive merge\n    \n-   Property definition by path\n    \n\n### Unsafe Object recursive merge\n\nThe logic of a vulnerable recursive merge function follows the following high-level model:\n```\nmerge (target, source)\n\n  foreach property of source\n\n    if property exists and is an object on both the target and the source\n\n      merge(target[property], source[property])\n\n    else\n\n      target[property] = source[property]\n```\n<br>  \n\nWhen the source object contains a property named `__proto__` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\n\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\n\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\n\n### Property definition by path\n\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\n\nIf the attacker can control the value of “path”, they can set this value to `__proto__.myValue`. `myValue` is then assigned to the prototype of the class of the object.\n\n## Types of attacks\n\nThere are a few methods by which Prototype Pollution can be manipulated:\n\n| Type |Origin  |Short description |\n|--|--|--|\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\n\n## Affected environments\n\nThe following environments are susceptible to a Prototype Pollution attack:\n\n-   Application server\n    \n-   Web server\n\n-   Web browser\n    \n\n## How to prevent\n\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\n    \n2.  Require schema validation of JSON input.\n    \n3.  Avoid using unsafe recursive merge functions.\n    \n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\n    \n5.  As a best practice use `Map` instead of `Object`.\n\n### For more information on this vulnerability type:\n\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\nUpgrade `unset-value` to version 2.0.1 or higher.\n## References\n- [GitHub Commit](https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561)\n- [GitHub Issue](https://github.com/jonschlinkert/unset-value/issues/11)\n- [GitHub PR](https://github.com/jonschlinkert/unset-value/pull/12)\n- [GitHub Release](https://github.com/jonschlinkert/unset-value/releases)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-1321"
+        ]
+      },
+      "packageName": "unset-value",
+      "proprietary": false,
+      "creationTime": "2022-02-13T14:46:07.185334Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-02-13T14:44:04Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-02-13T15:26:38.063549Z",
+      "modificationTime": "2022-02-13T15:26:38.065734Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "cxsast@2022.4.1",
+        "@checkmarx/cx-common-js-client@0.1.79",
+        "micromatch@3.1.10",
+        "braces@2.3.2",
+        "snapdragon@0.8.2",
+        "base@0.11.2",
+        "cache-base@1.0.1",
+        "unset-value@1.0.0"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "unset-value",
+      "version": "1.0.0"
+    },
+    {
+      "id": "SNYK-JS-UNSETVALUE-2400660",
+      "title": "Prototype Pollution",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+      "credit": [
+        "khizar"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<2.0.1"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "2.0.1"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "unset-value",
+      "references": [
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/issues/11",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12",
+          "title": "GitHub PR"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/releases",
+          "title": "GitHub Release"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Prototype Pollution via the `unset` function in `index.js`, because it allows access to object prototype properties.\n\n## Details\n\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `__proto__`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\n\nThere are two main ways in which the pollution of prototypes occurs:\n\n-   Unsafe `Object` recursive merge\n    \n-   Property definition by path\n    \n\n### Unsafe Object recursive merge\n\nThe logic of a vulnerable recursive merge function follows the following high-level model:\n```\nmerge (target, source)\n\n  foreach property of source\n\n    if property exists and is an object on both the target and the source\n\n      merge(target[property], source[property])\n\n    else\n\n      target[property] = source[property]\n```\n<br>  \n\nWhen the source object contains a property named `__proto__` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\n\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\n\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\n\n### Property definition by path\n\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\n\nIf the attacker can control the value of “path”, they can set this value to `__proto__.myValue`. `myValue` is then assigned to the prototype of the class of the object.\n\n## Types of attacks\n\nThere are a few methods by which Prototype Pollution can be manipulated:\n\n| Type |Origin  |Short description |\n|--|--|--|\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\n\n## Affected environments\n\nThe following environments are susceptible to a Prototype Pollution attack:\n\n-   Application server\n    \n-   Web server\n\n-   Web browser\n    \n\n## How to prevent\n\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\n    \n2.  Require schema validation of JSON input.\n    \n3.  Avoid using unsafe recursive merge functions.\n    \n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\n    \n5.  As a best practice use `Map` instead of `Object`.\n\n### For more information on this vulnerability type:\n\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\nUpgrade `unset-value` to version 2.0.1 or higher.\n## References\n- [GitHub Commit](https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561)\n- [GitHub Issue](https://github.com/jonschlinkert/unset-value/issues/11)\n- [GitHub PR](https://github.com/jonschlinkert/unset-value/pull/12)\n- [GitHub Release](https://github.com/jonschlinkert/unset-value/releases)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-1321"
+        ]
+      },
+      "packageName": "unset-value",
+      "proprietary": false,
+      "creationTime": "2022-02-13T14:46:07.185334Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-02-13T14:44:04Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-02-13T15:26:38.063549Z",
+      "modificationTime": "2022-02-13T15:26:38.065734Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "cxsast@2022.4.1",
+        "@checkmarx/cx-common-js-client@0.1.79",
+        "micromatch@3.1.10",
+        "extglob@2.0.4",
+        "snapdragon@0.8.2",
+        "base@0.11.2",
+        "cache-base@1.0.1",
+        "unset-value@1.0.0"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "unset-value",
+      "version": "1.0.0"
+    },
+    {
+      "id": "SNYK-JS-UNSETVALUE-2400660",
+      "title": "Prototype Pollution",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+      "credit": [
+        "khizar"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<2.0.1"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "2.0.1"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "unset-value",
+      "references": [
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/issues/11",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12",
+          "title": "GitHub PR"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/releases",
+          "title": "GitHub Release"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Prototype Pollution via the `unset` function in `index.js`, because it allows access to object prototype properties.\n\n## Details\n\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `__proto__`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\n\nThere are two main ways in which the pollution of prototypes occurs:\n\n-   Unsafe `Object` recursive merge\n    \n-   Property definition by path\n    \n\n### Unsafe Object recursive merge\n\nThe logic of a vulnerable recursive merge function follows the following high-level model:\n```\nmerge (target, source)\n\n  foreach property of source\n\n    if property exists and is an object on both the target and the source\n\n      merge(target[property], source[property])\n\n    else\n\n      target[property] = source[property]\n```\n<br>  \n\nWhen the source object contains a property named `__proto__` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\n\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\n\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\n\n### Property definition by path\n\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\n\nIf the attacker can control the value of “path”, they can set this value to `__proto__.myValue`. `myValue` is then assigned to the prototype of the class of the object.\n\n## Types of attacks\n\nThere are a few methods by which Prototype Pollution can be manipulated:\n\n| Type |Origin  |Short description |\n|--|--|--|\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\n\n## Affected environments\n\nThe following environments are susceptible to a Prototype Pollution attack:\n\n-   Application server\n    \n-   Web server\n\n-   Web browser\n    \n\n## How to prevent\n\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\n    \n2.  Require schema validation of JSON input.\n    \n3.  Avoid using unsafe recursive merge functions.\n    \n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\n    \n5.  As a best practice use `Map` instead of `Object`.\n\n### For more information on this vulnerability type:\n\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\nUpgrade `unset-value` to version 2.0.1 or higher.\n## References\n- [GitHub Commit](https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561)\n- [GitHub Issue](https://github.com/jonschlinkert/unset-value/issues/11)\n- [GitHub PR](https://github.com/jonschlinkert/unset-value/pull/12)\n- [GitHub Release](https://github.com/jonschlinkert/unset-value/releases)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-1321"
+        ]
+      },
+      "packageName": "unset-value",
+      "proprietary": false,
+      "creationTime": "2022-02-13T14:46:07.185334Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-02-13T14:44:04Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-02-13T15:26:38.063549Z",
+      "modificationTime": "2022-02-13T15:26:38.065734Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "cxsast@2022.4.1",
+        "@checkmarx/cx-common-js-client@0.1.79",
+        "micromatch@3.1.10",
+        "nanomatch@1.2.13",
+        "snapdragon@0.8.2",
+        "base@0.11.2",
+        "cache-base@1.0.1",
+        "unset-value@1.0.0"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "unset-value",
+      "version": "1.0.0"
+    },
+    {
+      "id": "SNYK-JS-UNSETVALUE-2400660",
+      "title": "Prototype Pollution",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+      "credit": [
+        "khizar"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<2.0.1"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "2.0.1"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "unset-value",
+      "references": [
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/issues/11",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/pull/12",
+          "title": "GitHub PR"
+        },
+        {
+          "url": "https://github.com/jonschlinkert/unset-value/releases",
+          "title": "GitHub Release"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Prototype Pollution via the `unset` function in `index.js`, because it allows access to object prototype properties.\n\n## Details\n\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `__proto__`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\n\nThere are two main ways in which the pollution of prototypes occurs:\n\n-   Unsafe `Object` recursive merge\n    \n-   Property definition by path\n    \n\n### Unsafe Object recursive merge\n\nThe logic of a vulnerable recursive merge function follows the following high-level model:\n```\nmerge (target, source)\n\n  foreach property of source\n\n    if property exists and is an object on both the target and the source\n\n      merge(target[property], source[property])\n\n    else\n\n      target[property] = source[property]\n```\n<br>  \n\nWhen the source object contains a property named `__proto__` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\n\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\n\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\n\n### Property definition by path\n\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\n\nIf the attacker can control the value of “path”, they can set this value to `__proto__.myValue`. `myValue` is then assigned to the prototype of the class of the object.\n\n## Types of attacks\n\nThere are a few methods by which Prototype Pollution can be manipulated:\n\n| Type |Origin  |Short description |\n|--|--|--|\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\n\n## Affected environments\n\nThe following environments are susceptible to a Prototype Pollution attack:\n\n-   Application server\n    \n-   Web server\n\n-   Web browser\n    \n\n## How to prevent\n\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\n    \n2.  Require schema validation of JSON input.\n    \n3.  Avoid using unsafe recursive merge functions.\n    \n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\n    \n5.  As a best practice use `Map` instead of `Object`.\n\n### For more information on this vulnerability type:\n\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\nUpgrade `unset-value` to version 2.0.1 or higher.\n## References\n- [GitHub Commit](https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561)\n- [GitHub Issue](https://github.com/jonschlinkert/unset-value/issues/11)\n- [GitHub PR](https://github.com/jonschlinkert/unset-value/pull/12)\n- [GitHub Release](https://github.com/jonschlinkert/unset-value/releases)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-1321"
+        ]
+      },
+      "packageName": "unset-value",
+      "proprietary": false,
+      "creationTime": "2022-02-13T14:46:07.185334Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-02-13T14:44:04Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-02-13T15:26:38.063549Z",
+      "modificationTime": "2022-02-13T15:26:38.065734Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "cxsast@2022.4.1",
+        "@checkmarx/cx-common-js-client@0.1.79",
+        "micromatch@3.1.10",
+        "extglob@2.0.4",
+        "expand-brackets@2.1.4",
+        "snapdragon@0.8.2",
+        "base@0.11.2",
+        "cache-base@1.0.1",
+        "unset-value@1.0.0"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "unset-value",
+      "version": "1.0.0"
+    }
+  ],
+  "ok": false,
+  "dependencyCount": 272,
+  "org": "global-devops-bootcamp",
+  "policy": "# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.25.0\nignore: {}\npatch: {}\n",
+  "isPrivate": true,
+  "licensesPolicy": {
+    "severities": {},
+    "orgLicenseRules": {
+      "AGPL-1.0": {
+        "licenseType": "AGPL-1.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "AGPL-3.0": {
+        "licenseType": "AGPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "Artistic-1.0": {
+        "licenseType": "Artistic-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "Artistic-2.0": {
+        "licenseType": "Artistic-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CDDL-1.0": {
+        "licenseType": "CDDL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CPOL-1.02": {
+        "licenseType": "CPOL-1.02",
+        "severity": "high",
+        "instructions": ""
+      },
+      "EPL-1.0": {
+        "licenseType": "EPL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "GPL-2.0": {
+        "licenseType": "GPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "GPL-3.0": {
+        "licenseType": "GPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "LGPL-2.0": {
+        "licenseType": "LGPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1": {
+        "licenseType": "LGPL-2.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1+": {
+        "licenseType": "LGPL-2.1+",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0": {
+        "licenseType": "LGPL-3.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0+": {
+        "licenseType": "LGPL-3.0+",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-1.1": {
+        "licenseType": "MPL-1.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-2.0": {
+        "licenseType": "MPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MS-RL": {
+        "licenseType": "MS-RL",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "SimPL-2.0": {
+        "licenseType": "SimPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      }
+    }
+  },
+  "packageManager": "npm",
+  "ignoreSettings": {
+    "adminOnly": false,
+    "reasonRequired": false,
+    "disregardFilesystemIgnores": false
+  },
+  "summary": "14 vulnerable dependency paths",
+  "remediation": {
+    "unresolved": [
+      {
+        "id": "SNYK-JS-DECODEURICOMPONENT-3149970",
+        "title": "Denial of Service (DoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+        "credit": [
+          "KatsuragiCSL"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<0.2.2"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "0.2.2"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "decode-uri-component",
+        "references": [
+          {
+            "url": "https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/SamVerschueren/decode-uri-component/issues/5",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://github.com/sindresorhus/query-string/issues/345",
+            "title": "GitHub Issue"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-12-02T01:11:11.714842Z"
+          }
+        ],
+        "description": "## Overview\n\nAffected versions of this package are vulnerable to Denial of Service (DoS) due to improper input validation, when the hash string `# kun%ea%ba%5a%ba` is being parsed by `decodeUriComponent`.\r\n\r\n## PoC\r\n```js\r\nconst decodeUriComponent = require('decode-uri-component');\r\n\r\nvar x = decodeUriComponent('%ea%ba%5a%ba');\r\n\r\nconsole.log(x);\r\n```\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `decode-uri-component` to version 0.2.2 or higher.\n## References\n- [GitHub Commit](https://github.com/SamVerschueren/decode-uri-component/commit/980e0bf09b64d94f1aa79012f895816c30ffd152)\n- [GitHub Issue](https://github.com/SamVerschueren/decode-uri-component/issues/5)\n- [GitHub Issue](https://github.com/sindresorhus/query-string/issues/345)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-38900"
+          ],
+          "CWE": [
+            "CWE-400"
+          ]
+        },
+        "packageName": "decode-uri-component",
+        "proprietary": false,
+        "creationTime": "2022-11-28T14:24:36.010219Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-11-28T14:06:23Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-11-28T16:12:34.614831Z",
+        "modificationTime": "2022-12-02T09:02:03.162272Z",
+        "socialTrendAlert": false,
+        "from": [
+          "cxsast@2022.4.1",
+          "@checkmarx/cx-common-js-client@0.1.79",
+          "micromatch@3.1.10",
+          "extglob@2.0.4",
+          "expand-brackets@2.1.4",
+          "snapdragon@0.8.2",
+          "source-map-resolve@0.5.3",
+          "decode-uri-component@0.2.0"
+        ],
+        "upgradePath": [
+          false,
+          "@checkmarx/cx-common-js-client@0.1.79",
+          "micromatch@3.1.10",
+          "extglob@2.0.4",
+          "expand-brackets@2.1.4",
+          "snapdragon@0.8.2",
+          "source-map-resolve@0.5.3",
+          "decode-uri-component@0.2.2"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "decode-uri-component",
+        "version": "0.2.0",
+        "severityWithCritical": "high"
+      },
+      {
+        "id": "SNYK-JS-UNSETVALUE-2400660",
+        "title": "Prototype Pollution",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "credit": [
+          "khizar"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<2.0.1"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "2.0.1"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "unset-value",
+        "references": [
+          {
+            "url": "https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/jonschlinkert/unset-value/issues/11",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://github.com/jonschlinkert/unset-value/pull/12",
+            "title": "GitHub PR"
+          },
+          {
+            "url": "https://github.com/jonschlinkert/unset-value/releases",
+            "title": "GitHub Release"
+          }
+        ],
+        "cvssDetails": [],
+        "description": "## Overview\n\nAffected versions of this package are vulnerable to Prototype Pollution via the `unset` function in `index.js`, because it allows access to object prototype properties.\n\n## Details\n\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `__proto__`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\n\nThere are two main ways in which the pollution of prototypes occurs:\n\n-   Unsafe `Object` recursive merge\n    \n-   Property definition by path\n    \n\n### Unsafe Object recursive merge\n\nThe logic of a vulnerable recursive merge function follows the following high-level model:\n```\nmerge (target, source)\n\n  foreach property of source\n\n    if property exists and is an object on both the target and the source\n\n      merge(target[property], source[property])\n\n    else\n\n      target[property] = source[property]\n```\n<br>  \n\nWhen the source object contains a property named `__proto__` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\n\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\n\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\n\n### Property definition by path\n\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\n\nIf the attacker can control the value of “path”, they can set this value to `__proto__.myValue`. `myValue` is then assigned to the prototype of the class of the object.\n\n## Types of attacks\n\nThere are a few methods by which Prototype Pollution can be manipulated:\n\n| Type |Origin  |Short description |\n|--|--|--|\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\n\n## Affected environments\n\nThe following environments are susceptible to a Prototype Pollution attack:\n\n-   Application server\n    \n-   Web server\n\n-   Web browser\n    \n\n## How to prevent\n\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\n    \n2.  Require schema validation of JSON input.\n    \n3.  Avoid using unsafe recursive merge functions.\n    \n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\n    \n5.  As a best practice use `Map` instead of `Object`.\n\n### For more information on this vulnerability type:\n\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\nUpgrade `unset-value` to version 2.0.1 or higher.\n## References\n- [GitHub Commit](https://github.com/jonschlinkert/unset-value/pull/12/commits/abb534769f6ea62c3dd988f5ce0a4ebd1f91b561)\n- [GitHub Issue](https://github.com/jonschlinkert/unset-value/issues/11)\n- [GitHub PR](https://github.com/jonschlinkert/unset-value/pull/12)\n- [GitHub Release](https://github.com/jonschlinkert/unset-value/releases)\n",
+        "identifiers": {
+          "CVE": [],
+          "CWE": [
+            "CWE-1321"
+          ]
+        },
+        "packageName": "unset-value",
+        "proprietary": false,
+        "creationTime": "2022-02-13T14:46:07.185334Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-02-13T14:44:04Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-02-13T15:26:38.063549Z",
+        "modificationTime": "2022-02-13T15:26:38.065734Z",
+        "socialTrendAlert": false,
+        "from": [
+          "cxsast@2022.4.1",
+          "@checkmarx/cx-common-js-client@0.1.79",
+          "micromatch@3.1.10",
+          "extglob@2.0.4",
+          "expand-brackets@2.1.4",
+          "snapdragon@0.8.2",
+          "base@0.11.2",
+          "cache-base@1.0.1",
+          "unset-value@1.0.0"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "unset-value",
+        "version": "1.0.0",
+        "severityWithCritical": "high"
+      }
+    ],
+    "upgrade": {
+      "@checkmarx/cx-common-js-client@0.1.79": {
+        "upgradeTo": "@checkmarx/cx-common-js-client@0.1.610",
+        "upgrades": [
+          "pac-resolver@4.2.0"
+        ],
+        "vulns": [
+          "SNYK-JS-PACRESOLVER-1564857"
+        ]
+      }
+    },
+    "patch": {},
+    "ignore": {},
+    "pin": {}
+  },
+  "filesystemPolicy": false,
+  "filtered": {
+    "ignore": [],
+    "patch": []
+  },
+  "uniqueCount": 3,
+  "projectName": "cxsast",
+  "displayTargetFile": "CxScan\\CxScanV20\\package-lock.json",
+  "hasUnknownVersions": false,
+  "path": "C:\\Users\\JesseHouwing\\source\\extension-securiry\\vsixs\\checkmarx\\cxsast\\2022.4.1"
+}

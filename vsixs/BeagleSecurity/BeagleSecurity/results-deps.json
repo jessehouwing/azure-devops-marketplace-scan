@@ -1,0 +1,1171 @@
+{
+  "vulnerabilities": [
+    {
+      "id": "SNYK-JS-MINIMATCH-3050818",
+      "title": "Regular Expression Denial of Service (ReDoS)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+      "credit": [
+        "Unknown"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<3.0.5"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "3.0.5"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "medium",
+      "cvssScore": 5.3,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "minimatch",
+      "references": [
+        {
+          "url": "https://github.com/isaacs/minimatch/commit/a8763f4388e51956be62dc6025cec1126beeb5e6",
+          "title": "GitHub Commit"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "Red Hat",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-11-27T21:40:17.490683Z"
+        },
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-10-20T01:10:31.056597Z"
+        }
+      ],
+      "description": "## Overview\n[minimatch](https://www.npmjs.com/package/minimatch) is a minimal matching utility.\n\nAffected versions of this package are vulnerable to Regular Expression Denial of Service (ReDoS) via the `braceExpand` function in `minimatch.js`.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `minimatch` to version 3.0.5 or higher.\n## References\n- [GitHub Commit](https://github.com/isaacs/minimatch/commit/a8763f4388e51956be62dc6025cec1126beeb5e6)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-3517"
+        ],
+        "CWE": [
+          "CWE-1333"
+        ]
+      },
+      "packageName": "minimatch",
+      "proprietary": false,
+      "creationTime": "2022-10-18T06:10:47.980262Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-10-18T06:00:25Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-10-18T06:29:18.078950Z",
+      "modificationTime": "2022-11-27T21:40:17.490683Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "medium",
+      "from": [
+        "beagle-azure-task@1.0.1",
+        "azure-pipelines-task-lib@2.12.2",
+        "minimatch@3.0.4"
+      ],
+      "upgradePath": [
+        false,
+        "azure-pipelines-task-lib@3.3.1",
+        "minimatch@3.0.5"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "minimatch",
+      "version": "3.0.4"
+    },
+    {
+      "id": "SNYK-JS-QS-3153490",
+      "title": "Prototype Poisoning",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+      "credit": [
+        "BRAUN Nathanael",
+        "BRISSAUD Johan"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<6.2.4",
+          ">=6.3.0 <6.3.3",
+          ">=6.4.0 <6.4.1",
+          ">=6.5.0 <6.5.3",
+          ">=6.6.0 <6.6.1",
+          ">=6.7.0 <6.7.3",
+          ">=6.8.0 <6.8.3",
+          ">=6.9.0 <6.9.7",
+          ">=6.10.0 <6.10.3"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "6.2.4",
+        "6.3.3",
+        "6.4.1",
+        "6.5.3",
+        "6.6.1",
+        "6.7.3",
+        "6.8.3",
+        "6.9.7",
+        "6.10.3"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "qs",
+      "references": [
+        {
+          "url": "https://github.com/ljharb/qs/pull/428",
+          "title": "GitHub PR"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2150323",
+          "title": "RedHat Bugzilla Bug"
+        },
+        {
+          "url": "https://github.com/n8tz/CVE-2022-24999",
+          "title": "Researcher Advisory"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-11-29T01:11:13.913238Z"
+        },
+        {
+          "assigner": "Red Hat",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-12-03T13:46:25.900727Z"
+        }
+      ],
+      "description": "## Overview\n[qs](https://www.npmjs.com/package/qs) is a querystring parser that supports nesting and arrays, with a depth limit.\n\nAffected versions of this package are vulnerable to Prototype Poisoning which allows attackers to cause a Node process to hang, processing an Array object whose prototype has been replaced by one with an excessive length value.\r\n\r\n**Note:** In many typical Express use cases, an unauthenticated remote attacker can place the attack payload in the query string of the URL that is used to visit the application, such as `a[__proto__]=b&a[__proto__]&a[length]=100000000`.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `qs` to version 6.2.4, 6.3.3, 6.4.1, 6.5.3, 6.6.1, 6.7.3, 6.8.3, 6.9.7, 6.10.3 or higher.\n## References\n- [GitHub PR](https://github.com/ljharb/qs/pull/428)\n- [RedHat Bugzilla Bug](https://bugzilla.redhat.com/show_bug.cgi?id=2150323)\n- [Researcher Advisory](https://github.com/n8tz/CVE-2022-24999)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-24999"
+        ],
+        "CWE": [
+          "CWE-1321"
+        ]
+      },
+      "packageName": "qs",
+      "proprietary": false,
+      "creationTime": "2022-12-04T11:01:47.782869Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-11-26T00:00:00Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-12-04T12:24:32.307833Z",
+      "modificationTime": "2022-12-06T09:33:17.364321Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "beagle-azure-task@1.0.1",
+        "request@2.88.2",
+        "qs@6.5.2"
+      ],
+      "upgradePath": [
+        false,
+        "request@2.88.2",
+        "qs@6.5.3"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "qs",
+      "version": "6.5.2"
+    },
+    {
+      "id": "SNYK-JS-QS-3153490",
+      "title": "Prototype Poisoning",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+      "credit": [
+        "BRAUN Nathanael",
+        "BRISSAUD Johan"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<6.2.4",
+          ">=6.3.0 <6.3.3",
+          ">=6.4.0 <6.4.1",
+          ">=6.5.0 <6.5.3",
+          ">=6.6.0 <6.6.1",
+          ">=6.7.0 <6.7.3",
+          ">=6.8.0 <6.8.3",
+          ">=6.9.0 <6.9.7",
+          ">=6.10.0 <6.10.3"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "6.2.4",
+        "6.3.3",
+        "6.4.1",
+        "6.5.3",
+        "6.6.1",
+        "6.7.3",
+        "6.8.3",
+        "6.9.7",
+        "6.10.3"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "qs",
+      "references": [
+        {
+          "url": "https://github.com/ljharb/qs/pull/428",
+          "title": "GitHub PR"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2150323",
+          "title": "RedHat Bugzilla Bug"
+        },
+        {
+          "url": "https://github.com/n8tz/CVE-2022-24999",
+          "title": "Researcher Advisory"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-11-29T01:11:13.913238Z"
+        },
+        {
+          "assigner": "Red Hat",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-12-03T13:46:25.900727Z"
+        }
+      ],
+      "description": "## Overview\n[qs](https://www.npmjs.com/package/qs) is a querystring parser that supports nesting and arrays, with a depth limit.\n\nAffected versions of this package are vulnerable to Prototype Poisoning which allows attackers to cause a Node process to hang, processing an Array object whose prototype has been replaced by one with an excessive length value.\r\n\r\n**Note:** In many typical Express use cases, an unauthenticated remote attacker can place the attack payload in the query string of the URL that is used to visit the application, such as `a[__proto__]=b&a[__proto__]&a[length]=100000000`.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `qs` to version 6.2.4, 6.3.3, 6.4.1, 6.5.3, 6.6.1, 6.7.3, 6.8.3, 6.9.7, 6.10.3 or higher.\n## References\n- [GitHub PR](https://github.com/ljharb/qs/pull/428)\n- [RedHat Bugzilla Bug](https://bugzilla.redhat.com/show_bug.cgi?id=2150323)\n- [Researcher Advisory](https://github.com/n8tz/CVE-2022-24999)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-24999"
+        ],
+        "CWE": [
+          "CWE-1321"
+        ]
+      },
+      "packageName": "qs",
+      "proprietary": false,
+      "creationTime": "2022-12-04T11:01:47.782869Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-11-26T00:00:00Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-12-04T12:24:32.307833Z",
+      "modificationTime": "2022-12-06T09:33:17.364321Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "beagle-azure-task@1.0.1",
+        "azure-pipelines-task-lib@2.12.2",
+        "sync-request@3.0.1",
+        "then-request@2.2.0",
+        "qs@6.5.2"
+      ],
+      "upgradePath": [
+        false,
+        "azure-pipelines-task-lib@2.12.2",
+        "sync-request@3.0.1",
+        "then-request@2.2.0",
+        "qs@6.5.3"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "qs",
+      "version": "6.5.2"
+    },
+    {
+      "id": "SNYK-JS-SHELLJS-2332187",
+      "title": "Improper Privilege Management",
+      "CVSSv3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H/E:P",
+      "credit": [
+        "haxatron"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<0.8.5"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "0.8.5"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.1,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "shelljs",
+      "references": [
+        {
+          "url": "https://github.com/shelljs/shelljs/commit/d919d22dd6de385edaa9d90313075a77f74b338c",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/shelljs/shelljs/issues/1058",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/shelljs/shelljs/pull/1060",
+          "title": "GitHub PR"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H",
+          "cvssV3BaseScore": 7.1,
+          "modificationTime": "2022-02-09T16:10:36.984666Z"
+        }
+      ],
+      "description": "## Overview\n[shelljs](None) is a wrapper for the Unix shell commands for Node.js.\n\nAffected versions of this package are vulnerable to Improper Privilege Management. When `ShellJS` is used to create shell scripts which may be running as `root`, users with low-level privileges on the system can leak sensitive information such as passwords (depending on implementation) from the standard output of the privileged process OR shutdown privileged `ShellJS` processes via the `exec` function when triggering EACCESS errors.\r\n\r\n**Note:** Thi only impacts the synchronous version of `shell.exec()`.\n## Remediation\nUpgrade `shelljs` to version 0.8.5 or higher.\n## References\n- [GitHub Commit](https://github.com/shelljs/shelljs/commit/d919d22dd6de385edaa9d90313075a77f74b338c)\n- [GitHub Issue](https://github.com/shelljs/shelljs/issues/1058)\n- [GitHub PR](https://github.com/shelljs/shelljs/pull/1060)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-0144"
+        ],
+        "CWE": [
+          "CWE-269"
+        ]
+      },
+      "packageName": "shelljs",
+      "proprietary": false,
+      "creationTime": "2022-01-11T12:52:23.829882Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-01-11T12:39:08Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-01-12T12:49:35.008405Z",
+      "modificationTime": "2022-02-09T16:10:36.984666Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "beagle-azure-task@1.0.1",
+        "azure-pipelines-task-lib@2.12.2",
+        "shelljs@0.3.0"
+      ],
+      "upgradePath": [
+        false,
+        "azure-pipelines-task-lib@3.1.0",
+        "shelljs@0.8.5"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "shelljs",
+      "version": "0.3.0"
+    },
+    {
+      "id": "SNYK-JS-UGLIFYJS-1727251",
+      "title": "Regular Expression Denial of Service (ReDoS)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+      "credit": [
+        "ready-research"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<3.14.3"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "3.14.3"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "medium",
+      "cvssScore": 5.3,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "uglify-js",
+      "references": [
+        {
+          "url": "https://github.com/mishoo/UglifyJS/commit/157521066fc43cff2feab7ffc1ecea603617606b",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/mishoo/UglifyJS/issues/5133",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/mishoo/UglifyJS/pull/5134",
+          "title": "GitHub PR"
+        },
+        {
+          "url": "https://github.com/mishoo/UglifyJS/pull/5135",
+          "title": "GitHub PR"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n[uglify-js](http://npmjs.com/package/uglify-js) is a JavaScript parser, minifier, compressor and beautifier toolkit.\n\nAffected versions of this package are vulnerable to Regular Expression Denial of Service (ReDoS) via the `string_template` and the `decode_template` functions.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `uglify-js` to version 3.14.3 or higher.\n## References\n- [GitHub Commit](https://github.com/mishoo/UglifyJS/commit/157521066fc43cff2feab7ffc1ecea603617606b)\n- [GitHub Issue](https://github.com/mishoo/UglifyJS/issues/5133)\n- [GitHub PR](https://github.com/mishoo/UglifyJS/pull/5134)\n- [GitHub PR](https://github.com/mishoo/UglifyJS/pull/5135)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-1333"
+        ]
+      },
+      "packageName": "uglify-js",
+      "proprietary": false,
+      "creationTime": "2021-09-30T14:25:50.130236Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2021-09-30T14:22:21Z",
+      "packageManager": "npm",
+      "publicationTime": "2021-11-09T18:42:15.313328Z",
+      "modificationTime": "2021-11-09T18:42:15.332622Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "medium",
+      "from": [
+        "beagle-azure-task@1.0.1",
+        "require@2.4.20",
+        "uglify-js@2.3.0"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "uglify-js",
+      "version": "2.3.0"
+    },
+    {
+      "id": "npm:uglify-js:20150824",
+      "title": "Improper minification of non-boolean comparisons",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L",
+      "credit": [
+        "Tom MacWright"
+      ],
+      "semver": {
+        "vulnerable": [
+          ">=2.2.0 <2.4.24"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "2.4.24"
+      ],
+      "patches": [
+        {
+          "id": "patch:npm:uglify-js:20150824:0",
+          "urls": [
+            "https://snyk-patches.s3.amazonaws.com/npm/uglify-js/20150824/uglify-js_20150824_0_0_905b6011784ca60d41919ac1a499962b7c1d4b02_snyk.patch"
+          ],
+          "version": "<= 2.4.23 >2.0.0",
+          "comments": [],
+          "modificationTime": "2019-12-03T11:40:45.756528Z"
+        }
+      ],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 8.3,
+      "functions": [
+        {
+          "version": [
+            ">=2.2.0 <2.4.24"
+          ],
+          "functionId": {
+            "filePath": "lib/compress.js",
+            "className": null,
+            "functionName": "Compressor"
+          }
+        }
+      ],
+      "malicious": false,
+      "moduleName": "uglify-js",
+      "references": [
+        {
+          "url": "https://zyan.scripts.mit.edu/blog/backdooring-js/",
+          "title": "Blog Post"
+        },
+        {
+          "url": "https://github.com/mishoo/UglifyJS2/issues/751",
+          "title": "GitHub Issue"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "critical",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cvssV3BaseScore": 9.8,
+          "modificationTime": "2022-01-03T17:48:01.009006Z"
+        }
+      ],
+      "description": "## Overview\r\n[`uglify-js`](http://npmjs.com/package/uglify-js) is a JavaScript parser, minifier, compressor and beautifier toolkit.\r\n\r\n[Tom MacWright](https://github.com/mishoo/UglifyJS2/issues/751) discovered that UglifyJS versions 2.4.23 and earlier are affected by a vulnerability which allows a specially crafted Javascript file to have altered functionality after minification. This bug was [demonstrated](https://zyan.scripts.mit.edu/blog/backdooring-js/) by [Yan](https://twitter.com/bcrypt) to allow potentially malicious code to be hidden within secure code, activated by minification.\r\n\r\n### Details\r\nIn Boolean algebra, DeMorgan's laws describe the relationships between conjunctions (`&&`), disjunctions (`||`) and negations (`!`).\r\nIn Javascript form, they state that:\r\n```savascript\r\n !(a && b) === (!a) || (!b)\r\n !(a || b) === (!a) && (!b)\r\n```\r\n\r\nThe law does not hold true when one of the values is not a boolean however.\r\n\r\nVulnerable versions of UglifyJS do not account for this restriction, and erroneously apply the laws to a statement if it can be reduced in length by it.\r\n\r\nConsider this authentication function:\r\n\r\n```javascript\r\nfunction isTokenValid(user) {\r\n    var timeLeft =\r\n        !!config && // config object exists\r\n        !!user.token && // user object has a token\r\n        !user.token.invalidated && // token is not explicitly invalidated\r\n        !config.uninitialized && // config is initialized\r\n        !config.ignoreTimestamps && // don't ignore timestamps\r\n        getTimeLeft(user.token.expiry); // > 0 if expiration is in the future\r\n\r\n    // The token must not be expired\r\n    return timeLeft > 0;\r\n}\r\n\r\nfunction getTimeLeft(expiry) {\r\n  return expiry - getSystemTime();\r\n}\r\n```\r\nWhen minified with a vulnerable version of UglifyJS, it will produce the following insecure output, where a token will never expire:\r\n\r\n( Formatted for readability )\r\n\r\n```javascript\r\nfunction isTokenValid(user) {\r\n    var timeLeft = !(                       // negation\r\n        !config                             // config object does not exist\r\n        || !user.token                      // user object does not have a token\r\n        || user.token.invalidated           // token is explicitly invalidated\r\n        || config.uninitialized             // config isn't initialized\r\n        || config.ignoreTimestamps          // ignore timestamps\r\n        || !getTimeLeft(user.token.expiry)  // > 0 if expiration is in the future\r\n    );\r\n    return timeLeft > 0\r\n}\r\n\r\nfunction getTimeLeft(expiry) {\r\n    return expiry - getSystemTime()\r\n}\r\n```\r\n\r\n## Remediation\r\nUpgrade UglifyJS to version `2.4.24` or higher.\r\n\r\n## References\r\n- [Blog Post](https://zyan.scripts.mit.edu/blog/backdooring-js/)\r\n- [GitHub Issue](https://github.com/mishoo/UglifyJS2/issues/751)",
+      "identifiers": {
+        "CVE": [
+          "CVE-2015-8857"
+        ],
+        "CWE": [
+          "CWE-95"
+        ],
+        "NSP": [
+          "39"
+        ],
+        "GHSA": [
+          "GHSA-34r7-q49f-h37c"
+        ],
+        "ALTERNATIVE": [
+          "SNYK-JS-UGLIFYJS-10041"
+        ]
+      },
+      "packageName": "uglify-js",
+      "proprietary": false,
+      "creationTime": "2015-08-24T09:29:10Z",
+      "functions_new": [
+        {
+          "version": [
+            ">=2.2.0 <2.4.24"
+          ],
+          "functionId": {
+            "filePath": "lib/compress.js",
+            "functionName": "Compressor"
+          }
+        }
+      ],
+      "alternativeIds": [
+        "SNYK-JS-UGLIFYJS-10041"
+      ],
+      "disclosureTime": "2015-08-24T09:29:10Z",
+      "packageManager": "npm",
+      "publicationTime": "2015-08-24T09:29:10Z",
+      "modificationTime": "2022-01-03T17:48:01.009006Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "beagle-azure-task@1.0.1",
+        "require@2.4.20",
+        "uglify-js@2.3.0"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": true,
+      "name": "uglify-js",
+      "version": "2.3.0"
+    },
+    {
+      "id": "npm:uglify-js:20151024",
+      "title": "Regular Expression Denial of Service (ReDoS)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+      "credit": [
+        "Adam Baldwin"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<2.6.0"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "2.6.0"
+      ],
+      "patches": [
+        {
+          "id": "patch:npm:uglify-js:20151024:0",
+          "urls": [
+            "https://snyk-patches.s3.amazonaws.com/npm/uglify-js/20151024/uglify-js_20151024_0_0_63d35f8_snyk_inc.patch"
+          ],
+          "version": "<= 2.4.23 >=2.2.0",
+          "comments": [
+            "https://github.com/mishoo/UglifyJS2/commit/63d35f8.patch"
+          ],
+          "modificationTime": "2019-12-03T11:40:45.767604Z"
+        },
+        {
+          "id": "patch:npm:uglify-js:20151024:1",
+          "urls": [
+            "https://snyk-patches.s3.amazonaws.com/npm/uglify-js/20151024/uglify-js_20151024_0_0_63d35f8_snyk.patch"
+          ],
+          "version": "<2.6.0 >2.4.23",
+          "comments": [
+            "https://github.com/mishoo/UglifyJS2/commit/63d35f8.patch"
+          ],
+          "modificationTime": "2019-12-03T11:40:45.768705Z"
+        }
+      ],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "medium",
+      "cvssScore": 5.3,
+      "functions": [
+        {
+          "version": [
+            ">1.3.5 <2.6.0"
+          ],
+          "functionId": {
+            "filePath": "lib/parse.js",
+            "className": null,
+            "functionName": "parse_js_number"
+          }
+        }
+      ],
+      "malicious": false,
+      "moduleName": "uglify-js",
+      "references": [
+        {
+          "url": "https://github.com/mishoo/UglifyJS2/commit/63d35f8f6db6d90d6142132d2d5f0bd5d3d698aa",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS",
+          "title": "OWASP - ReDoS"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-01-03T17:48:00.481391Z"
+        }
+      ],
+      "description": "## Overview\r\nThe `parse()` function in the [`uglify-js`](https://www.npmjs.com/package/uglify-js) package prior to version 2.6.0 is vulnerable to regular expression denial of service (ReDoS) attacks when long inputs of certain patterns are processed.\r\n\r\n## Details\r\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\r\n\r\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\r\n\r\nLet’s take the following regular expression as an example:\r\n```js\r\nregex = /A(B|C+)+D/\r\n```\r\n\r\nThis regular expression accomplishes the following:\r\n- `A` The string must start with the letter 'A'\r\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\r\n- `D` Finally, we ensure this section of the string ends with a 'D'\r\n\r\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\r\n\r\nIt most cases, it doesn't take very long for a regex engine to find a match:\r\n\r\n```bash\r\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\r\n0.04s user 0.01s system 95% cpu 0.052 total\r\n\r\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\r\n1.79s user 0.02s system 99% cpu 1.812 total\r\n```\r\n\r\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\r\n\r\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\r\n\r\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\r\n1. CCC\r\n2. CC+C\r\n3. C+CC\r\n4. C+C+C.\r\n\r\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\r\n\r\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\r\n\r\n| String | Number of C's | Number of steps |\r\n| -------|-------------:| -----:|\r\n| ACCCX | 3 | 38\r\n| ACCCCX | 4 | 71\r\n| ACCCCCX | 5 | 136\r\n| ACCCCCCCCCCCCCCX | 14 | 65,553\r\n\r\n\r\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\r\n\r\n## Remediation\r\nUpgrade to version `2.6.0` or greater.\r\nIf a direct dependency update is not possible, use `snyk wizard` to patch this vulnerability.\r\n\r\n## References\r\n- [OWASP - ReDoS](https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS)",
+      "identifiers": {
+        "CVE": [
+          "CVE-2015-8858"
+        ],
+        "CWE": [
+          "CWE-400"
+        ],
+        "NSP": [
+          "48"
+        ],
+        "GHSA": [
+          "GHSA-c9f4-xj24-8jqx"
+        ],
+        "ALTERNATIVE": [
+          "SNYK-JS-UGLIFYJS-10059"
+        ]
+      },
+      "packageName": "uglify-js",
+      "proprietary": false,
+      "creationTime": "2015-11-06T02:09:36.186000Z",
+      "functions_new": [
+        {
+          "version": [
+            ">1.3.5 <2.6.0"
+          ],
+          "functionId": {
+            "filePath": "lib/parse.js",
+            "functionName": "parse_js_number"
+          }
+        }
+      ],
+      "alternativeIds": [
+        "SNYK-JS-UGLIFYJS-10059"
+      ],
+      "disclosureTime": "2015-10-24T21:01:32Z",
+      "packageManager": "npm",
+      "publicationTime": "2015-11-06T02:09:36Z",
+      "modificationTime": "2022-01-03T17:48:00.481391Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "medium",
+      "from": [
+        "beagle-azure-task@1.0.1",
+        "require@2.4.20",
+        "uglify-js@2.3.0"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": true,
+      "name": "uglify-js",
+      "version": "2.3.0"
+    }
+  ],
+  "ok": false,
+  "dependencyCount": 94,
+  "org": "global-devops-bootcamp",
+  "policy": "# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.25.0\nignore: {}\npatch: {}\n",
+  "isPrivate": true,
+  "licensesPolicy": {
+    "severities": {},
+    "orgLicenseRules": {
+      "AGPL-1.0": {
+        "licenseType": "AGPL-1.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "AGPL-3.0": {
+        "licenseType": "AGPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "Artistic-1.0": {
+        "licenseType": "Artistic-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "Artistic-2.0": {
+        "licenseType": "Artistic-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CDDL-1.0": {
+        "licenseType": "CDDL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CPOL-1.02": {
+        "licenseType": "CPOL-1.02",
+        "severity": "high",
+        "instructions": ""
+      },
+      "EPL-1.0": {
+        "licenseType": "EPL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "GPL-2.0": {
+        "licenseType": "GPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "GPL-3.0": {
+        "licenseType": "GPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "LGPL-2.0": {
+        "licenseType": "LGPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1": {
+        "licenseType": "LGPL-2.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1+": {
+        "licenseType": "LGPL-2.1+",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0": {
+        "licenseType": "LGPL-3.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0+": {
+        "licenseType": "LGPL-3.0+",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-1.1": {
+        "licenseType": "MPL-1.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-2.0": {
+        "licenseType": "MPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MS-RL": {
+        "licenseType": "MS-RL",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "SimPL-2.0": {
+        "licenseType": "SimPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      }
+    }
+  },
+  "packageManager": "npm",
+  "ignoreSettings": {
+    "adminOnly": false,
+    "reasonRequired": false,
+    "disregardFilesystemIgnores": false
+  },
+  "summary": "7 vulnerable dependency paths",
+  "remediation": {
+    "unresolved": [
+      {
+        "id": "SNYK-JS-QS-3153490",
+        "title": "Prototype Poisoning",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+        "credit": [
+          "BRAUN Nathanael",
+          "BRISSAUD Johan"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<6.2.4",
+            ">=6.3.0 <6.3.3",
+            ">=6.4.0 <6.4.1",
+            ">=6.5.0 <6.5.3",
+            ">=6.6.0 <6.6.1",
+            ">=6.7.0 <6.7.3",
+            ">=6.8.0 <6.8.3",
+            ">=6.9.0 <6.9.7",
+            ">=6.10.0 <6.10.3"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "6.2.4",
+          "6.3.3",
+          "6.4.1",
+          "6.5.3",
+          "6.6.1",
+          "6.7.3",
+          "6.8.3",
+          "6.9.7",
+          "6.10.3"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "qs",
+        "references": [
+          {
+            "url": "https://github.com/ljharb/qs/pull/428",
+            "title": "GitHub PR"
+          },
+          {
+            "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2150323",
+            "title": "RedHat Bugzilla Bug"
+          },
+          {
+            "url": "https://github.com/n8tz/CVE-2022-24999",
+            "title": "Researcher Advisory"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-11-29T01:11:13.913238Z"
+          },
+          {
+            "assigner": "Red Hat",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-12-03T13:46:25.900727Z"
+          }
+        ],
+        "description": "## Overview\n[qs](https://www.npmjs.com/package/qs) is a querystring parser that supports nesting and arrays, with a depth limit.\n\nAffected versions of this package are vulnerable to Prototype Poisoning which allows attackers to cause a Node process to hang, processing an Array object whose prototype has been replaced by one with an excessive length value.\r\n\r\n**Note:** In many typical Express use cases, an unauthenticated remote attacker can place the attack payload in the query string of the URL that is used to visit the application, such as `a[__proto__]=b&a[__proto__]&a[length]=100000000`.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `qs` to version 6.2.4, 6.3.3, 6.4.1, 6.5.3, 6.6.1, 6.7.3, 6.8.3, 6.9.7, 6.10.3 or higher.\n## References\n- [GitHub PR](https://github.com/ljharb/qs/pull/428)\n- [RedHat Bugzilla Bug](https://bugzilla.redhat.com/show_bug.cgi?id=2150323)\n- [Researcher Advisory](https://github.com/n8tz/CVE-2022-24999)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-24999"
+          ],
+          "CWE": [
+            "CWE-1321"
+          ]
+        },
+        "packageName": "qs",
+        "proprietary": false,
+        "creationTime": "2022-12-04T11:01:47.782869Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-11-26T00:00:00Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-12-04T12:24:32.307833Z",
+        "modificationTime": "2022-12-06T09:33:17.364321Z",
+        "socialTrendAlert": false,
+        "from": [
+          "beagle-azure-task@1.0.1",
+          "azure-pipelines-task-lib@2.12.2",
+          "sync-request@3.0.1",
+          "then-request@2.2.0",
+          "qs@6.5.2"
+        ],
+        "upgradePath": [
+          false,
+          "azure-pipelines-task-lib@2.12.2",
+          "sync-request@3.0.1",
+          "then-request@2.2.0",
+          "qs@6.5.3"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "qs",
+        "version": "6.5.2",
+        "severityWithCritical": "high"
+      },
+      {
+        "id": "SNYK-JS-UGLIFYJS-1727251",
+        "title": "Regular Expression Denial of Service (ReDoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+        "credit": [
+          "ready-research"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<3.14.3"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "3.14.3"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 5.3,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "uglify-js",
+        "references": [
+          {
+            "url": "https://github.com/mishoo/UglifyJS/commit/157521066fc43cff2feab7ffc1ecea603617606b",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/mishoo/UglifyJS/issues/5133",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://github.com/mishoo/UglifyJS/pull/5134",
+            "title": "GitHub PR"
+          },
+          {
+            "url": "https://github.com/mishoo/UglifyJS/pull/5135",
+            "title": "GitHub PR"
+          }
+        ],
+        "cvssDetails": [],
+        "description": "## Overview\n[uglify-js](http://npmjs.com/package/uglify-js) is a JavaScript parser, minifier, compressor and beautifier toolkit.\n\nAffected versions of this package are vulnerable to Regular Expression Denial of Service (ReDoS) via the `string_template` and the `decode_template` functions.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `uglify-js` to version 3.14.3 or higher.\n## References\n- [GitHub Commit](https://github.com/mishoo/UglifyJS/commit/157521066fc43cff2feab7ffc1ecea603617606b)\n- [GitHub Issue](https://github.com/mishoo/UglifyJS/issues/5133)\n- [GitHub PR](https://github.com/mishoo/UglifyJS/pull/5134)\n- [GitHub PR](https://github.com/mishoo/UglifyJS/pull/5135)\n",
+        "identifiers": {
+          "CVE": [],
+          "CWE": [
+            "CWE-1333"
+          ]
+        },
+        "packageName": "uglify-js",
+        "proprietary": false,
+        "creationTime": "2021-09-30T14:25:50.130236Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2021-09-30T14:22:21Z",
+        "packageManager": "npm",
+        "publicationTime": "2021-11-09T18:42:15.313328Z",
+        "modificationTime": "2021-11-09T18:42:15.332622Z",
+        "socialTrendAlert": false,
+        "from": [
+          "beagle-azure-task@1.0.1",
+          "require@2.4.20",
+          "uglify-js@2.3.0"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "uglify-js",
+        "version": "2.3.0",
+        "severityWithCritical": "medium"
+      },
+      {
+        "id": "npm:uglify-js:20150824",
+        "title": "Improper minification of non-boolean comparisons",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L",
+        "credit": [
+          "Tom MacWright"
+        ],
+        "semver": {
+          "vulnerable": [
+            ">=2.2.0 <2.4.24"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "2.4.24"
+        ],
+        "patches": [
+          {
+            "id": "patch:npm:uglify-js:20150824:0",
+            "urls": [
+              "https://snyk-patches.s3.amazonaws.com/npm/uglify-js/20150824/uglify-js_20150824_0_0_905b6011784ca60d41919ac1a499962b7c1d4b02_snyk.patch"
+            ],
+            "version": "<= 2.4.23 >2.0.0",
+            "comments": [],
+            "modificationTime": "2019-12-03T11:40:45.756528Z"
+          }
+        ],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 8.3,
+        "functions": [
+          {
+            "version": [
+              ">=2.2.0 <2.4.24"
+            ],
+            "functionId": {
+              "filePath": "lib/compress.js",
+              "className": null,
+              "functionName": "Compressor"
+            }
+          }
+        ],
+        "malicious": false,
+        "moduleName": "uglify-js",
+        "references": [
+          {
+            "url": "https://zyan.scripts.mit.edu/blog/backdooring-js/",
+            "title": "Blog Post"
+          },
+          {
+            "url": "https://github.com/mishoo/UglifyJS2/issues/751",
+            "title": "GitHub Issue"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 9.8,
+            "modificationTime": "2022-01-03T17:48:01.009006Z"
+          }
+        ],
+        "description": "## Overview\r\n[`uglify-js`](http://npmjs.com/package/uglify-js) is a JavaScript parser, minifier, compressor and beautifier toolkit.\r\n\r\n[Tom MacWright](https://github.com/mishoo/UglifyJS2/issues/751) discovered that UglifyJS versions 2.4.23 and earlier are affected by a vulnerability which allows a specially crafted Javascript file to have altered functionality after minification. This bug was [demonstrated](https://zyan.scripts.mit.edu/blog/backdooring-js/) by [Yan](https://twitter.com/bcrypt) to allow potentially malicious code to be hidden within secure code, activated by minification.\r\n\r\n### Details\r\nIn Boolean algebra, DeMorgan's laws describe the relationships between conjunctions (`&&`), disjunctions (`||`) and negations (`!`).\r\nIn Javascript form, they state that:\r\n```savascript\r\n !(a && b) === (!a) || (!b)\r\n !(a || b) === (!a) && (!b)\r\n```\r\n\r\nThe law does not hold true when one of the values is not a boolean however.\r\n\r\nVulnerable versions of UglifyJS do not account for this restriction, and erroneously apply the laws to a statement if it can be reduced in length by it.\r\n\r\nConsider this authentication function:\r\n\r\n```javascript\r\nfunction isTokenValid(user) {\r\n    var timeLeft =\r\n        !!config && // config object exists\r\n        !!user.token && // user object has a token\r\n        !user.token.invalidated && // token is not explicitly invalidated\r\n        !config.uninitialized && // config is initialized\r\n        !config.ignoreTimestamps && // don't ignore timestamps\r\n        getTimeLeft(user.token.expiry); // > 0 if expiration is in the future\r\n\r\n    // The token must not be expired\r\n    return timeLeft > 0;\r\n}\r\n\r\nfunction getTimeLeft(expiry) {\r\n  return expiry - getSystemTime();\r\n}\r\n```\r\nWhen minified with a vulnerable version of UglifyJS, it will produce the following insecure output, where a token will never expire:\r\n\r\n( Formatted for readability )\r\n\r\n```javascript\r\nfunction isTokenValid(user) {\r\n    var timeLeft = !(                       // negation\r\n        !config                             // config object does not exist\r\n        || !user.token                      // user object does not have a token\r\n        || user.token.invalidated           // token is explicitly invalidated\r\n        || config.uninitialized             // config isn't initialized\r\n        || config.ignoreTimestamps          // ignore timestamps\r\n        || !getTimeLeft(user.token.expiry)  // > 0 if expiration is in the future\r\n    );\r\n    return timeLeft > 0\r\n}\r\n\r\nfunction getTimeLeft(expiry) {\r\n    return expiry - getSystemTime()\r\n}\r\n```\r\n\r\n## Remediation\r\nUpgrade UglifyJS to version `2.4.24` or higher.\r\n\r\n## References\r\n- [Blog Post](https://zyan.scripts.mit.edu/blog/backdooring-js/)\r\n- [GitHub Issue](https://github.com/mishoo/UglifyJS2/issues/751)",
+        "identifiers": {
+          "CVE": [
+            "CVE-2015-8857"
+          ],
+          "CWE": [
+            "CWE-95"
+          ],
+          "NSP": [
+            "39"
+          ],
+          "GHSA": [
+            "GHSA-34r7-q49f-h37c"
+          ],
+          "ALTERNATIVE": [
+            "SNYK-JS-UGLIFYJS-10041"
+          ]
+        },
+        "packageName": "uglify-js",
+        "proprietary": false,
+        "creationTime": "2015-08-24T09:29:10Z",
+        "functions_new": [
+          {
+            "version": [
+              ">=2.2.0 <2.4.24"
+            ],
+            "functionId": {
+              "filePath": "lib/compress.js",
+              "functionName": "Compressor"
+            }
+          }
+        ],
+        "alternativeIds": [
+          "SNYK-JS-UGLIFYJS-10041"
+        ],
+        "disclosureTime": "2015-08-24T09:29:10Z",
+        "packageManager": "npm",
+        "publicationTime": "2015-08-24T09:29:10Z",
+        "modificationTime": "2022-01-03T17:48:01.009006Z",
+        "socialTrendAlert": false,
+        "from": [
+          "beagle-azure-task@1.0.1",
+          "require@2.4.20",
+          "uglify-js@2.3.0"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": true,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "uglify-js",
+        "version": "2.3.0",
+        "severityWithCritical": "high"
+      }
+    ],
+    "upgrade": {
+      "azure-pipelines-task-lib@2.12.2": {
+        "upgradeTo": "azure-pipelines-task-lib@3.3.1",
+        "upgrades": [
+          "minimatch@3.0.4",
+          "shelljs@0.3.0"
+        ],
+        "vulns": [
+          "SNYK-JS-MINIMATCH-3050818",
+          "SNYK-JS-SHELLJS-2332187"
+        ]
+      }
+    },
+    "patch": {
+      "npm:uglify-js:20151024": {
+        "paths": [
+          {
+            "require > uglify-js": {
+              "patched": "2023-01-04T18:54:41.842Z"
+            }
+          }
+        ]
+      }
+    },
+    "ignore": {},
+    "pin": {}
+  },
+  "filesystemPolicy": false,
+  "filtered": {
+    "ignore": [],
+    "patch": []
+  },
+  "uniqueCount": 6,
+  "projectName": "beagle-azure-task",
+  "displayTargetFile": "beagle-azure-task\\package-lock.json",
+  "hasUnknownVersions": false,
+  "path": "C:\\Users\\JesseHouwing\\source\\extension-securiry\\vsixs\\BeagleSecurity\\BeagleSecurity\\1.0.5"
+}

@@ -1,0 +1,439 @@
+{
+  "vulnerabilities": [
+    {
+      "id": "SNYK-JS-ADMZIP-1065796",
+      "title": "Directory Traversal",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+      "credit": [
+        "cthackers"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<0.5.2"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "0.5.2"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.4,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "adm-zip",
+      "references": [
+        {
+          "url": "https://github.com/cthackers/adm-zip/commit/119dcad6599adccc77982feb14a0c7440fa63013",
+          "title": "GitHub Commit"
+        }
+      ],
+      "cvssDetails": [],
+      "description": "## Overview\n[adm-zip](https://www.npmjs.com/package/adm-zip) is a JavaScript implementation for zip data compression for NodeJS.\n\nAffected versions of this package are vulnerable to Directory Traversal. It could extract files outside the target folder.\n\n## Details\n\nA Directory Traversal attack (also known as path traversal) aims to access files and directories that are stored outside the intended folder. By manipulating files with \"dot-dot-slash (../)\" sequences and its variations, or by using absolute file paths, it may be possible to access arbitrary files and directories stored on file system, including application source code, configuration, and other critical system files.\n\nDirectory Traversal vulnerabilities can be generally divided into two types:\n\n- **Information Disclosure**: Allows the attacker to gain information about the folder structure or read the contents of sensitive files on the system.\n\n`st` is a module for serving static files on web pages, and contains a [vulnerability of this type](https://snyk.io/vuln/npm:st:20140206). In our example, we will serve files from the `public` route.\n\nIf an attacker requests the following URL from our server, it will in turn leak the sensitive private key of the root user.\n\n```\ncurl http://localhost:8080/public/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/root/.ssh/id_rsa\n```\n**Note** `%2e` is the URL encoded version of `.` (dot).\n\n- **Writing arbitrary files**: Allows the attacker to create or replace existing files. This type of vulnerability is also known as `Zip-Slip`. \n\nOne way to achieve this is by using a malicious `zip` archive that holds path traversal filenames. When each filename in the zip archive gets concatenated to the target extraction folder, without validation, the final path ends up outside of the target folder. If an executable or a configuration file is overwritten with a file containing malicious code, the problem can turn into an arbitrary code execution issue quite easily.\n\nThe following is an example of a `zip` archive with one benign file and one malicious file. Extracting the malicious file will result in traversing out of the target folder, ending up in `/root/.ssh/` overwriting the `authorized_keys` file:\n\n```\n2018-04-15 22:04:29 .....           19           19  good.txt\n2018-04-15 22:04:42 .....           20           20  ../../../../../../root/.ssh/authorized_keys\n```\n\n## Remediation\nUpgrade `adm-zip` to version 0.5.2 or higher.\n## References\n- [GitHub Commit](https://github.com/cthackers/adm-zip/commit/119dcad6599adccc77982feb14a0c7440fa63013)\n",
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-22"
+        ]
+      },
+      "packageName": "adm-zip",
+      "proprietary": false,
+      "creationTime": "2021-01-28T07:59:50.454879Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2021-01-28T07:59:22Z",
+      "packageManager": "npm",
+      "publicationTime": "2021-02-15T17:04:18.109270Z",
+      "modificationTime": "2021-02-15T17:04:18.111270Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "synthetics-test-automation@0.1.0",
+        "azure-pipelines-tasks-packaging-common@2.198.1",
+        "adm-zip@0.4.16"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "adm-zip",
+      "version": "0.4.16"
+    },
+    {
+      "id": "SNYK-JS-VM2-3018201",
+      "title": "Sandbox Bypass",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
+      "credit": [
+        "Oxeye"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<3.9.11"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "3.9.11"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "critical",
+      "cvssScore": 9.9,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "vm2",
+      "references": [
+        {
+          "url": "https://github.com/patriksimek/vm2/commit/d9a7f3cc995d3d861e1380eafb886cb3c5e2b873%23diff-b1a515a627d820118e76d0e323fe2f0589ed50a1eacb490f6c3278fe3698f164",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/patriksimek/vm2/issues/467",
+          "title": "GitHub Issue"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "critical",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+          "cvssV3BaseScore": 10,
+          "modificationTime": "2022-11-08T13:10:48.047566Z"
+        }
+      ],
+      "description": "## Overview\n[vm2](https://github.com/patriksimek/vm2#readme) is a sandbox that can run untrusted code with whitelisted Node's built-in modules.\n\nAffected versions of this package are vulnerable to Sandbox Bypass via indirect access to `host.Object` during preparation of stacktraces, which can lead to execution of arbitrary code on the host machine.\n## Remediation\nUpgrade `vm2` to version 3.9.11 or higher.\n## References\n- [GitHub Commit](https://github.com/patriksimek/vm2/commit/d9a7f3cc995d3d861e1380eafb886cb3c5e2b873#diff-b1a515a627d820118e76d0e323fe2f0589ed50a1eacb490f6c3278fe3698f164)\n- [GitHub Issue](https://github.com/patriksimek/vm2/issues/467)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-36067"
+        ],
+        "CWE": [
+          "CWE-265"
+        ],
+        "GHSA": [
+          "GHSA-mrgp-mrhc-5jrq"
+        ]
+      },
+      "packageName": "vm2",
+      "proprietary": false,
+      "creationTime": "2022-09-07T11:36:26.891879Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-09-07T11:22:42Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-09-07T15:09:22Z",
+      "modificationTime": "2022-12-29T15:25:01.168749Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "critical",
+      "from": [
+        "synthetics-test-automation@0.1.0",
+        "@datadog/datadog-ci@2.2.0",
+        "proxy-agent@5.0.0",
+        "pac-proxy-agent@5.0.0",
+        "pac-resolver@5.0.1",
+        "degenerator@3.0.2",
+        "vm2@3.9.10"
+      ],
+      "upgradePath": [
+        false,
+        "@datadog/datadog-ci@2.2.0",
+        "proxy-agent@5.0.0",
+        "pac-proxy-agent@5.0.0",
+        "pac-resolver@5.0.1",
+        "degenerator@3.0.2",
+        "vm2@3.9.11"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "vm2",
+      "version": "3.9.10"
+    }
+  ],
+  "ok": false,
+  "dependencyCount": 330,
+  "org": "global-devops-bootcamp",
+  "policy": "# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.25.0\nignore: {}\npatch: {}\n",
+  "isPrivate": true,
+  "licensesPolicy": {
+    "severities": {},
+    "orgLicenseRules": {
+      "AGPL-1.0": {
+        "licenseType": "AGPL-1.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "AGPL-3.0": {
+        "licenseType": "AGPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "Artistic-1.0": {
+        "licenseType": "Artistic-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "Artistic-2.0": {
+        "licenseType": "Artistic-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CDDL-1.0": {
+        "licenseType": "CDDL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CPOL-1.02": {
+        "licenseType": "CPOL-1.02",
+        "severity": "high",
+        "instructions": ""
+      },
+      "EPL-1.0": {
+        "licenseType": "EPL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "GPL-2.0": {
+        "licenseType": "GPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "GPL-3.0": {
+        "licenseType": "GPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "LGPL-2.0": {
+        "licenseType": "LGPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1": {
+        "licenseType": "LGPL-2.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1+": {
+        "licenseType": "LGPL-2.1+",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0": {
+        "licenseType": "LGPL-3.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0+": {
+        "licenseType": "LGPL-3.0+",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-1.1": {
+        "licenseType": "MPL-1.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-2.0": {
+        "licenseType": "MPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MS-RL": {
+        "licenseType": "MS-RL",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "SimPL-2.0": {
+        "licenseType": "SimPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      }
+    }
+  },
+  "packageManager": "yarn",
+  "ignoreSettings": {
+    "adminOnly": false,
+    "reasonRequired": false,
+    "disregardFilesystemIgnores": false
+  },
+  "summary": "2 vulnerable dependency paths",
+  "remediation": {
+    "unresolved": [
+      {
+        "id": "SNYK-JS-ADMZIP-1065796",
+        "title": "Directory Traversal",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+        "credit": [
+          "cthackers"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<0.5.2"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "0.5.2"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.4,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "adm-zip",
+        "references": [
+          {
+            "url": "https://github.com/cthackers/adm-zip/commit/119dcad6599adccc77982feb14a0c7440fa63013",
+            "title": "GitHub Commit"
+          }
+        ],
+        "cvssDetails": [],
+        "description": "## Overview\n[adm-zip](https://www.npmjs.com/package/adm-zip) is a JavaScript implementation for zip data compression for NodeJS.\n\nAffected versions of this package are vulnerable to Directory Traversal. It could extract files outside the target folder.\n\n## Details\n\nA Directory Traversal attack (also known as path traversal) aims to access files and directories that are stored outside the intended folder. By manipulating files with \"dot-dot-slash (../)\" sequences and its variations, or by using absolute file paths, it may be possible to access arbitrary files and directories stored on file system, including application source code, configuration, and other critical system files.\n\nDirectory Traversal vulnerabilities can be generally divided into two types:\n\n- **Information Disclosure**: Allows the attacker to gain information about the folder structure or read the contents of sensitive files on the system.\n\n`st` is a module for serving static files on web pages, and contains a [vulnerability of this type](https://snyk.io/vuln/npm:st:20140206). In our example, we will serve files from the `public` route.\n\nIf an attacker requests the following URL from our server, it will in turn leak the sensitive private key of the root user.\n\n```\ncurl http://localhost:8080/public/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/root/.ssh/id_rsa\n```\n**Note** `%2e` is the URL encoded version of `.` (dot).\n\n- **Writing arbitrary files**: Allows the attacker to create or replace existing files. This type of vulnerability is also known as `Zip-Slip`. \n\nOne way to achieve this is by using a malicious `zip` archive that holds path traversal filenames. When each filename in the zip archive gets concatenated to the target extraction folder, without validation, the final path ends up outside of the target folder. If an executable or a configuration file is overwritten with a file containing malicious code, the problem can turn into an arbitrary code execution issue quite easily.\n\nThe following is an example of a `zip` archive with one benign file and one malicious file. Extracting the malicious file will result in traversing out of the target folder, ending up in `/root/.ssh/` overwriting the `authorized_keys` file:\n\n```\n2018-04-15 22:04:29 .....           19           19  good.txt\n2018-04-15 22:04:42 .....           20           20  ../../../../../../root/.ssh/authorized_keys\n```\n\n## Remediation\nUpgrade `adm-zip` to version 0.5.2 or higher.\n## References\n- [GitHub Commit](https://github.com/cthackers/adm-zip/commit/119dcad6599adccc77982feb14a0c7440fa63013)\n",
+        "identifiers": {
+          "CVE": [],
+          "CWE": [
+            "CWE-22"
+          ]
+        },
+        "packageName": "adm-zip",
+        "proprietary": false,
+        "creationTime": "2021-01-28T07:59:50.454879Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2021-01-28T07:59:22Z",
+        "packageManager": "npm",
+        "publicationTime": "2021-02-15T17:04:18.109270Z",
+        "modificationTime": "2021-02-15T17:04:18.111270Z",
+        "socialTrendAlert": false,
+        "from": [
+          "synthetics-test-automation@0.1.0",
+          "azure-pipelines-tasks-packaging-common@2.198.1",
+          "adm-zip@0.4.16"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "adm-zip",
+        "version": "0.4.16",
+        "severityWithCritical": "high"
+      },
+      {
+        "id": "SNYK-JS-VM2-3018201",
+        "title": "Sandbox Bypass",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
+        "credit": [
+          "Oxeye"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<3.9.11"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "3.9.11"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "critical",
+        "cvssScore": 9.9,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "vm2",
+        "references": [
+          {
+            "url": "https://github.com/patriksimek/vm2/commit/d9a7f3cc995d3d861e1380eafb886cb3c5e2b873%23diff-b1a515a627d820118e76d0e323fe2f0589ed50a1eacb490f6c3278fe3698f164",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/patriksimek/vm2/issues/467",
+            "title": "GitHub Issue"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+            "cvssV3BaseScore": 10,
+            "modificationTime": "2022-11-08T13:10:48.047566Z"
+          }
+        ],
+        "description": "## Overview\n[vm2](https://github.com/patriksimek/vm2#readme) is a sandbox that can run untrusted code with whitelisted Node's built-in modules.\n\nAffected versions of this package are vulnerable to Sandbox Bypass via indirect access to `host.Object` during preparation of stacktraces, which can lead to execution of arbitrary code on the host machine.\n## Remediation\nUpgrade `vm2` to version 3.9.11 or higher.\n## References\n- [GitHub Commit](https://github.com/patriksimek/vm2/commit/d9a7f3cc995d3d861e1380eafb886cb3c5e2b873#diff-b1a515a627d820118e76d0e323fe2f0589ed50a1eacb490f6c3278fe3698f164)\n- [GitHub Issue](https://github.com/patriksimek/vm2/issues/467)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-36067"
+          ],
+          "CWE": [
+            "CWE-265"
+          ],
+          "GHSA": [
+            "GHSA-mrgp-mrhc-5jrq"
+          ]
+        },
+        "packageName": "vm2",
+        "proprietary": false,
+        "creationTime": "2022-09-07T11:36:26.891879Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-09-07T11:22:42Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-09-07T15:09:22Z",
+        "modificationTime": "2022-12-29T15:25:01.168749Z",
+        "socialTrendAlert": false,
+        "from": [
+          "synthetics-test-automation@0.1.0",
+          "@datadog/datadog-ci@2.2.0",
+          "proxy-agent@5.0.0",
+          "pac-proxy-agent@5.0.0",
+          "pac-resolver@5.0.1",
+          "degenerator@3.0.2",
+          "vm2@3.9.10"
+        ],
+        "upgradePath": [
+          false,
+          "@datadog/datadog-ci@2.2.0",
+          "proxy-agent@5.0.0",
+          "pac-proxy-agent@5.0.0",
+          "pac-resolver@5.0.1",
+          "degenerator@3.0.2",
+          "vm2@3.9.11"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "vm2",
+        "version": "3.9.10",
+        "severityWithCritical": "critical"
+      }
+    ],
+    "upgrade": {},
+    "patch": {},
+    "ignore": {},
+    "pin": {}
+  },
+  "filesystemPolicy": false,
+  "filtered": {
+    "ignore": [],
+    "patch": []
+  },
+  "uniqueCount": 2,
+  "projectName": "synthetics-test-automation",
+  "displayTargetFile": "SyntheticsRunTestsTask\\yarn.lock",
+  "hasUnknownVersions": false,
+  "path": "C:\\Users\\JesseHouwing\\source\\extension-securiry\\vsixs\\Datadog\\datadog-ci\\1.1.1"
+}

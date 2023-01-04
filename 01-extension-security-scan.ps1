@@ -100,6 +100,7 @@ foreach ($extension in $extensions)
     {
         Expand-Archive -Path $savePath -DestinationPath $extractedPath -Force
     }
+    & git add "$extractedPath/extension.*manifest" --force
 
     write-host "##### COUNT: $count / $max "
     $count += 1
@@ -110,22 +111,30 @@ foreach ($extension in $extensions)
 {
     $publisherId = $extension.publisher.publisherName
     $extensionId = $extension.extensionName
-    $savePath = "vsixs/$publisherId/$extensionId/$($extension.versions[0].version).vsix"
-    $extractedPath = "vsixs/$publisherId/$extensionId/$($extension.versions[0].version)/"
+    $extensionRoot = "vsixs/$publisherId/$extensionId/"
+    $savePath = "$extensionRoot/$($extension.versions[0].version).vsix"
+    $extractedPath = "$extensionRoot/$($extension.versions[0].version)/"
     
-    if (-not ((Test-Path -Path (join-path -path $extractedPath -childpath "..\results-code.json") -PathType Leaf) -or (Test-Path -Path (join-path -path $extractedPath -childpath "..\results-code.completed") -PathType Leaf)))
+    if (-not ((Test-Path -Path (join-path -path $extensionRoot -childpath "results-code.json") -PathType Leaf) -or (Test-Path -Path (join-path -path $extensionRoot -childpath "results-code.completed") -PathType Leaf)))
     {
         pushd $extractedPath
         & snyk code test --json-file-output=..\results-code.json
         set-content -path ..\results-code.completed -value "completed"
+        & git add ..\results-code.* --force
         popd
     }
+    
+    
+    if (-not (Test-Path -Path (join-path -path $extensionRoot -childpath "results-deps.completed") -PathType Leaf))
+    {
+        pushd $extractedPath
+        & snyk test --all-projects --detection-depth=10 --json-file-output=..\results-deps.json
+        set-content -path ..\results-deps.completed -value "completed"
+        & git add ..\results-deps.* --force
+        popd
+    }
+    & git add $extensionRoot\results-deps.* --force
 
     write-host "##### COUNT: $count / $max "
     $count += 1
-}
-
-if (-not (Test-Path -Path "./result.json" -PathType Leaf))
-{
-    & snyk test --all-projects --detection-depth=25 --json-file-output=result.json
 }

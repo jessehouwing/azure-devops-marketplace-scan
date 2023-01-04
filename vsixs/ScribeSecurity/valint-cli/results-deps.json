@@ -1,0 +1,1275 @@
+[
+  {
+    "vulnerabilities": [
+      {
+        "id": "SNYK-JS-DECOMPRESSTAR-559095",
+        "title": "Arbitrary File Write via Archive Extraction (Zip Slip)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:C/C:H/I:N/A:N/E:P/RL:U/RC:C",
+        "credit": [
+          "Oscar Arnflo"
+        ],
+        "semver": {
+          "vulnerable": [
+            "*"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 6.3,
+        "functions": [
+          {
+            "version": [
+              "*"
+            ],
+            "functionId": {
+              "filePath": "index.js",
+              "className": null,
+              "functionName": "module.exports"
+            }
+          }
+        ],
+        "malicious": false,
+        "moduleName": "decompress-tar",
+        "references": [
+          {
+            "url": "https://github.com/kevva/decompress/pull/73",
+            "title": "GitHub Fix PR"
+          },
+          {
+            "url": "https://github.com/kevva/decompress/issues/71",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://github.com/kevva/decompress-tar/pull/12",
+            "title": "GitHub PR decompress-tar"
+          },
+          {
+            "url": "https://www.npmjs.com/advisories/1217",
+            "title": "NPM Advisory"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 9.8,
+            "modificationTime": "2022-01-03T18:04:12.459024Z"
+          }
+        ],
+        "description": "## Overview\n[decompress-tar](https://github.com/kevva/decompress-tar) is a tar plugin for decompress.\n\nAffected versions of this package are vulnerable to Arbitrary File Write via Archive Extraction (Zip Slip). It is possible to bypass the security measures provided by decompress  and conduct ZIP path traversal through symlinks.\r\n\r\n### PoC\r\n\r\n```\r\nconst decompress = require('decompress');\r\n\r\ndecompress('slip.tar.gz', 'dist').then(files => {\r\n\tconsole.log('done!');\r\n});\r\n```\n\n## Details\n\nIt is exploited using a specially crafted zip archive, that holds path traversal filenames. When exploited, a filename in a malicious archive is concatenated to the target extraction directory, which results in the final path ending up outside of the target folder. For instance, a zip may hold a file with a \"../../file.exe\" location and thus break out of the target folder. If an executable or a configuration file is overwritten with a file containing malicious code, the problem can turn into an arbitrary code execution issue quite easily.\n\nThe following is an example of a zip archive with one benign file and one malicious file. Extracting the malicous file will result in traversing out of the target folder, ending up in `/root/.ssh/` overwriting the `authorized_keys` file:\n\n```\n\n+2018-04-15 22:04:29 ..... 19 19 good.txt\n\n+2018-04-15 22:04:42 ..... 20 20 ../../../../../../root/.ssh/authorized_keys\n\n```\n\n## Remediation\nThere is no fixed version for `decompress-tar`.\n## References\n- [GitHub Fix PR](https://github.com/kevva/decompress/pull/73)\n- [GitHub Issue](https://github.com/kevva/decompress/issues/71)\n- [GitHub PR decompress-tar](https://github.com/kevva/decompress-tar/pull/12)\n- [NPM Advisory](https://www.npmjs.com/advisories/1217)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2020-12265"
+          ],
+          "CWE": [
+            "CWE-29"
+          ],
+          "NSP": [
+            "1217"
+          ],
+          "GHSA": [
+            "GHSA-qgfr-5hqp-vrw9"
+          ]
+        },
+        "packageName": "decompress-tar",
+        "proprietary": false,
+        "creationTime": "2020-03-02T11:17:35.161853Z",
+        "functions_new": [
+          {
+            "version": [
+              "*"
+            ],
+            "functionId": {
+              "filePath": "index.js",
+              "functionName": "module.exports"
+            }
+          }
+        ],
+        "alternativeIds": [],
+        "disclosureTime": "2019-10-15T20:29:24Z",
+        "packageManager": "npm",
+        "publicationTime": "2020-02-27T13:28:41Z",
+        "modificationTime": "2022-01-03T18:04:12.459024Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "medium",
+        "from": [
+          "install@1.0.0",
+          "decompress@4.2.1",
+          "decompress-tar@4.1.1"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "name": "decompress-tar",
+        "version": "4.1.1"
+      },
+      {
+        "id": "SNYK-JS-DECOMPRESSTAR-559095",
+        "title": "Arbitrary File Write via Archive Extraction (Zip Slip)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:C/C:H/I:N/A:N/E:P/RL:U/RC:C",
+        "credit": [
+          "Oscar Arnflo"
+        ],
+        "semver": {
+          "vulnerable": [
+            "*"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 6.3,
+        "functions": [
+          {
+            "version": [
+              "*"
+            ],
+            "functionId": {
+              "filePath": "index.js",
+              "className": null,
+              "functionName": "module.exports"
+            }
+          }
+        ],
+        "malicious": false,
+        "moduleName": "decompress-tar",
+        "references": [
+          {
+            "url": "https://github.com/kevva/decompress/pull/73",
+            "title": "GitHub Fix PR"
+          },
+          {
+            "url": "https://github.com/kevva/decompress/issues/71",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://github.com/kevva/decompress-tar/pull/12",
+            "title": "GitHub PR decompress-tar"
+          },
+          {
+            "url": "https://www.npmjs.com/advisories/1217",
+            "title": "NPM Advisory"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 9.8,
+            "modificationTime": "2022-01-03T18:04:12.459024Z"
+          }
+        ],
+        "description": "## Overview\n[decompress-tar](https://github.com/kevva/decompress-tar) is a tar plugin for decompress.\n\nAffected versions of this package are vulnerable to Arbitrary File Write via Archive Extraction (Zip Slip). It is possible to bypass the security measures provided by decompress  and conduct ZIP path traversal through symlinks.\r\n\r\n### PoC\r\n\r\n```\r\nconst decompress = require('decompress');\r\n\r\ndecompress('slip.tar.gz', 'dist').then(files => {\r\n\tconsole.log('done!');\r\n});\r\n```\n\n## Details\n\nIt is exploited using a specially crafted zip archive, that holds path traversal filenames. When exploited, a filename in a malicious archive is concatenated to the target extraction directory, which results in the final path ending up outside of the target folder. For instance, a zip may hold a file with a \"../../file.exe\" location and thus break out of the target folder. If an executable or a configuration file is overwritten with a file containing malicious code, the problem can turn into an arbitrary code execution issue quite easily.\n\nThe following is an example of a zip archive with one benign file and one malicious file. Extracting the malicous file will result in traversing out of the target folder, ending up in `/root/.ssh/` overwriting the `authorized_keys` file:\n\n```\n\n+2018-04-15 22:04:29 ..... 19 19 good.txt\n\n+2018-04-15 22:04:42 ..... 20 20 ../../../../../../root/.ssh/authorized_keys\n\n```\n\n## Remediation\nThere is no fixed version for `decompress-tar`.\n## References\n- [GitHub Fix PR](https://github.com/kevva/decompress/pull/73)\n- [GitHub Issue](https://github.com/kevva/decompress/issues/71)\n- [GitHub PR decompress-tar](https://github.com/kevva/decompress-tar/pull/12)\n- [NPM Advisory](https://www.npmjs.com/advisories/1217)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2020-12265"
+          ],
+          "CWE": [
+            "CWE-29"
+          ],
+          "NSP": [
+            "1217"
+          ],
+          "GHSA": [
+            "GHSA-qgfr-5hqp-vrw9"
+          ]
+        },
+        "packageName": "decompress-tar",
+        "proprietary": false,
+        "creationTime": "2020-03-02T11:17:35.161853Z",
+        "functions_new": [
+          {
+            "version": [
+              "*"
+            ],
+            "functionId": {
+              "filePath": "index.js",
+              "functionName": "module.exports"
+            }
+          }
+        ],
+        "alternativeIds": [],
+        "disclosureTime": "2019-10-15T20:29:24Z",
+        "packageManager": "npm",
+        "publicationTime": "2020-02-27T13:28:41Z",
+        "modificationTime": "2022-01-03T18:04:12.459024Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "medium",
+        "from": [
+          "install@1.0.0",
+          "decompress@4.2.1",
+          "decompress-tarbz2@4.1.1",
+          "decompress-tar@4.1.1"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "name": "decompress-tar",
+        "version": "4.1.1"
+      },
+      {
+        "id": "SNYK-JS-DECOMPRESSTAR-559095",
+        "title": "Arbitrary File Write via Archive Extraction (Zip Slip)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:C/C:H/I:N/A:N/E:P/RL:U/RC:C",
+        "credit": [
+          "Oscar Arnflo"
+        ],
+        "semver": {
+          "vulnerable": [
+            "*"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 6.3,
+        "functions": [
+          {
+            "version": [
+              "*"
+            ],
+            "functionId": {
+              "filePath": "index.js",
+              "className": null,
+              "functionName": "module.exports"
+            }
+          }
+        ],
+        "malicious": false,
+        "moduleName": "decompress-tar",
+        "references": [
+          {
+            "url": "https://github.com/kevva/decompress/pull/73",
+            "title": "GitHub Fix PR"
+          },
+          {
+            "url": "https://github.com/kevva/decompress/issues/71",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://github.com/kevva/decompress-tar/pull/12",
+            "title": "GitHub PR decompress-tar"
+          },
+          {
+            "url": "https://www.npmjs.com/advisories/1217",
+            "title": "NPM Advisory"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 9.8,
+            "modificationTime": "2022-01-03T18:04:12.459024Z"
+          }
+        ],
+        "description": "## Overview\n[decompress-tar](https://github.com/kevva/decompress-tar) is a tar plugin for decompress.\n\nAffected versions of this package are vulnerable to Arbitrary File Write via Archive Extraction (Zip Slip). It is possible to bypass the security measures provided by decompress  and conduct ZIP path traversal through symlinks.\r\n\r\n### PoC\r\n\r\n```\r\nconst decompress = require('decompress');\r\n\r\ndecompress('slip.tar.gz', 'dist').then(files => {\r\n\tconsole.log('done!');\r\n});\r\n```\n\n## Details\n\nIt is exploited using a specially crafted zip archive, that holds path traversal filenames. When exploited, a filename in a malicious archive is concatenated to the target extraction directory, which results in the final path ending up outside of the target folder. For instance, a zip may hold a file with a \"../../file.exe\" location and thus break out of the target folder. If an executable or a configuration file is overwritten with a file containing malicious code, the problem can turn into an arbitrary code execution issue quite easily.\n\nThe following is an example of a zip archive with one benign file and one malicious file. Extracting the malicous file will result in traversing out of the target folder, ending up in `/root/.ssh/` overwriting the `authorized_keys` file:\n\n```\n\n+2018-04-15 22:04:29 ..... 19 19 good.txt\n\n+2018-04-15 22:04:42 ..... 20 20 ../../../../../../root/.ssh/authorized_keys\n\n```\n\n## Remediation\nThere is no fixed version for `decompress-tar`.\n## References\n- [GitHub Fix PR](https://github.com/kevva/decompress/pull/73)\n- [GitHub Issue](https://github.com/kevva/decompress/issues/71)\n- [GitHub PR decompress-tar](https://github.com/kevva/decompress-tar/pull/12)\n- [NPM Advisory](https://www.npmjs.com/advisories/1217)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2020-12265"
+          ],
+          "CWE": [
+            "CWE-29"
+          ],
+          "NSP": [
+            "1217"
+          ],
+          "GHSA": [
+            "GHSA-qgfr-5hqp-vrw9"
+          ]
+        },
+        "packageName": "decompress-tar",
+        "proprietary": false,
+        "creationTime": "2020-03-02T11:17:35.161853Z",
+        "functions_new": [
+          {
+            "version": [
+              "*"
+            ],
+            "functionId": {
+              "filePath": "index.js",
+              "functionName": "module.exports"
+            }
+          }
+        ],
+        "alternativeIds": [],
+        "disclosureTime": "2019-10-15T20:29:24Z",
+        "packageManager": "npm",
+        "publicationTime": "2020-02-27T13:28:41Z",
+        "modificationTime": "2022-01-03T18:04:12.459024Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "medium",
+        "from": [
+          "install@1.0.0",
+          "decompress@4.2.1",
+          "decompress-targz@4.1.1",
+          "decompress-tar@4.1.1"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "name": "decompress-tar",
+        "version": "4.1.1"
+      },
+      {
+        "id": "SNYK-JS-FILETYPE-2958042",
+        "title": "Denial of Service (DoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<16.5.4",
+            ">=17.0.0 <17.1.3"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "16.5.4",
+          "17.1.3"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "file-type",
+        "references": [
+          {
+            "url": "https://github.com/sindresorhus/file-type/releases/tag/v16.5.4",
+            "title": "GitHub 16.5.4 Release"
+          },
+          {
+            "url": "https://github.com/sindresorhus/file-type/releases/tag/v17.1.3",
+            "title": "GitHub 17.1.3 Release"
+          },
+          {
+            "url": "https://github.com/sindresorhus/file-type/commit/2c4d1200c99dffb7d515b9b9951ef43c22bf7e47",
+            "title": "GitHub Commit"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 5.5,
+            "modificationTime": "2022-10-28T01:10:26.023002Z"
+          }
+        ],
+        "description": "## Overview\n\nAffected versions of this package are vulnerable to Denial of Service (DoS). A malformed MKV file could cause the file type detector to get caught in an infinite loop. This would make the application become unresponsive and could be used to cause a DoS attack.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `file-type` to version 16.5.4, 17.1.3 or higher.\n## References\n- [GitHub 16.5.4 Release](https://github.com/sindresorhus/file-type/releases/tag/v16.5.4)\n- [GitHub 17.1.3 Release](https://github.com/sindresorhus/file-type/releases/tag/v17.1.3)\n- [GitHub Commit](https://github.com/sindresorhus/file-type/commit/2c4d1200c99dffb7d515b9b9951ef43c22bf7e47)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-36313"
+          ],
+          "CWE": [
+            "CWE-400"
+          ]
+        },
+        "packageName": "file-type",
+        "proprietary": false,
+        "creationTime": "2022-07-22T06:18:14.062685Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-07-22T06:15:46Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-07-22T06:18:14Z",
+        "modificationTime": "2022-10-28T01:10:26.023002Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "install@1.0.0",
+          "decompress@4.2.1",
+          "decompress-tar@4.1.1",
+          "file-type@5.2.0"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "name": "file-type",
+        "version": "5.2.0"
+      },
+      {
+        "id": "SNYK-JS-FILETYPE-2958042",
+        "title": "Denial of Service (DoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<16.5.4",
+            ">=17.0.0 <17.1.3"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "16.5.4",
+          "17.1.3"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "file-type",
+        "references": [
+          {
+            "url": "https://github.com/sindresorhus/file-type/releases/tag/v16.5.4",
+            "title": "GitHub 16.5.4 Release"
+          },
+          {
+            "url": "https://github.com/sindresorhus/file-type/releases/tag/v17.1.3",
+            "title": "GitHub 17.1.3 Release"
+          },
+          {
+            "url": "https://github.com/sindresorhus/file-type/commit/2c4d1200c99dffb7d515b9b9951ef43c22bf7e47",
+            "title": "GitHub Commit"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 5.5,
+            "modificationTime": "2022-10-28T01:10:26.023002Z"
+          }
+        ],
+        "description": "## Overview\n\nAffected versions of this package are vulnerable to Denial of Service (DoS). A malformed MKV file could cause the file type detector to get caught in an infinite loop. This would make the application become unresponsive and could be used to cause a DoS attack.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `file-type` to version 16.5.4, 17.1.3 or higher.\n## References\n- [GitHub 16.5.4 Release](https://github.com/sindresorhus/file-type/releases/tag/v16.5.4)\n- [GitHub 17.1.3 Release](https://github.com/sindresorhus/file-type/releases/tag/v17.1.3)\n- [GitHub Commit](https://github.com/sindresorhus/file-type/commit/2c4d1200c99dffb7d515b9b9951ef43c22bf7e47)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-36313"
+          ],
+          "CWE": [
+            "CWE-400"
+          ]
+        },
+        "packageName": "file-type",
+        "proprietary": false,
+        "creationTime": "2022-07-22T06:18:14.062685Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-07-22T06:15:46Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-07-22T06:18:14Z",
+        "modificationTime": "2022-10-28T01:10:26.023002Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "install@1.0.0",
+          "decompress@4.2.1",
+          "decompress-targz@4.1.1",
+          "file-type@5.2.0"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "name": "file-type",
+        "version": "5.2.0"
+      },
+      {
+        "id": "SNYK-JS-FILETYPE-2958042",
+        "title": "Denial of Service (DoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<16.5.4",
+            ">=17.0.0 <17.1.3"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "16.5.4",
+          "17.1.3"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "file-type",
+        "references": [
+          {
+            "url": "https://github.com/sindresorhus/file-type/releases/tag/v16.5.4",
+            "title": "GitHub 16.5.4 Release"
+          },
+          {
+            "url": "https://github.com/sindresorhus/file-type/releases/tag/v17.1.3",
+            "title": "GitHub 17.1.3 Release"
+          },
+          {
+            "url": "https://github.com/sindresorhus/file-type/commit/2c4d1200c99dffb7d515b9b9951ef43c22bf7e47",
+            "title": "GitHub Commit"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 5.5,
+            "modificationTime": "2022-10-28T01:10:26.023002Z"
+          }
+        ],
+        "description": "## Overview\n\nAffected versions of this package are vulnerable to Denial of Service (DoS). A malformed MKV file could cause the file type detector to get caught in an infinite loop. This would make the application become unresponsive and could be used to cause a DoS attack.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `file-type` to version 16.5.4, 17.1.3 or higher.\n## References\n- [GitHub 16.5.4 Release](https://github.com/sindresorhus/file-type/releases/tag/v16.5.4)\n- [GitHub 17.1.3 Release](https://github.com/sindresorhus/file-type/releases/tag/v17.1.3)\n- [GitHub Commit](https://github.com/sindresorhus/file-type/commit/2c4d1200c99dffb7d515b9b9951ef43c22bf7e47)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-36313"
+          ],
+          "CWE": [
+            "CWE-400"
+          ]
+        },
+        "packageName": "file-type",
+        "proprietary": false,
+        "creationTime": "2022-07-22T06:18:14.062685Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-07-22T06:15:46Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-07-22T06:18:14Z",
+        "modificationTime": "2022-10-28T01:10:26.023002Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "install@1.0.0",
+          "decompress@4.2.1",
+          "decompress-tarbz2@4.1.1",
+          "decompress-tar@4.1.1",
+          "file-type@5.2.0"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "name": "file-type",
+        "version": "5.2.0"
+      },
+      {
+        "id": "SNYK-JS-FILETYPE-2958042",
+        "title": "Denial of Service (DoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<16.5.4",
+            ">=17.0.0 <17.1.3"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "16.5.4",
+          "17.1.3"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "file-type",
+        "references": [
+          {
+            "url": "https://github.com/sindresorhus/file-type/releases/tag/v16.5.4",
+            "title": "GitHub 16.5.4 Release"
+          },
+          {
+            "url": "https://github.com/sindresorhus/file-type/releases/tag/v17.1.3",
+            "title": "GitHub 17.1.3 Release"
+          },
+          {
+            "url": "https://github.com/sindresorhus/file-type/commit/2c4d1200c99dffb7d515b9b9951ef43c22bf7e47",
+            "title": "GitHub Commit"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 5.5,
+            "modificationTime": "2022-10-28T01:10:26.023002Z"
+          }
+        ],
+        "description": "## Overview\n\nAffected versions of this package are vulnerable to Denial of Service (DoS). A malformed MKV file could cause the file type detector to get caught in an infinite loop. This would make the application become unresponsive and could be used to cause a DoS attack.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `file-type` to version 16.5.4, 17.1.3 or higher.\n## References\n- [GitHub 16.5.4 Release](https://github.com/sindresorhus/file-type/releases/tag/v16.5.4)\n- [GitHub 17.1.3 Release](https://github.com/sindresorhus/file-type/releases/tag/v17.1.3)\n- [GitHub Commit](https://github.com/sindresorhus/file-type/commit/2c4d1200c99dffb7d515b9b9951ef43c22bf7e47)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-36313"
+          ],
+          "CWE": [
+            "CWE-400"
+          ]
+        },
+        "packageName": "file-type",
+        "proprietary": false,
+        "creationTime": "2022-07-22T06:18:14.062685Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-07-22T06:15:46Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-07-22T06:18:14Z",
+        "modificationTime": "2022-10-28T01:10:26.023002Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "install@1.0.0",
+          "decompress@4.2.1",
+          "decompress-targz@4.1.1",
+          "decompress-tar@4.1.1",
+          "file-type@5.2.0"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "name": "file-type",
+        "version": "5.2.0"
+      },
+      {
+        "id": "SNYK-JS-FILETYPE-2958042",
+        "title": "Denial of Service (DoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<16.5.4",
+            ">=17.0.0 <17.1.3"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "16.5.4",
+          "17.1.3"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "file-type",
+        "references": [
+          {
+            "url": "https://github.com/sindresorhus/file-type/releases/tag/v16.5.4",
+            "title": "GitHub 16.5.4 Release"
+          },
+          {
+            "url": "https://github.com/sindresorhus/file-type/releases/tag/v17.1.3",
+            "title": "GitHub 17.1.3 Release"
+          },
+          {
+            "url": "https://github.com/sindresorhus/file-type/commit/2c4d1200c99dffb7d515b9b9951ef43c22bf7e47",
+            "title": "GitHub Commit"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 5.5,
+            "modificationTime": "2022-10-28T01:10:26.023002Z"
+          }
+        ],
+        "description": "## Overview\n\nAffected versions of this package are vulnerable to Denial of Service (DoS). A malformed MKV file could cause the file type detector to get caught in an infinite loop. This would make the application become unresponsive and could be used to cause a DoS attack.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `file-type` to version 16.5.4, 17.1.3 or higher.\n## References\n- [GitHub 16.5.4 Release](https://github.com/sindresorhus/file-type/releases/tag/v16.5.4)\n- [GitHub 17.1.3 Release](https://github.com/sindresorhus/file-type/releases/tag/v17.1.3)\n- [GitHub Commit](https://github.com/sindresorhus/file-type/commit/2c4d1200c99dffb7d515b9b9951ef43c22bf7e47)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-36313"
+          ],
+          "CWE": [
+            "CWE-400"
+          ]
+        },
+        "packageName": "file-type",
+        "proprietary": false,
+        "creationTime": "2022-07-22T06:18:14.062685Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-07-22T06:15:46Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-07-22T06:18:14Z",
+        "modificationTime": "2022-10-28T01:10:26.023002Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "install@1.0.0",
+          "decompress@4.2.1",
+          "decompress-tarbz2@4.1.1",
+          "file-type@6.2.0"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "name": "file-type",
+        "version": "6.2.0"
+      },
+      {
+        "id": "SNYK-JS-FILETYPE-2958042",
+        "title": "Denial of Service (DoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<16.5.4",
+            ">=17.0.0 <17.1.3"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "16.5.4",
+          "17.1.3"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "file-type",
+        "references": [
+          {
+            "url": "https://github.com/sindresorhus/file-type/releases/tag/v16.5.4",
+            "title": "GitHub 16.5.4 Release"
+          },
+          {
+            "url": "https://github.com/sindresorhus/file-type/releases/tag/v17.1.3",
+            "title": "GitHub 17.1.3 Release"
+          },
+          {
+            "url": "https://github.com/sindresorhus/file-type/commit/2c4d1200c99dffb7d515b9b9951ef43c22bf7e47",
+            "title": "GitHub Commit"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 5.5,
+            "modificationTime": "2022-10-28T01:10:26.023002Z"
+          }
+        ],
+        "description": "## Overview\n\nAffected versions of this package are vulnerable to Denial of Service (DoS). A malformed MKV file could cause the file type detector to get caught in an infinite loop. This would make the application become unresponsive and could be used to cause a DoS attack.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `file-type` to version 16.5.4, 17.1.3 or higher.\n## References\n- [GitHub 16.5.4 Release](https://github.com/sindresorhus/file-type/releases/tag/v16.5.4)\n- [GitHub 17.1.3 Release](https://github.com/sindresorhus/file-type/releases/tag/v17.1.3)\n- [GitHub Commit](https://github.com/sindresorhus/file-type/commit/2c4d1200c99dffb7d515b9b9951ef43c22bf7e47)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-36313"
+          ],
+          "CWE": [
+            "CWE-400"
+          ]
+        },
+        "packageName": "file-type",
+        "proprietary": false,
+        "creationTime": "2022-07-22T06:18:14.062685Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-07-22T06:15:46Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-07-22T06:18:14Z",
+        "modificationTime": "2022-10-28T01:10:26.023002Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "install@1.0.0",
+          "decompress@4.2.1",
+          "decompress-unzip@4.0.1",
+          "file-type@3.9.0"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "name": "file-type",
+        "version": "3.9.0"
+      }
+    ],
+    "ok": false,
+    "dependencyCount": 118,
+    "org": "global-devops-bootcamp",
+    "policy": "# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.25.0\nignore: {}\npatch: {}\n",
+    "isPrivate": true,
+    "licensesPolicy": {
+      "severities": {},
+      "orgLicenseRules": {
+        "AGPL-1.0": {
+          "licenseType": "AGPL-1.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "AGPL-3.0": {
+          "licenseType": "AGPL-3.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "Artistic-1.0": {
+          "licenseType": "Artistic-1.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "Artistic-2.0": {
+          "licenseType": "Artistic-2.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "CDDL-1.0": {
+          "licenseType": "CDDL-1.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "CPOL-1.02": {
+          "licenseType": "CPOL-1.02",
+          "severity": "high",
+          "instructions": ""
+        },
+        "EPL-1.0": {
+          "licenseType": "EPL-1.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "GPL-2.0": {
+          "licenseType": "GPL-2.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "GPL-3.0": {
+          "licenseType": "GPL-3.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "LGPL-2.0": {
+          "licenseType": "LGPL-2.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-2.1": {
+          "licenseType": "LGPL-2.1",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-2.1+": {
+          "licenseType": "LGPL-2.1+",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-3.0": {
+          "licenseType": "LGPL-3.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-3.0+": {
+          "licenseType": "LGPL-3.0+",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "MPL-1.1": {
+          "licenseType": "MPL-1.1",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "MPL-2.0": {
+          "licenseType": "MPL-2.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "MS-RL": {
+          "licenseType": "MS-RL",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "SimPL-2.0": {
+          "licenseType": "SimPL-2.0",
+          "severity": "high",
+          "instructions": ""
+        }
+      }
+    },
+    "packageManager": "npm",
+    "ignoreSettings": {
+      "adminOnly": false,
+      "reasonRequired": false,
+      "disregardFilesystemIgnores": false
+    },
+    "summary": "9 vulnerable dependency paths",
+    "remediation": {
+      "unresolved": [
+        {
+          "id": "SNYK-JS-DECOMPRESSTAR-559095",
+          "title": "Arbitrary File Write via Archive Extraction (Zip Slip)",
+          "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:C/C:H/I:N/A:N/E:P/RL:U/RC:C",
+          "credit": [
+            "Oscar Arnflo"
+          ],
+          "semver": {
+            "vulnerable": [
+              "*"
+            ]
+          },
+          "exploit": "Proof of Concept",
+          "fixedIn": [],
+          "patches": [],
+          "insights": {
+            "triageAdvice": null
+          },
+          "language": "js",
+          "severity": "medium",
+          "cvssScore": 6.3,
+          "functions": [
+            {
+              "version": [
+                "*"
+              ],
+              "functionId": {
+                "filePath": "index.js",
+                "className": null,
+                "functionName": "module.exports"
+              }
+            }
+          ],
+          "malicious": false,
+          "moduleName": "decompress-tar",
+          "references": [
+            {
+              "url": "https://github.com/kevva/decompress/pull/73",
+              "title": "GitHub Fix PR"
+            },
+            {
+              "url": "https://github.com/kevva/decompress/issues/71",
+              "title": "GitHub Issue"
+            },
+            {
+              "url": "https://github.com/kevva/decompress-tar/pull/12",
+              "title": "GitHub PR decompress-tar"
+            },
+            {
+              "url": "https://www.npmjs.com/advisories/1217",
+              "title": "NPM Advisory"
+            }
+          ],
+          "cvssDetails": [
+            {
+              "assigner": "NVD",
+              "severity": "critical",
+              "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+              "cvssV3BaseScore": 9.8,
+              "modificationTime": "2022-01-03T18:04:12.459024Z"
+            }
+          ],
+          "description": "## Overview\n[decompress-tar](https://github.com/kevva/decompress-tar) is a tar plugin for decompress.\n\nAffected versions of this package are vulnerable to Arbitrary File Write via Archive Extraction (Zip Slip). It is possible to bypass the security measures provided by decompress  and conduct ZIP path traversal through symlinks.\r\n\r\n### PoC\r\n\r\n```\r\nconst decompress = require('decompress');\r\n\r\ndecompress('slip.tar.gz', 'dist').then(files => {\r\n\tconsole.log('done!');\r\n});\r\n```\n\n## Details\n\nIt is exploited using a specially crafted zip archive, that holds path traversal filenames. When exploited, a filename in a malicious archive is concatenated to the target extraction directory, which results in the final path ending up outside of the target folder. For instance, a zip may hold a file with a \"../../file.exe\" location and thus break out of the target folder. If an executable or a configuration file is overwritten with a file containing malicious code, the problem can turn into an arbitrary code execution issue quite easily.\n\nThe following is an example of a zip archive with one benign file and one malicious file. Extracting the malicous file will result in traversing out of the target folder, ending up in `/root/.ssh/` overwriting the `authorized_keys` file:\n\n```\n\n+2018-04-15 22:04:29 ..... 19 19 good.txt\n\n+2018-04-15 22:04:42 ..... 20 20 ../../../../../../root/.ssh/authorized_keys\n\n```\n\n## Remediation\nThere is no fixed version for `decompress-tar`.\n## References\n- [GitHub Fix PR](https://github.com/kevva/decompress/pull/73)\n- [GitHub Issue](https://github.com/kevva/decompress/issues/71)\n- [GitHub PR decompress-tar](https://github.com/kevva/decompress-tar/pull/12)\n- [NPM Advisory](https://www.npmjs.com/advisories/1217)\n",
+          "identifiers": {
+            "CVE": [
+              "CVE-2020-12265"
+            ],
+            "CWE": [
+              "CWE-29"
+            ],
+            "NSP": [
+              "1217"
+            ],
+            "GHSA": [
+              "GHSA-qgfr-5hqp-vrw9"
+            ]
+          },
+          "packageName": "decompress-tar",
+          "proprietary": false,
+          "creationTime": "2020-03-02T11:17:35.161853Z",
+          "functions_new": [
+            {
+              "version": [
+                "*"
+              ],
+              "functionId": {
+                "filePath": "index.js",
+                "functionName": "module.exports"
+              }
+            }
+          ],
+          "alternativeIds": [],
+          "disclosureTime": "2019-10-15T20:29:24Z",
+          "packageManager": "npm",
+          "publicationTime": "2020-02-27T13:28:41Z",
+          "modificationTime": "2022-01-03T18:04:12.459024Z",
+          "socialTrendAlert": false,
+          "from": [
+            "install@1.0.0",
+            "decompress@4.2.1",
+            "decompress-targz@4.1.1",
+            "decompress-tar@4.1.1"
+          ],
+          "upgradePath": [],
+          "isUpgradable": false,
+          "isPatchable": false,
+          "isPinnable": false,
+          "isRuntime": false,
+          "name": "decompress-tar",
+          "version": "4.1.1",
+          "severityWithCritical": "medium"
+        },
+        {
+          "id": "SNYK-JS-FILETYPE-2958042",
+          "title": "Denial of Service (DoS)",
+          "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "credit": [
+            "Unknown"
+          ],
+          "semver": {
+            "vulnerable": [
+              "<16.5.4",
+              ">=17.0.0 <17.1.3"
+            ]
+          },
+          "exploit": "Not Defined",
+          "fixedIn": [
+            "16.5.4",
+            "17.1.3"
+          ],
+          "patches": [],
+          "insights": {
+            "triageAdvice": null
+          },
+          "language": "js",
+          "severity": "high",
+          "cvssScore": 7.5,
+          "functions": [],
+          "malicious": false,
+          "moduleName": "file-type",
+          "references": [
+            {
+              "url": "https://github.com/sindresorhus/file-type/releases/tag/v16.5.4",
+              "title": "GitHub 16.5.4 Release"
+            },
+            {
+              "url": "https://github.com/sindresorhus/file-type/releases/tag/v17.1.3",
+              "title": "GitHub 17.1.3 Release"
+            },
+            {
+              "url": "https://github.com/sindresorhus/file-type/commit/2c4d1200c99dffb7d515b9b9951ef43c22bf7e47",
+              "title": "GitHub Commit"
+            }
+          ],
+          "cvssDetails": [
+            {
+              "assigner": "NVD",
+              "severity": "medium",
+              "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+              "cvssV3BaseScore": 5.5,
+              "modificationTime": "2022-10-28T01:10:26.023002Z"
+            }
+          ],
+          "description": "## Overview\n\nAffected versions of this package are vulnerable to Denial of Service (DoS). A malformed MKV file could cause the file type detector to get caught in an infinite loop. This would make the application become unresponsive and could be used to cause a DoS attack.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `file-type` to version 16.5.4, 17.1.3 or higher.\n## References\n- [GitHub 16.5.4 Release](https://github.com/sindresorhus/file-type/releases/tag/v16.5.4)\n- [GitHub 17.1.3 Release](https://github.com/sindresorhus/file-type/releases/tag/v17.1.3)\n- [GitHub Commit](https://github.com/sindresorhus/file-type/commit/2c4d1200c99dffb7d515b9b9951ef43c22bf7e47)\n",
+          "identifiers": {
+            "CVE": [
+              "CVE-2022-36313"
+            ],
+            "CWE": [
+              "CWE-400"
+            ]
+          },
+          "packageName": "file-type",
+          "proprietary": false,
+          "creationTime": "2022-07-22T06:18:14.062685Z",
+          "functions_new": [],
+          "alternativeIds": [],
+          "disclosureTime": "2022-07-22T06:15:46Z",
+          "packageManager": "npm",
+          "publicationTime": "2022-07-22T06:18:14Z",
+          "modificationTime": "2022-10-28T01:10:26.023002Z",
+          "socialTrendAlert": false,
+          "from": [
+            "install@1.0.0",
+            "decompress@4.2.1",
+            "decompress-unzip@4.0.1",
+            "file-type@3.9.0"
+          ],
+          "upgradePath": [],
+          "isUpgradable": false,
+          "isPatchable": false,
+          "isPinnable": false,
+          "isRuntime": false,
+          "name": "file-type",
+          "version": "3.9.0",
+          "severityWithCritical": "high"
+        }
+      ],
+      "upgrade": {},
+      "patch": {},
+      "ignore": {},
+      "pin": {}
+    },
+    "filesystemPolicy": false,
+    "filtered": {
+      "ignore": [],
+      "patch": []
+    },
+    "uniqueCount": 2,
+    "projectName": "install",
+    "foundProjectCount": 1,
+    "displayTargetFile": "install\\package-lock.json",
+    "hasUnknownVersions": false,
+    "path": "C:\\Users\\JesseHouwing\\source\\extension-securiry\\vsixs\\ScribeSecurity\\valint-cli\\0.1.2"
+  },
+  {
+    "vulnerabilities": [],
+    "ok": true,
+    "dependencyCount": 64,
+    "org": "global-devops-bootcamp",
+    "policy": "# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.25.0\nignore: {}\npatch: {}\n",
+    "isPrivate": true,
+    "licensesPolicy": {
+      "severities": {},
+      "orgLicenseRules": {
+        "AGPL-1.0": {
+          "licenseType": "AGPL-1.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "AGPL-3.0": {
+          "licenseType": "AGPL-3.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "Artistic-1.0": {
+          "licenseType": "Artistic-1.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "Artistic-2.0": {
+          "licenseType": "Artistic-2.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "CDDL-1.0": {
+          "licenseType": "CDDL-1.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "CPOL-1.02": {
+          "licenseType": "CPOL-1.02",
+          "severity": "high",
+          "instructions": ""
+        },
+        "EPL-1.0": {
+          "licenseType": "EPL-1.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "GPL-2.0": {
+          "licenseType": "GPL-2.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "GPL-3.0": {
+          "licenseType": "GPL-3.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "LGPL-2.0": {
+          "licenseType": "LGPL-2.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-2.1": {
+          "licenseType": "LGPL-2.1",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-2.1+": {
+          "licenseType": "LGPL-2.1+",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-3.0": {
+          "licenseType": "LGPL-3.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-3.0+": {
+          "licenseType": "LGPL-3.0+",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "MPL-1.1": {
+          "licenseType": "MPL-1.1",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "MPL-2.0": {
+          "licenseType": "MPL-2.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "MS-RL": {
+          "licenseType": "MS-RL",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "SimPL-2.0": {
+          "licenseType": "SimPL-2.0",
+          "severity": "high",
+          "instructions": ""
+        }
+      }
+    },
+    "packageManager": "npm",
+    "ignoreSettings": {
+      "adminOnly": false,
+      "reasonRequired": false,
+      "disregardFilesystemIgnores": false
+    },
+    "summary": "No known vulnerabilities",
+    "filesystemPolicy": false,
+    "uniqueCount": 0,
+    "projectName": "valint-cli",
+    "foundProjectCount": 1,
+    "displayTargetFile": "valint-cli\\package-lock.json",
+    "hasUnknownVersions": false,
+    "path": "C:\\Users\\JesseHouwing\\source\\extension-securiry\\vsixs\\ScribeSecurity\\valint-cli\\0.1.2"
+  }
+]

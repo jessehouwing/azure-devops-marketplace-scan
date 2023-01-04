@@ -1,0 +1,1675 @@
+{
+  "vulnerabilities": [
+    {
+      "id": "SNYK-JS-FOLLOWREDIRECTS-2332181",
+      "title": "Information Exposure",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:N/E:P",
+      "credit": [
+        "ranjit-git"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<1.14.7"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "1.14.7"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "medium",
+      "cvssScore": 5.3,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "follow-redirects",
+      "references": [
+        {
+          "url": "https://github.com/follow-redirects/follow-redirects/commit/8b347cbcef7c7b72a6e9be20f5710c17d6163c22",
+          "title": "GitHub Commit"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "medium",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
+          "cvssV3BaseScore": 6.5,
+          "modificationTime": "2022-10-29T01:10:37.731334Z"
+        }
+      ],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Information Exposure by leaking the cookie header to a third party site in the process of fetching a remote URL with the cookie in the request body. If the response contains a `location` header, it will follow the redirect to another URL of a potentially malicious actor, to which the cookie would be exposed.\n## Remediation\nUpgrade `follow-redirects` to version 1.14.7 or higher.\n## References\n- [GitHub Commit](https://github.com/follow-redirects/follow-redirects/commit/8b347cbcef7c7b72a6e9be20f5710c17d6163c22)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-0155"
+        ],
+        "CWE": [
+          "CWE-359"
+        ]
+      },
+      "packageName": "follow-redirects",
+      "proprietary": false,
+      "creationTime": "2022-01-11T12:27:16.635235Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-01-11T12:06:36Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-01-12T12:49:36.149349Z",
+      "modificationTime": "2022-10-29T01:10:37.731334Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "medium",
+      "from": [
+        "ghostthemeuploader@0.1.0",
+        "@tryghost/admin-api@1.4.4",
+        "axios@0.21.4",
+        "follow-redirects@1.14.5"
+      ],
+      "upgradePath": [
+        false,
+        "@tryghost/admin-api@1.4.4",
+        "axios@0.21.4",
+        "follow-redirects@1.14.7"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "follow-redirects",
+      "version": "1.14.5"
+    },
+    {
+      "id": "SNYK-JS-FOLLOWREDIRECTS-2396346",
+      "title": "Information Exposure",
+      "CVSSv3": "CVSS:3.1/AV:A/AC:H/PR:L/UI:N/S:U/C:L/I:N/A:N",
+      "credit": [
+        "haxatron"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<1.14.8"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "1.14.8"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "low",
+      "cvssScore": 2.6,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "follow-redirects",
+      "references": [
+        {
+          "url": "https://github.com/follow-redirects/follow-redirects/commit/62e546a99c07c3ee5e4e0718c84a6ca127c5c445",
+          "title": "GitHub Commit"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "medium",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+          "cvssV3BaseScore": 5.9,
+          "modificationTime": "2022-02-12T04:10:26.549451Z"
+        },
+        {
+          "assigner": "Red Hat",
+          "severity": "medium",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+          "cvssV3BaseScore": 5.9,
+          "modificationTime": "2022-10-27T02:41:54.426377Z"
+        }
+      ],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Information Exposure due a leakage of the Authorization header from the same hostname during HTTPS to HTTP redirection. An attacker who can listen in on the wire (or perform a MITM attack) will be able to receive the Authorization header due to the usage of the insecure HTTP protocol which does not verify the hostname the request is sending to.\n## Remediation\nUpgrade `follow-redirects` to version 1.14.8 or higher.\n## References\n- [GitHub Commit](https://github.com/follow-redirects/follow-redirects/commit/62e546a99c07c3ee5e4e0718c84a6ca127c5c445)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-0536"
+        ],
+        "CWE": [
+          "CWE-200"
+        ]
+      },
+      "packageName": "follow-redirects",
+      "proprietary": false,
+      "creationTime": "2022-02-09T13:37:15.331538Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-02-09T12:43:30Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-02-09T17:20:22.054220Z",
+      "modificationTime": "2022-10-27T02:41:54.426377Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "low",
+      "from": [
+        "ghostthemeuploader@0.1.0",
+        "@tryghost/admin-api@1.4.4",
+        "axios@0.21.4",
+        "follow-redirects@1.14.5"
+      ],
+      "upgradePath": [
+        false,
+        "@tryghost/admin-api@1.4.4",
+        "axios@0.21.4",
+        "follow-redirects@1.14.8"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "follow-redirects",
+      "version": "1.14.5"
+    },
+    {
+      "id": "SNYK-JS-JSONWEBTOKEN-3180020",
+      "title": "Improper Input Validation",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:L",
+      "credit": [
+        "Palo Alto Networks"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<9.0.0"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "9.0.0"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.7,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "jsonwebtoken",
+      "references": [
+        {
+          "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0",
+          "title": "GitHub Release"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "critical",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cvssV3BaseScore": 9.8,
+          "modificationTime": "2022-12-31T01:11:46.767526Z"
+        }
+      ],
+      "description": "## Overview\n[jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) is a JSON Web Token implementation (symmetric and asymmetric)\n\nAffected versions of this package are vulnerable to Improper Input Validation such that if a malicious actor has the ability to modify the key retrieval parameter (referring to the `secretOrPublicKey` argument from the [readme link](https://github.com/auth0/node-jsonwebtoken#jwtverifytoken-secretorpublickey-options-callback)) of the `jwt.verify()` function, they can gain remote code execution (RCE).\r\n\r\n## Exploitability\r\nUsers are affected only if they are allowing untrusted entities to modify the key retrieval parameter of the `jwt.verify()` on a host that they control.\n## Remediation\nUpgrade `jsonwebtoken` to version 9.0.0 or higher.\n## References\n- [GitHub Commit](https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3)\n- [GitHub Release](https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-23529"
+        ],
+        "CWE": [
+          "CWE-20"
+        ],
+        "GHSA": [
+          "GHSA-27h2-hvpr-p74q"
+        ]
+      },
+      "packageName": "jsonwebtoken",
+      "proprietary": false,
+      "creationTime": "2022-12-22T09:01:22.380794Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-12-22T03:31:28Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-12-22T09:12:58.920917Z",
+      "modificationTime": "2022-12-31T01:11:46.767526Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "ghostthemeuploader@0.1.0",
+        "@tryghost/admin-api@1.4.4",
+        "jsonwebtoken@8.5.1"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "jsonwebtoken",
+      "version": "8.5.1"
+    },
+    {
+      "id": "SNYK-JS-JSONWEBTOKEN-3180022",
+      "title": "Improper Authentication",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+      "credit": [
+        "Unknown"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<9.0.0"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "9.0.0"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "critical",
+      "cvssScore": 9.8,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "jsonwebtoken",
+      "references": [
+        {
+          "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0",
+          "title": "GitHub Release"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "critical",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cvssV3BaseScore": 9.8,
+          "modificationTime": "2022-12-30T01:10:39.106809Z"
+        }
+      ],
+      "description": "## Overview\n[jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) is a JSON Web Token implementation (symmetric and asymmetric)\n\nAffected versions of this package are vulnerable to Improper Authentication such that the lack of algorithm definition in the `jwt.verify()` function can lead to signature validation bypass due to defaulting to the `none` algorithm for signature verification. \r\n\r\n## Exploitability\r\nUsers are affected if they do not specify algorithms in the `jwt.verify()` function.\n## Remediation\nUpgrade `jsonwebtoken` to version 9.0.0 or higher.\n## References\n- [GitHub Commit](https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3)\n- [GitHub Release](https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-23540"
+        ],
+        "CWE": [
+          "CWE-287"
+        ],
+        "GHSA": [
+          "GHSA-qwph-4952-7xr6"
+        ]
+      },
+      "packageName": "jsonwebtoken",
+      "proprietary": false,
+      "creationTime": "2022-12-22T09:09:36.072853Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-12-22T03:32:59Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-12-22T09:13:25.290846Z",
+      "modificationTime": "2022-12-30T08:09:08.244368Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "critical",
+      "from": [
+        "ghostthemeuploader@0.1.0",
+        "@tryghost/admin-api@1.4.4",
+        "jsonwebtoken@8.5.1"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "jsonwebtoken",
+      "version": "8.5.1"
+    },
+    {
+      "id": "SNYK-JS-JSONWEBTOKEN-3180024",
+      "title": "Improper Restriction of Security Token Assignment",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N",
+      "credit": [
+        "Unknown"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<9.0.0"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "9.0.0"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "medium",
+      "cvssScore": 6.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "jsonwebtoken",
+      "references": [
+        {
+          "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0",
+          "title": "GitHub Release"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "critical",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cvssV3BaseScore": 9.8,
+          "modificationTime": "2022-12-30T01:10:39.650072Z"
+        }
+      ],
+      "description": "## Overview\n[jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) is a JSON Web Token implementation (symmetric and asymmetric)\n\nAffected versions of this package are vulnerable to Improper Restriction of Security Token Assignment via the `secretOrPublicKey ` argument due to misconfigurations of the key retrieval function `jwt.verify()`. Exploiting this vulnerability might result in incorrect verification of forged tokens when tokens signed with an asymmetric public key could be verified with a symmetric HS256 algorithm.\r\n\r\n**Note:**\r\nThis vulnerability affects your application if it supports the usage of both symmetric and asymmetric keys in `jwt.verify()` implementation with the same key retrieval function.\n## Remediation\nUpgrade `jsonwebtoken` to version 9.0.0 or higher.\n## References\n- [GitHub Commit](https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3)\n- [GitHub Release](https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-23541"
+        ],
+        "CWE": [
+          "CWE-1259"
+        ],
+        "GHSA": [
+          "GHSA-hjrf-2m68-5959"
+        ]
+      },
+      "packageName": "jsonwebtoken",
+      "proprietary": false,
+      "creationTime": "2022-12-22T09:14:27.155728Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-12-22T03:33:19Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-12-22T09:16:03.621406Z",
+      "modificationTime": "2022-12-30T01:10:39.650072Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "medium",
+      "from": [
+        "ghostthemeuploader@0.1.0",
+        "@tryghost/admin-api@1.4.4",
+        "jsonwebtoken@8.5.1"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "jsonwebtoken",
+      "version": "8.5.1"
+    },
+    {
+      "id": "SNYK-JS-JSONWEBTOKEN-3180026",
+      "title": "Use of a Broken or Risky Cryptographic Algorithm",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:N",
+      "credit": [
+        "Unknown"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<9.0.0"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "9.0.0"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "medium",
+      "cvssScore": 6.8,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "jsonwebtoken",
+      "references": [
+        {
+          "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0",
+          "title": "GitHub Release"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N",
+          "cvssV3BaseScore": 8.1,
+          "modificationTime": "2022-12-31T01:11:45.823807Z"
+        }
+      ],
+      "description": "## Overview\n[jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) is a JSON Web Token implementation (symmetric and asymmetric)\n\nAffected versions of this package are vulnerable to Use of a Broken or Risky Cryptographic Algorithm such that the library can be misconfigured to use legacy, insecure key types for signature verification. For example, DSA keys could be used with the RS256 algorithm. \r\n\r\n## Exploitability\r\n\r\nUsers are affected when using an algorithm and a key type _other_ than the combinations mentioned below:\r\n\r\nEC: ES256, ES384, ES512\r\n                  \r\nRSA: RS256, RS384, RS512, PS256, PS384, PS512 \r\n\r\nRSA-PSS: PS256, PS384, PS512                      \r\n\r\nAnd for Elliptic Curve algorithms:\r\n\r\nES256: prime256v1\r\n\r\nES384: secp384r1\r\n\r\nES512:  secp521r1 \r\n\r\n## Workaround \r\n\r\nUsers who are unable to upgrade to the fixed version can use the  `allowInvalidAsymmetricKeyTypes` option  to `true` in the `sign()` and `verify()` functions to continue usage of invalid key type/algorithm combination in 9.0.0 for legacy compatibility.\n## Remediation\nUpgrade `jsonwebtoken` to version 9.0.0 or higher.\n## References\n- [GitHub Commit](https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3)\n- [GitHub Release](https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-23539"
+        ],
+        "CWE": [
+          "CWE-327"
+        ],
+        "GHSA": [
+          "GHSA-8cf7-32gw-wr33"
+        ]
+      },
+      "packageName": "jsonwebtoken",
+      "proprietary": false,
+      "creationTime": "2022-12-22T09:19:03.430735Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-12-22T03:32:22Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-12-22T10:32:50.173080Z",
+      "modificationTime": "2023-01-01T13:30:43.098324Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "medium",
+      "from": [
+        "ghostthemeuploader@0.1.0",
+        "@tryghost/admin-api@1.4.4",
+        "jsonwebtoken@8.5.1"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "jsonwebtoken",
+      "version": "8.5.1"
+    },
+    {
+      "id": "SNYK-JS-MINIMATCH-3050818",
+      "title": "Regular Expression Denial of Service (ReDoS)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+      "credit": [
+        "Unknown"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<3.0.5"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "3.0.5"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "medium",
+      "cvssScore": 5.3,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "minimatch",
+      "references": [
+        {
+          "url": "https://github.com/isaacs/minimatch/commit/a8763f4388e51956be62dc6025cec1126beeb5e6",
+          "title": "GitHub Commit"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "Red Hat",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-11-27T21:40:17.490683Z"
+        },
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-10-20T01:10:31.056597Z"
+        }
+      ],
+      "description": "## Overview\n[minimatch](https://www.npmjs.com/package/minimatch) is a minimal matching utility.\n\nAffected versions of this package are vulnerable to Regular Expression Denial of Service (ReDoS) via the `braceExpand` function in `minimatch.js`.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `minimatch` to version 3.0.5 or higher.\n## References\n- [GitHub Commit](https://github.com/isaacs/minimatch/commit/a8763f4388e51956be62dc6025cec1126beeb5e6)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-3517"
+        ],
+        "CWE": [
+          "CWE-1333"
+        ]
+      },
+      "packageName": "minimatch",
+      "proprietary": false,
+      "creationTime": "2022-10-18T06:10:47.980262Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-10-18T06:00:25Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-10-18T06:29:18.078950Z",
+      "modificationTime": "2022-11-27T21:40:17.490683Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "medium",
+      "from": [
+        "ghostthemeuploader@0.1.0",
+        "azure-pipelines-task-lib@3.1.10",
+        "minimatch@3.0.4"
+      ],
+      "upgradePath": [
+        false,
+        "azure-pipelines-task-lib@3.3.1",
+        "minimatch@3.0.5"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "minimatch",
+      "version": "3.0.4"
+    },
+    {
+      "id": "SNYK-JS-MINIMATCH-3050818",
+      "title": "Regular Expression Denial of Service (ReDoS)",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+      "credit": [
+        "Unknown"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<3.0.5"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "3.0.5"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "medium",
+      "cvssScore": 5.3,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "minimatch",
+      "references": [
+        {
+          "url": "https://github.com/isaacs/minimatch/commit/a8763f4388e51956be62dc6025cec1126beeb5e6",
+          "title": "GitHub Commit"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "Red Hat",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-11-27T21:40:17.490683Z"
+        },
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-10-20T01:10:31.056597Z"
+        }
+      ],
+      "description": "## Overview\n[minimatch](https://www.npmjs.com/package/minimatch) is a minimal matching utility.\n\nAffected versions of this package are vulnerable to Regular Expression Denial of Service (ReDoS) via the `braceExpand` function in `minimatch.js`.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `minimatch` to version 3.0.5 or higher.\n## References\n- [GitHub Commit](https://github.com/isaacs/minimatch/commit/a8763f4388e51956be62dc6025cec1126beeb5e6)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-3517"
+        ],
+        "CWE": [
+          "CWE-1333"
+        ]
+      },
+      "packageName": "minimatch",
+      "proprietary": false,
+      "creationTime": "2022-10-18T06:10:47.980262Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-10-18T06:00:25Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-10-18T06:29:18.078950Z",
+      "modificationTime": "2022-11-27T21:40:17.490683Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "medium",
+      "from": [
+        "ghostthemeuploader@0.1.0",
+        "azure-pipelines-task-lib@3.1.10",
+        "shelljs@0.8.4",
+        "glob@7.2.0",
+        "minimatch@3.0.4"
+      ],
+      "upgradePath": [
+        false,
+        "azure-pipelines-task-lib@3.1.10",
+        "shelljs@0.8.4",
+        "glob@7.2.0",
+        "minimatch@3.0.5"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "minimatch",
+      "version": "3.0.4"
+    },
+    {
+      "id": "SNYK-JS-QS-3153490",
+      "title": "Prototype Poisoning",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+      "credit": [
+        "BRAUN Nathanael",
+        "BRISSAUD Johan"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<6.2.4",
+          ">=6.3.0 <6.3.3",
+          ">=6.4.0 <6.4.1",
+          ">=6.5.0 <6.5.3",
+          ">=6.6.0 <6.6.1",
+          ">=6.7.0 <6.7.3",
+          ">=6.8.0 <6.8.3",
+          ">=6.9.0 <6.9.7",
+          ">=6.10.0 <6.10.3"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "6.2.4",
+        "6.3.3",
+        "6.4.1",
+        "6.5.3",
+        "6.6.1",
+        "6.7.3",
+        "6.8.3",
+        "6.9.7",
+        "6.10.3"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "qs",
+      "references": [
+        {
+          "url": "https://github.com/ljharb/qs/pull/428",
+          "title": "GitHub PR"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2150323",
+          "title": "RedHat Bugzilla Bug"
+        },
+        {
+          "url": "https://github.com/n8tz/CVE-2022-24999",
+          "title": "Researcher Advisory"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-11-29T01:11:13.913238Z"
+        },
+        {
+          "assigner": "Red Hat",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "cvssV3BaseScore": 7.5,
+          "modificationTime": "2022-12-03T13:46:25.900727Z"
+        }
+      ],
+      "description": "## Overview\n[qs](https://www.npmjs.com/package/qs) is a querystring parser that supports nesting and arrays, with a depth limit.\n\nAffected versions of this package are vulnerable to Prototype Poisoning which allows attackers to cause a Node process to hang, processing an Array object whose prototype has been replaced by one with an excessive length value.\r\n\r\n**Note:** In many typical Express use cases, an unauthenticated remote attacker can place the attack payload in the query string of the URL that is used to visit the application, such as `a[__proto__]=b&a[__proto__]&a[length]=100000000`.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `qs` to version 6.2.4, 6.3.3, 6.4.1, 6.5.3, 6.6.1, 6.7.3, 6.8.3, 6.9.7, 6.10.3 or higher.\n## References\n- [GitHub PR](https://github.com/ljharb/qs/pull/428)\n- [RedHat Bugzilla Bug](https://bugzilla.redhat.com/show_bug.cgi?id=2150323)\n- [Researcher Advisory](https://github.com/n8tz/CVE-2022-24999)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-24999"
+        ],
+        "CWE": [
+          "CWE-1321"
+        ]
+      },
+      "packageName": "qs",
+      "proprietary": false,
+      "creationTime": "2022-12-04T11:01:47.782869Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-11-26T00:00:00Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-12-04T12:24:32.307833Z",
+      "modificationTime": "2022-12-06T09:33:17.364321Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "ghostthemeuploader@0.1.0",
+        "azure-pipelines-task-lib@3.1.10",
+        "sync-request@6.1.0",
+        "then-request@6.0.2",
+        "qs@6.10.1"
+      ],
+      "upgradePath": [
+        false,
+        "azure-pipelines-task-lib@3.1.10",
+        "sync-request@6.1.0",
+        "then-request@6.0.2",
+        "qs@6.10.3"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "qs",
+      "version": "6.10.1"
+    },
+    {
+      "id": "SNYK-JS-SHELLJS-2332187",
+      "title": "Improper Privilege Management",
+      "CVSSv3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H/E:P",
+      "credit": [
+        "haxatron"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<0.8.5"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "0.8.5"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.1,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "shelljs",
+      "references": [
+        {
+          "url": "https://github.com/shelljs/shelljs/commit/d919d22dd6de385edaa9d90313075a77f74b338c",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/shelljs/shelljs/issues/1058",
+          "title": "GitHub Issue"
+        },
+        {
+          "url": "https://github.com/shelljs/shelljs/pull/1060",
+          "title": "GitHub PR"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H",
+          "cvssV3BaseScore": 7.1,
+          "modificationTime": "2022-02-09T16:10:36.984666Z"
+        }
+      ],
+      "description": "## Overview\n[shelljs](None) is a wrapper for the Unix shell commands for Node.js.\n\nAffected versions of this package are vulnerable to Improper Privilege Management. When `ShellJS` is used to create shell scripts which may be running as `root`, users with low-level privileges on the system can leak sensitive information such as passwords (depending on implementation) from the standard output of the privileged process OR shutdown privileged `ShellJS` processes via the `exec` function when triggering EACCESS errors.\r\n\r\n**Note:** Thi only impacts the synchronous version of `shell.exec()`.\n## Remediation\nUpgrade `shelljs` to version 0.8.5 or higher.\n## References\n- [GitHub Commit](https://github.com/shelljs/shelljs/commit/d919d22dd6de385edaa9d90313075a77f74b338c)\n- [GitHub Issue](https://github.com/shelljs/shelljs/issues/1058)\n- [GitHub PR](https://github.com/shelljs/shelljs/pull/1060)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-0144"
+        ],
+        "CWE": [
+          "CWE-269"
+        ]
+      },
+      "packageName": "shelljs",
+      "proprietary": false,
+      "creationTime": "2022-01-11T12:52:23.829882Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-01-11T12:39:08Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-01-12T12:49:35.008405Z",
+      "modificationTime": "2022-02-09T16:10:36.984666Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "ghostthemeuploader@0.1.0",
+        "azure-pipelines-task-lib@3.1.10",
+        "shelljs@0.8.4"
+      ],
+      "upgradePath": [
+        false,
+        "azure-pipelines-task-lib@3.1.10",
+        "shelljs@0.8.5"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "shelljs",
+      "version": "0.8.4"
+    }
+  ],
+  "ok": false,
+  "dependencyCount": 85,
+  "org": "global-devops-bootcamp",
+  "policy": "# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.25.0\nignore: {}\npatch: {}\n",
+  "isPrivate": true,
+  "licensesPolicy": {
+    "severities": {},
+    "orgLicenseRules": {
+      "AGPL-1.0": {
+        "licenseType": "AGPL-1.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "AGPL-3.0": {
+        "licenseType": "AGPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "Artistic-1.0": {
+        "licenseType": "Artistic-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "Artistic-2.0": {
+        "licenseType": "Artistic-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CDDL-1.0": {
+        "licenseType": "CDDL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CPOL-1.02": {
+        "licenseType": "CPOL-1.02",
+        "severity": "high",
+        "instructions": ""
+      },
+      "EPL-1.0": {
+        "licenseType": "EPL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "GPL-2.0": {
+        "licenseType": "GPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "GPL-3.0": {
+        "licenseType": "GPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "LGPL-2.0": {
+        "licenseType": "LGPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1": {
+        "licenseType": "LGPL-2.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1+": {
+        "licenseType": "LGPL-2.1+",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0": {
+        "licenseType": "LGPL-3.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0+": {
+        "licenseType": "LGPL-3.0+",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-1.1": {
+        "licenseType": "MPL-1.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-2.0": {
+        "licenseType": "MPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MS-RL": {
+        "licenseType": "MS-RL",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "SimPL-2.0": {
+        "licenseType": "SimPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      }
+    }
+  },
+  "packageManager": "yarn",
+  "ignoreSettings": {
+    "adminOnly": false,
+    "reasonRequired": false,
+    "disregardFilesystemIgnores": false
+  },
+  "summary": "10 vulnerable dependency paths",
+  "remediation": {
+    "unresolved": [
+      {
+        "id": "SNYK-JS-FOLLOWREDIRECTS-2332181",
+        "title": "Information Exposure",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:N/E:P",
+        "credit": [
+          "ranjit-git"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<1.14.7"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "1.14.7"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 5.3,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "follow-redirects",
+        "references": [
+          {
+            "url": "https://github.com/follow-redirects/follow-redirects/commit/8b347cbcef7c7b72a6e9be20f5710c17d6163c22",
+            "title": "GitHub Commit"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
+            "cvssV3BaseScore": 6.5,
+            "modificationTime": "2022-10-29T01:10:37.731334Z"
+          }
+        ],
+        "description": "## Overview\n\nAffected versions of this package are vulnerable to Information Exposure by leaking the cookie header to a third party site in the process of fetching a remote URL with the cookie in the request body. If the response contains a `location` header, it will follow the redirect to another URL of a potentially malicious actor, to which the cookie would be exposed.\n## Remediation\nUpgrade `follow-redirects` to version 1.14.7 or higher.\n## References\n- [GitHub Commit](https://github.com/follow-redirects/follow-redirects/commit/8b347cbcef7c7b72a6e9be20f5710c17d6163c22)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-0155"
+          ],
+          "CWE": [
+            "CWE-359"
+          ]
+        },
+        "packageName": "follow-redirects",
+        "proprietary": false,
+        "creationTime": "2022-01-11T12:27:16.635235Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-01-11T12:06:36Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-01-12T12:49:36.149349Z",
+        "modificationTime": "2022-10-29T01:10:37.731334Z",
+        "socialTrendAlert": false,
+        "from": [
+          "ghostthemeuploader@0.1.0",
+          "@tryghost/admin-api@1.4.4",
+          "axios@0.21.4",
+          "follow-redirects@1.14.5"
+        ],
+        "upgradePath": [
+          false,
+          "@tryghost/admin-api@1.4.4",
+          "axios@0.21.4",
+          "follow-redirects@1.14.7"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "follow-redirects",
+        "version": "1.14.5",
+        "severityWithCritical": "medium"
+      },
+      {
+        "id": "SNYK-JS-FOLLOWREDIRECTS-2396346",
+        "title": "Information Exposure",
+        "CVSSv3": "CVSS:3.1/AV:A/AC:H/PR:L/UI:N/S:U/C:L/I:N/A:N",
+        "credit": [
+          "haxatron"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<1.14.8"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "1.14.8"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "low",
+        "cvssScore": 2.6,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "follow-redirects",
+        "references": [
+          {
+            "url": "https://github.com/follow-redirects/follow-redirects/commit/62e546a99c07c3ee5e4e0718c84a6ca127c5c445",
+            "title": "GitHub Commit"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+            "cvssV3BaseScore": 5.9,
+            "modificationTime": "2022-02-12T04:10:26.549451Z"
+          },
+          {
+            "assigner": "Red Hat",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+            "cvssV3BaseScore": 5.9,
+            "modificationTime": "2022-10-27T02:41:54.426377Z"
+          }
+        ],
+        "description": "## Overview\n\nAffected versions of this package are vulnerable to Information Exposure due a leakage of the Authorization header from the same hostname during HTTPS to HTTP redirection. An attacker who can listen in on the wire (or perform a MITM attack) will be able to receive the Authorization header due to the usage of the insecure HTTP protocol which does not verify the hostname the request is sending to.\n## Remediation\nUpgrade `follow-redirects` to version 1.14.8 or higher.\n## References\n- [GitHub Commit](https://github.com/follow-redirects/follow-redirects/commit/62e546a99c07c3ee5e4e0718c84a6ca127c5c445)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-0536"
+          ],
+          "CWE": [
+            "CWE-200"
+          ]
+        },
+        "packageName": "follow-redirects",
+        "proprietary": false,
+        "creationTime": "2022-02-09T13:37:15.331538Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-02-09T12:43:30Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-02-09T17:20:22.054220Z",
+        "modificationTime": "2022-10-27T02:41:54.426377Z",
+        "socialTrendAlert": false,
+        "from": [
+          "ghostthemeuploader@0.1.0",
+          "@tryghost/admin-api@1.4.4",
+          "axios@0.21.4",
+          "follow-redirects@1.14.5"
+        ],
+        "upgradePath": [
+          false,
+          "@tryghost/admin-api@1.4.4",
+          "axios@0.21.4",
+          "follow-redirects@1.14.8"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "follow-redirects",
+        "version": "1.14.5",
+        "severityWithCritical": "low"
+      },
+      {
+        "id": "SNYK-JS-JSONWEBTOKEN-3180020",
+        "title": "Improper Input Validation",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:L",
+        "credit": [
+          "Palo Alto Networks"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<9.0.0"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "9.0.0"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.7,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "jsonwebtoken",
+        "references": [
+          {
+            "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0",
+            "title": "GitHub Release"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 9.8,
+            "modificationTime": "2022-12-31T01:11:46.767526Z"
+          }
+        ],
+        "description": "## Overview\n[jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) is a JSON Web Token implementation (symmetric and asymmetric)\n\nAffected versions of this package are vulnerable to Improper Input Validation such that if a malicious actor has the ability to modify the key retrieval parameter (referring to the `secretOrPublicKey` argument from the [readme link](https://github.com/auth0/node-jsonwebtoken#jwtverifytoken-secretorpublickey-options-callback)) of the `jwt.verify()` function, they can gain remote code execution (RCE).\r\n\r\n## Exploitability\r\nUsers are affected only if they are allowing untrusted entities to modify the key retrieval parameter of the `jwt.verify()` on a host that they control.\n## Remediation\nUpgrade `jsonwebtoken` to version 9.0.0 or higher.\n## References\n- [GitHub Commit](https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3)\n- [GitHub Release](https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-23529"
+          ],
+          "CWE": [
+            "CWE-20"
+          ],
+          "GHSA": [
+            "GHSA-27h2-hvpr-p74q"
+          ]
+        },
+        "packageName": "jsonwebtoken",
+        "proprietary": false,
+        "creationTime": "2022-12-22T09:01:22.380794Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-12-22T03:31:28Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-12-22T09:12:58.920917Z",
+        "modificationTime": "2022-12-31T01:11:46.767526Z",
+        "socialTrendAlert": false,
+        "from": [
+          "ghostthemeuploader@0.1.0",
+          "@tryghost/admin-api@1.4.4",
+          "jsonwebtoken@8.5.1"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "jsonwebtoken",
+        "version": "8.5.1",
+        "severityWithCritical": "high"
+      },
+      {
+        "id": "SNYK-JS-JSONWEBTOKEN-3180022",
+        "title": "Improper Authentication",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<9.0.0"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "9.0.0"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "critical",
+        "cvssScore": 9.8,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "jsonwebtoken",
+        "references": [
+          {
+            "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0",
+            "title": "GitHub Release"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 9.8,
+            "modificationTime": "2022-12-30T01:10:39.106809Z"
+          }
+        ],
+        "description": "## Overview\n[jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) is a JSON Web Token implementation (symmetric and asymmetric)\n\nAffected versions of this package are vulnerable to Improper Authentication such that the lack of algorithm definition in the `jwt.verify()` function can lead to signature validation bypass due to defaulting to the `none` algorithm for signature verification. \r\n\r\n## Exploitability\r\nUsers are affected if they do not specify algorithms in the `jwt.verify()` function.\n## Remediation\nUpgrade `jsonwebtoken` to version 9.0.0 or higher.\n## References\n- [GitHub Commit](https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3)\n- [GitHub Release](https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-23540"
+          ],
+          "CWE": [
+            "CWE-287"
+          ],
+          "GHSA": [
+            "GHSA-qwph-4952-7xr6"
+          ]
+        },
+        "packageName": "jsonwebtoken",
+        "proprietary": false,
+        "creationTime": "2022-12-22T09:09:36.072853Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-12-22T03:32:59Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-12-22T09:13:25.290846Z",
+        "modificationTime": "2022-12-30T08:09:08.244368Z",
+        "socialTrendAlert": false,
+        "from": [
+          "ghostthemeuploader@0.1.0",
+          "@tryghost/admin-api@1.4.4",
+          "jsonwebtoken@8.5.1"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "jsonwebtoken",
+        "version": "8.5.1",
+        "severityWithCritical": "critical"
+      },
+      {
+        "id": "SNYK-JS-JSONWEBTOKEN-3180024",
+        "title": "Improper Restriction of Security Token Assignment",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<9.0.0"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "9.0.0"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 6.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "jsonwebtoken",
+        "references": [
+          {
+            "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0",
+            "title": "GitHub Release"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 9.8,
+            "modificationTime": "2022-12-30T01:10:39.650072Z"
+          }
+        ],
+        "description": "## Overview\n[jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) is a JSON Web Token implementation (symmetric and asymmetric)\n\nAffected versions of this package are vulnerable to Improper Restriction of Security Token Assignment via the `secretOrPublicKey ` argument due to misconfigurations of the key retrieval function `jwt.verify()`. Exploiting this vulnerability might result in incorrect verification of forged tokens when tokens signed with an asymmetric public key could be verified with a symmetric HS256 algorithm.\r\n\r\n**Note:**\r\nThis vulnerability affects your application if it supports the usage of both symmetric and asymmetric keys in `jwt.verify()` implementation with the same key retrieval function.\n## Remediation\nUpgrade `jsonwebtoken` to version 9.0.0 or higher.\n## References\n- [GitHub Commit](https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3)\n- [GitHub Release](https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-23541"
+          ],
+          "CWE": [
+            "CWE-1259"
+          ],
+          "GHSA": [
+            "GHSA-hjrf-2m68-5959"
+          ]
+        },
+        "packageName": "jsonwebtoken",
+        "proprietary": false,
+        "creationTime": "2022-12-22T09:14:27.155728Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-12-22T03:33:19Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-12-22T09:16:03.621406Z",
+        "modificationTime": "2022-12-30T01:10:39.650072Z",
+        "socialTrendAlert": false,
+        "from": [
+          "ghostthemeuploader@0.1.0",
+          "@tryghost/admin-api@1.4.4",
+          "jsonwebtoken@8.5.1"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "jsonwebtoken",
+        "version": "8.5.1",
+        "severityWithCritical": "medium"
+      },
+      {
+        "id": "SNYK-JS-JSONWEBTOKEN-3180026",
+        "title": "Use of a Broken or Risky Cryptographic Algorithm",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:N",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<9.0.0"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "9.0.0"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 6.8,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "jsonwebtoken",
+        "references": [
+          {
+            "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0",
+            "title": "GitHub Release"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N",
+            "cvssV3BaseScore": 8.1,
+            "modificationTime": "2022-12-31T01:11:45.823807Z"
+          }
+        ],
+        "description": "## Overview\n[jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) is a JSON Web Token implementation (symmetric and asymmetric)\n\nAffected versions of this package are vulnerable to Use of a Broken or Risky Cryptographic Algorithm such that the library can be misconfigured to use legacy, insecure key types for signature verification. For example, DSA keys could be used with the RS256 algorithm. \r\n\r\n## Exploitability\r\n\r\nUsers are affected when using an algorithm and a key type _other_ than the combinations mentioned below:\r\n\r\nEC: ES256, ES384, ES512\r\n                  \r\nRSA: RS256, RS384, RS512, PS256, PS384, PS512 \r\n\r\nRSA-PSS: PS256, PS384, PS512                      \r\n\r\nAnd for Elliptic Curve algorithms:\r\n\r\nES256: prime256v1\r\n\r\nES384: secp384r1\r\n\r\nES512:  secp521r1 \r\n\r\n## Workaround \r\n\r\nUsers who are unable to upgrade to the fixed version can use the  `allowInvalidAsymmetricKeyTypes` option  to `true` in the `sign()` and `verify()` functions to continue usage of invalid key type/algorithm combination in 9.0.0 for legacy compatibility.\n## Remediation\nUpgrade `jsonwebtoken` to version 9.0.0 or higher.\n## References\n- [GitHub Commit](https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3)\n- [GitHub Release](https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-23539"
+          ],
+          "CWE": [
+            "CWE-327"
+          ],
+          "GHSA": [
+            "GHSA-8cf7-32gw-wr33"
+          ]
+        },
+        "packageName": "jsonwebtoken",
+        "proprietary": false,
+        "creationTime": "2022-12-22T09:19:03.430735Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-12-22T03:32:22Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-12-22T10:32:50.173080Z",
+        "modificationTime": "2023-01-01T13:30:43.098324Z",
+        "socialTrendAlert": false,
+        "from": [
+          "ghostthemeuploader@0.1.0",
+          "@tryghost/admin-api@1.4.4",
+          "jsonwebtoken@8.5.1"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "jsonwebtoken",
+        "version": "8.5.1",
+        "severityWithCritical": "medium"
+      },
+      {
+        "id": "SNYK-JS-QS-3153490",
+        "title": "Prototype Poisoning",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+        "credit": [
+          "BRAUN Nathanael",
+          "BRISSAUD Johan"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<6.2.4",
+            ">=6.3.0 <6.3.3",
+            ">=6.4.0 <6.4.1",
+            ">=6.5.0 <6.5.3",
+            ">=6.6.0 <6.6.1",
+            ">=6.7.0 <6.7.3",
+            ">=6.8.0 <6.8.3",
+            ">=6.9.0 <6.9.7",
+            ">=6.10.0 <6.10.3"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "6.2.4",
+          "6.3.3",
+          "6.4.1",
+          "6.5.3",
+          "6.6.1",
+          "6.7.3",
+          "6.8.3",
+          "6.9.7",
+          "6.10.3"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "qs",
+        "references": [
+          {
+            "url": "https://github.com/ljharb/qs/pull/428",
+            "title": "GitHub PR"
+          },
+          {
+            "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2150323",
+            "title": "RedHat Bugzilla Bug"
+          },
+          {
+            "url": "https://github.com/n8tz/CVE-2022-24999",
+            "title": "Researcher Advisory"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-11-29T01:11:13.913238Z"
+          },
+          {
+            "assigner": "Red Hat",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-12-03T13:46:25.900727Z"
+          }
+        ],
+        "description": "## Overview\n[qs](https://www.npmjs.com/package/qs) is a querystring parser that supports nesting and arrays, with a depth limit.\n\nAffected versions of this package are vulnerable to Prototype Poisoning which allows attackers to cause a Node process to hang, processing an Array object whose prototype has been replaced by one with an excessive length value.\r\n\r\n**Note:** In many typical Express use cases, an unauthenticated remote attacker can place the attack payload in the query string of the URL that is used to visit the application, such as `a[__proto__]=b&a[__proto__]&a[length]=100000000`.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `qs` to version 6.2.4, 6.3.3, 6.4.1, 6.5.3, 6.6.1, 6.7.3, 6.8.3, 6.9.7, 6.10.3 or higher.\n## References\n- [GitHub PR](https://github.com/ljharb/qs/pull/428)\n- [RedHat Bugzilla Bug](https://bugzilla.redhat.com/show_bug.cgi?id=2150323)\n- [Researcher Advisory](https://github.com/n8tz/CVE-2022-24999)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-24999"
+          ],
+          "CWE": [
+            "CWE-1321"
+          ]
+        },
+        "packageName": "qs",
+        "proprietary": false,
+        "creationTime": "2022-12-04T11:01:47.782869Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-11-26T00:00:00Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-12-04T12:24:32.307833Z",
+        "modificationTime": "2022-12-06T09:33:17.364321Z",
+        "socialTrendAlert": false,
+        "from": [
+          "ghostthemeuploader@0.1.0",
+          "azure-pipelines-task-lib@3.1.10",
+          "sync-request@6.1.0",
+          "then-request@6.0.2",
+          "qs@6.10.1"
+        ],
+        "upgradePath": [
+          false,
+          "azure-pipelines-task-lib@3.1.10",
+          "sync-request@6.1.0",
+          "then-request@6.0.2",
+          "qs@6.10.3"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "qs",
+        "version": "6.10.1",
+        "severityWithCritical": "high"
+      },
+      {
+        "id": "SNYK-JS-SHELLJS-2332187",
+        "title": "Improper Privilege Management",
+        "CVSSv3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H/E:P",
+        "credit": [
+          "haxatron"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<0.8.5"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "0.8.5"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.1,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "shelljs",
+        "references": [
+          {
+            "url": "https://github.com/shelljs/shelljs/commit/d919d22dd6de385edaa9d90313075a77f74b338c",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/shelljs/shelljs/issues/1058",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://github.com/shelljs/shelljs/pull/1060",
+            "title": "GitHub PR"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H",
+            "cvssV3BaseScore": 7.1,
+            "modificationTime": "2022-02-09T16:10:36.984666Z"
+          }
+        ],
+        "description": "## Overview\n[shelljs](None) is a wrapper for the Unix shell commands for Node.js.\n\nAffected versions of this package are vulnerable to Improper Privilege Management. When `ShellJS` is used to create shell scripts which may be running as `root`, users with low-level privileges on the system can leak sensitive information such as passwords (depending on implementation) from the standard output of the privileged process OR shutdown privileged `ShellJS` processes via the `exec` function when triggering EACCESS errors.\r\n\r\n**Note:** Thi only impacts the synchronous version of `shell.exec()`.\n## Remediation\nUpgrade `shelljs` to version 0.8.5 or higher.\n## References\n- [GitHub Commit](https://github.com/shelljs/shelljs/commit/d919d22dd6de385edaa9d90313075a77f74b338c)\n- [GitHub Issue](https://github.com/shelljs/shelljs/issues/1058)\n- [GitHub PR](https://github.com/shelljs/shelljs/pull/1060)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-0144"
+          ],
+          "CWE": [
+            "CWE-269"
+          ]
+        },
+        "packageName": "shelljs",
+        "proprietary": false,
+        "creationTime": "2022-01-11T12:52:23.829882Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-01-11T12:39:08Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-01-12T12:49:35.008405Z",
+        "modificationTime": "2022-02-09T16:10:36.984666Z",
+        "socialTrendAlert": false,
+        "from": [
+          "ghostthemeuploader@0.1.0",
+          "azure-pipelines-task-lib@3.1.10",
+          "shelljs@0.8.4"
+        ],
+        "upgradePath": [
+          false,
+          "azure-pipelines-task-lib@3.1.10",
+          "shelljs@0.8.5"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "shelljs",
+        "version": "0.8.4",
+        "severityWithCritical": "high"
+      }
+    ],
+    "upgrade": {
+      "azure-pipelines-task-lib@3.1.10": {
+        "upgradeTo": "azure-pipelines-task-lib@3.3.1",
+        "upgrades": [
+          "minimatch@3.0.4"
+        ],
+        "vulns": [
+          "SNYK-JS-MINIMATCH-3050818"
+        ]
+      }
+    },
+    "patch": {},
+    "ignore": {},
+    "pin": {}
+  },
+  "filesystemPolicy": false,
+  "filtered": {
+    "ignore": [],
+    "patch": []
+  },
+  "uniqueCount": 9,
+  "projectName": "ghostthemeuploader",
+  "displayTargetFile": "Tasks\\GhostThemeUploader\\yarn.lock",
+  "hasUnknownVersions": false,
+  "path": "C:\\Users\\JesseHouwing\\source\\extension-securiry\\vsixs\\geeklearningio\\gl-vsts-tasks-ghost\\2.0.1008"
+}

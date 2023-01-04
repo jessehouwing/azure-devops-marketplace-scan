@@ -1,0 +1,769 @@
+{
+  "vulnerabilities": [
+    {
+      "id": "SNYK-JS-JSONWEBTOKEN-3180020",
+      "title": "Improper Input Validation",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:L",
+      "credit": [
+        "Palo Alto Networks"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<9.0.0"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "9.0.0"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "high",
+      "cvssScore": 7.7,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "jsonwebtoken",
+      "references": [
+        {
+          "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0",
+          "title": "GitHub Release"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "critical",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cvssV3BaseScore": 9.8,
+          "modificationTime": "2022-12-31T01:11:46.767526Z"
+        }
+      ],
+      "description": "## Overview\n[jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) is a JSON Web Token implementation (symmetric and asymmetric)\n\nAffected versions of this package are vulnerable to Improper Input Validation such that if a malicious actor has the ability to modify the key retrieval parameter (referring to the `secretOrPublicKey` argument from the [readme link](https://github.com/auth0/node-jsonwebtoken#jwtverifytoken-secretorpublickey-options-callback)) of the `jwt.verify()` function, they can gain remote code execution (RCE).\r\n\r\n## Exploitability\r\nUsers are affected only if they are allowing untrusted entities to modify the key retrieval parameter of the `jwt.verify()` on a host that they control.\n## Remediation\nUpgrade `jsonwebtoken` to version 9.0.0 or higher.\n## References\n- [GitHub Commit](https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3)\n- [GitHub Release](https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-23529"
+        ],
+        "CWE": [
+          "CWE-20"
+        ],
+        "GHSA": [
+          "GHSA-27h2-hvpr-p74q"
+        ]
+      },
+      "packageName": "jsonwebtoken",
+      "proprietary": false,
+      "creationTime": "2022-12-22T09:01:22.380794Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-12-22T03:31:28Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-12-22T09:12:58.920917Z",
+      "modificationTime": "2022-12-31T01:11:46.767526Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "high",
+      "from": [
+        "src@5.0.0",
+        "azure-pipelines-tasks-azure-arm-rest-v2@2.210.0",
+        "jsonwebtoken@8.5.1"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "jsonwebtoken",
+      "version": "8.5.1"
+    },
+    {
+      "id": "SNYK-JS-JSONWEBTOKEN-3180022",
+      "title": "Improper Authentication",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+      "credit": [
+        "Unknown"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<9.0.0"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "9.0.0"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "critical",
+      "cvssScore": 9.8,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "jsonwebtoken",
+      "references": [
+        {
+          "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0",
+          "title": "GitHub Release"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "critical",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cvssV3BaseScore": 9.8,
+          "modificationTime": "2022-12-30T01:10:39.106809Z"
+        }
+      ],
+      "description": "## Overview\n[jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) is a JSON Web Token implementation (symmetric and asymmetric)\n\nAffected versions of this package are vulnerable to Improper Authentication such that the lack of algorithm definition in the `jwt.verify()` function can lead to signature validation bypass due to defaulting to the `none` algorithm for signature verification. \r\n\r\n## Exploitability\r\nUsers are affected if they do not specify algorithms in the `jwt.verify()` function.\n## Remediation\nUpgrade `jsonwebtoken` to version 9.0.0 or higher.\n## References\n- [GitHub Commit](https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3)\n- [GitHub Release](https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-23540"
+        ],
+        "CWE": [
+          "CWE-287"
+        ],
+        "GHSA": [
+          "GHSA-qwph-4952-7xr6"
+        ]
+      },
+      "packageName": "jsonwebtoken",
+      "proprietary": false,
+      "creationTime": "2022-12-22T09:09:36.072853Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-12-22T03:32:59Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-12-22T09:13:25.290846Z",
+      "modificationTime": "2022-12-30T08:09:08.244368Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "critical",
+      "from": [
+        "src@5.0.0",
+        "azure-pipelines-tasks-azure-arm-rest-v2@2.210.0",
+        "jsonwebtoken@8.5.1"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "jsonwebtoken",
+      "version": "8.5.1"
+    },
+    {
+      "id": "SNYK-JS-JSONWEBTOKEN-3180024",
+      "title": "Improper Restriction of Security Token Assignment",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N",
+      "credit": [
+        "Unknown"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<9.0.0"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "9.0.0"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "medium",
+      "cvssScore": 6.5,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "jsonwebtoken",
+      "references": [
+        {
+          "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0",
+          "title": "GitHub Release"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "critical",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "cvssV3BaseScore": 9.8,
+          "modificationTime": "2022-12-30T01:10:39.650072Z"
+        }
+      ],
+      "description": "## Overview\n[jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) is a JSON Web Token implementation (symmetric and asymmetric)\n\nAffected versions of this package are vulnerable to Improper Restriction of Security Token Assignment via the `secretOrPublicKey ` argument due to misconfigurations of the key retrieval function `jwt.verify()`. Exploiting this vulnerability might result in incorrect verification of forged tokens when tokens signed with an asymmetric public key could be verified with a symmetric HS256 algorithm.\r\n\r\n**Note:**\r\nThis vulnerability affects your application if it supports the usage of both symmetric and asymmetric keys in `jwt.verify()` implementation with the same key retrieval function.\n## Remediation\nUpgrade `jsonwebtoken` to version 9.0.0 or higher.\n## References\n- [GitHub Commit](https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3)\n- [GitHub Release](https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-23541"
+        ],
+        "CWE": [
+          "CWE-1259"
+        ],
+        "GHSA": [
+          "GHSA-hjrf-2m68-5959"
+        ]
+      },
+      "packageName": "jsonwebtoken",
+      "proprietary": false,
+      "creationTime": "2022-12-22T09:14:27.155728Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-12-22T03:33:19Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-12-22T09:16:03.621406Z",
+      "modificationTime": "2022-12-30T01:10:39.650072Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "medium",
+      "from": [
+        "src@5.0.0",
+        "azure-pipelines-tasks-azure-arm-rest-v2@2.210.0",
+        "jsonwebtoken@8.5.1"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "jsonwebtoken",
+      "version": "8.5.1"
+    },
+    {
+      "id": "SNYK-JS-JSONWEBTOKEN-3180026",
+      "title": "Use of a Broken or Risky Cryptographic Algorithm",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:N",
+      "credit": [
+        "Unknown"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<9.0.0"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "9.0.0"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "medium",
+      "cvssScore": 6.8,
+      "functions": [],
+      "malicious": false,
+      "moduleName": "jsonwebtoken",
+      "references": [
+        {
+          "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0",
+          "title": "GitHub Release"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "high",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N",
+          "cvssV3BaseScore": 8.1,
+          "modificationTime": "2022-12-31T01:11:45.823807Z"
+        }
+      ],
+      "description": "## Overview\n[jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) is a JSON Web Token implementation (symmetric and asymmetric)\n\nAffected versions of this package are vulnerable to Use of a Broken or Risky Cryptographic Algorithm such that the library can be misconfigured to use legacy, insecure key types for signature verification. For example, DSA keys could be used with the RS256 algorithm. \r\n\r\n## Exploitability\r\n\r\nUsers are affected when using an algorithm and a key type _other_ than the combinations mentioned below:\r\n\r\nEC: ES256, ES384, ES512\r\n                  \r\nRSA: RS256, RS384, RS512, PS256, PS384, PS512 \r\n\r\nRSA-PSS: PS256, PS384, PS512                      \r\n\r\nAnd for Elliptic Curve algorithms:\r\n\r\nES256: prime256v1\r\n\r\nES384: secp384r1\r\n\r\nES512:  secp521r1 \r\n\r\n## Workaround \r\n\r\nUsers who are unable to upgrade to the fixed version can use the  `allowInvalidAsymmetricKeyTypes` option  to `true` in the `sign()` and `verify()` functions to continue usage of invalid key type/algorithm combination in 9.0.0 for legacy compatibility.\n## Remediation\nUpgrade `jsonwebtoken` to version 9.0.0 or higher.\n## References\n- [GitHub Commit](https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3)\n- [GitHub Release](https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0)\n",
+      "identifiers": {
+        "CVE": [
+          "CVE-2022-23539"
+        ],
+        "CWE": [
+          "CWE-327"
+        ],
+        "GHSA": [
+          "GHSA-8cf7-32gw-wr33"
+        ]
+      },
+      "packageName": "jsonwebtoken",
+      "proprietary": false,
+      "creationTime": "2022-12-22T09:19:03.430735Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2022-12-22T03:32:22Z",
+      "packageManager": "npm",
+      "publicationTime": "2022-12-22T10:32:50.173080Z",
+      "modificationTime": "2023-01-01T13:30:43.098324Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "medium",
+      "from": [
+        "src@5.0.0",
+        "azure-pipelines-tasks-azure-arm-rest-v2@2.210.0",
+        "jsonwebtoken@8.5.1"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "jsonwebtoken",
+      "version": "8.5.1"
+    }
+  ],
+  "ok": false,
+  "dependencyCount": 164,
+  "org": "global-devops-bootcamp",
+  "policy": "# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.25.0\nignore: {}\npatch: {}\n",
+  "isPrivate": true,
+  "licensesPolicy": {
+    "severities": {},
+    "orgLicenseRules": {
+      "AGPL-1.0": {
+        "licenseType": "AGPL-1.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "AGPL-3.0": {
+        "licenseType": "AGPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "Artistic-1.0": {
+        "licenseType": "Artistic-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "Artistic-2.0": {
+        "licenseType": "Artistic-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CDDL-1.0": {
+        "licenseType": "CDDL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CPOL-1.02": {
+        "licenseType": "CPOL-1.02",
+        "severity": "high",
+        "instructions": ""
+      },
+      "EPL-1.0": {
+        "licenseType": "EPL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "GPL-2.0": {
+        "licenseType": "GPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "GPL-3.0": {
+        "licenseType": "GPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "LGPL-2.0": {
+        "licenseType": "LGPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1": {
+        "licenseType": "LGPL-2.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1+": {
+        "licenseType": "LGPL-2.1+",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0": {
+        "licenseType": "LGPL-3.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0+": {
+        "licenseType": "LGPL-3.0+",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-1.1": {
+        "licenseType": "MPL-1.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-2.0": {
+        "licenseType": "MPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MS-RL": {
+        "licenseType": "MS-RL",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "SimPL-2.0": {
+        "licenseType": "SimPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      }
+    }
+  },
+  "packageManager": "npm",
+  "ignoreSettings": {
+    "adminOnly": false,
+    "reasonRequired": false,
+    "disregardFilesystemIgnores": false
+  },
+  "summary": "4 vulnerable dependency paths",
+  "remediation": {
+    "unresolved": [
+      {
+        "id": "SNYK-JS-JSONWEBTOKEN-3180020",
+        "title": "Improper Input Validation",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:L",
+        "credit": [
+          "Palo Alto Networks"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<9.0.0"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "9.0.0"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.7,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "jsonwebtoken",
+        "references": [
+          {
+            "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0",
+            "title": "GitHub Release"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 9.8,
+            "modificationTime": "2022-12-31T01:11:46.767526Z"
+          }
+        ],
+        "description": "## Overview\n[jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) is a JSON Web Token implementation (symmetric and asymmetric)\n\nAffected versions of this package are vulnerable to Improper Input Validation such that if a malicious actor has the ability to modify the key retrieval parameter (referring to the `secretOrPublicKey` argument from the [readme link](https://github.com/auth0/node-jsonwebtoken#jwtverifytoken-secretorpublickey-options-callback)) of the `jwt.verify()` function, they can gain remote code execution (RCE).\r\n\r\n## Exploitability\r\nUsers are affected only if they are allowing untrusted entities to modify the key retrieval parameter of the `jwt.verify()` on a host that they control.\n## Remediation\nUpgrade `jsonwebtoken` to version 9.0.0 or higher.\n## References\n- [GitHub Commit](https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3)\n- [GitHub Release](https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-23529"
+          ],
+          "CWE": [
+            "CWE-20"
+          ],
+          "GHSA": [
+            "GHSA-27h2-hvpr-p74q"
+          ]
+        },
+        "packageName": "jsonwebtoken",
+        "proprietary": false,
+        "creationTime": "2022-12-22T09:01:22.380794Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-12-22T03:31:28Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-12-22T09:12:58.920917Z",
+        "modificationTime": "2022-12-31T01:11:46.767526Z",
+        "socialTrendAlert": false,
+        "from": [
+          "src@5.0.0",
+          "azure-pipelines-tasks-azure-arm-rest-v2@2.210.0",
+          "jsonwebtoken@8.5.1"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "jsonwebtoken",
+        "version": "8.5.1",
+        "severityWithCritical": "high"
+      },
+      {
+        "id": "SNYK-JS-JSONWEBTOKEN-3180022",
+        "title": "Improper Authentication",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<9.0.0"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "9.0.0"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "critical",
+        "cvssScore": 9.8,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "jsonwebtoken",
+        "references": [
+          {
+            "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0",
+            "title": "GitHub Release"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 9.8,
+            "modificationTime": "2022-12-30T01:10:39.106809Z"
+          }
+        ],
+        "description": "## Overview\n[jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) is a JSON Web Token implementation (symmetric and asymmetric)\n\nAffected versions of this package are vulnerable to Improper Authentication such that the lack of algorithm definition in the `jwt.verify()` function can lead to signature validation bypass due to defaulting to the `none` algorithm for signature verification. \r\n\r\n## Exploitability\r\nUsers are affected if they do not specify algorithms in the `jwt.verify()` function.\n## Remediation\nUpgrade `jsonwebtoken` to version 9.0.0 or higher.\n## References\n- [GitHub Commit](https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3)\n- [GitHub Release](https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-23540"
+          ],
+          "CWE": [
+            "CWE-287"
+          ],
+          "GHSA": [
+            "GHSA-qwph-4952-7xr6"
+          ]
+        },
+        "packageName": "jsonwebtoken",
+        "proprietary": false,
+        "creationTime": "2022-12-22T09:09:36.072853Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-12-22T03:32:59Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-12-22T09:13:25.290846Z",
+        "modificationTime": "2022-12-30T08:09:08.244368Z",
+        "socialTrendAlert": false,
+        "from": [
+          "src@5.0.0",
+          "azure-pipelines-tasks-azure-arm-rest-v2@2.210.0",
+          "jsonwebtoken@8.5.1"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "jsonwebtoken",
+        "version": "8.5.1",
+        "severityWithCritical": "critical"
+      },
+      {
+        "id": "SNYK-JS-JSONWEBTOKEN-3180024",
+        "title": "Improper Restriction of Security Token Assignment",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<9.0.0"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "9.0.0"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 6.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "jsonwebtoken",
+        "references": [
+          {
+            "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0",
+            "title": "GitHub Release"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 9.8,
+            "modificationTime": "2022-12-30T01:10:39.650072Z"
+          }
+        ],
+        "description": "## Overview\n[jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) is a JSON Web Token implementation (symmetric and asymmetric)\n\nAffected versions of this package are vulnerable to Improper Restriction of Security Token Assignment via the `secretOrPublicKey ` argument due to misconfigurations of the key retrieval function `jwt.verify()`. Exploiting this vulnerability might result in incorrect verification of forged tokens when tokens signed with an asymmetric public key could be verified with a symmetric HS256 algorithm.\r\n\r\n**Note:**\r\nThis vulnerability affects your application if it supports the usage of both symmetric and asymmetric keys in `jwt.verify()` implementation with the same key retrieval function.\n## Remediation\nUpgrade `jsonwebtoken` to version 9.0.0 or higher.\n## References\n- [GitHub Commit](https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3)\n- [GitHub Release](https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-23541"
+          ],
+          "CWE": [
+            "CWE-1259"
+          ],
+          "GHSA": [
+            "GHSA-hjrf-2m68-5959"
+          ]
+        },
+        "packageName": "jsonwebtoken",
+        "proprietary": false,
+        "creationTime": "2022-12-22T09:14:27.155728Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-12-22T03:33:19Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-12-22T09:16:03.621406Z",
+        "modificationTime": "2022-12-30T01:10:39.650072Z",
+        "socialTrendAlert": false,
+        "from": [
+          "src@5.0.0",
+          "azure-pipelines-tasks-azure-arm-rest-v2@2.210.0",
+          "jsonwebtoken@8.5.1"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "jsonwebtoken",
+        "version": "8.5.1",
+        "severityWithCritical": "medium"
+      },
+      {
+        "id": "SNYK-JS-JSONWEBTOKEN-3180026",
+        "title": "Use of a Broken or Risky Cryptographic Algorithm",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:N",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<9.0.0"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "9.0.0"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 6.8,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "jsonwebtoken",
+        "references": [
+          {
+            "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0",
+            "title": "GitHub Release"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N",
+            "cvssV3BaseScore": 8.1,
+            "modificationTime": "2022-12-31T01:11:45.823807Z"
+          }
+        ],
+        "description": "## Overview\n[jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) is a JSON Web Token implementation (symmetric and asymmetric)\n\nAffected versions of this package are vulnerable to Use of a Broken or Risky Cryptographic Algorithm such that the library can be misconfigured to use legacy, insecure key types for signature verification. For example, DSA keys could be used with the RS256 algorithm. \r\n\r\n## Exploitability\r\n\r\nUsers are affected when using an algorithm and a key type _other_ than the combinations mentioned below:\r\n\r\nEC: ES256, ES384, ES512\r\n                  \r\nRSA: RS256, RS384, RS512, PS256, PS384, PS512 \r\n\r\nRSA-PSS: PS256, PS384, PS512                      \r\n\r\nAnd for Elliptic Curve algorithms:\r\n\r\nES256: prime256v1\r\n\r\nES384: secp384r1\r\n\r\nES512:  secp521r1 \r\n\r\n## Workaround \r\n\r\nUsers who are unable to upgrade to the fixed version can use the  `allowInvalidAsymmetricKeyTypes` option  to `true` in the `sign()` and `verify()` functions to continue usage of invalid key type/algorithm combination in 9.0.0 for legacy compatibility.\n## Remediation\nUpgrade `jsonwebtoken` to version 9.0.0 or higher.\n## References\n- [GitHub Commit](https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3)\n- [GitHub Release](https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-23539"
+          ],
+          "CWE": [
+            "CWE-327"
+          ],
+          "GHSA": [
+            "GHSA-8cf7-32gw-wr33"
+          ]
+        },
+        "packageName": "jsonwebtoken",
+        "proprietary": false,
+        "creationTime": "2022-12-22T09:19:03.430735Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-12-22T03:32:22Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-12-22T10:32:50.173080Z",
+        "modificationTime": "2023-01-01T13:30:43.098324Z",
+        "socialTrendAlert": false,
+        "from": [
+          "src@5.0.0",
+          "azure-pipelines-tasks-azure-arm-rest-v2@2.210.0",
+          "jsonwebtoken@8.5.1"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "isPinnable": false,
+        "isRuntime": false,
+        "name": "jsonwebtoken",
+        "version": "8.5.1",
+        "severityWithCritical": "medium"
+      }
+    ],
+    "upgrade": {},
+    "patch": {},
+    "ignore": {},
+    "pin": {}
+  },
+  "filesystemPolicy": false,
+  "filtered": {
+    "ignore": [],
+    "patch": []
+  },
+  "uniqueCount": 4,
+  "projectName": "src",
+  "displayTargetFile": "src\\package-lock.json",
+  "hasUnknownVersions": false,
+  "path": "C:\\Users\\JesseHouwing\\source\\extension-securiry\\vsixs\\AzureImageBuilder\\devOps-task-for-azure-image-builder\\1.0.45"
+}

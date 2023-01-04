@@ -1,0 +1,1409 @@
+[
+  {
+    "vulnerabilities": [
+      {
+        "id": "SNYK-JS-MINIMATCH-3050818",
+        "title": "Regular Expression Denial of Service (ReDoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<3.0.5"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "3.0.5"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 5.3,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "minimatch",
+        "references": [
+          {
+            "url": "https://github.com/isaacs/minimatch/commit/a8763f4388e51956be62dc6025cec1126beeb5e6",
+            "title": "GitHub Commit"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "Red Hat",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-11-27T21:40:17.490683Z"
+          },
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-10-20T01:10:31.056597Z"
+          }
+        ],
+        "description": "## Overview\n[minimatch](https://www.npmjs.com/package/minimatch) is a minimal matching utility.\n\nAffected versions of this package are vulnerable to Regular Expression Denial of Service (ReDoS) via the `braceExpand` function in `minimatch.js`.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `minimatch` to version 3.0.5 or higher.\n## References\n- [GitHub Commit](https://github.com/isaacs/minimatch/commit/a8763f4388e51956be62dc6025cec1126beeb5e6)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-3517"
+          ],
+          "CWE": [
+            "CWE-1333"
+          ]
+        },
+        "packageName": "minimatch",
+        "proprietary": false,
+        "creationTime": "2022-10-18T06:10:47.980262Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-10-18T06:00:25Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-10-18T06:29:18.078950Z",
+        "modificationTime": "2022-11-27T21:40:17.490683Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "medium",
+        "from": [
+          "buildandreleasetask@1.0.0",
+          "azure-pipelines-task-lib@2.8.0",
+          "minimatch@3.0.4"
+        ],
+        "upgradePath": [
+          false,
+          "azure-pipelines-task-lib@3.3.1",
+          "minimatch@3.0.5"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "minimatch",
+        "version": "3.0.4"
+      },
+      {
+        "id": "SNYK-JS-MINIMATCH-3050818",
+        "title": "Regular Expression Denial of Service (ReDoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<3.0.5"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "3.0.5"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "medium",
+        "cvssScore": 5.3,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "minimatch",
+        "references": [
+          {
+            "url": "https://github.com/isaacs/minimatch/commit/a8763f4388e51956be62dc6025cec1126beeb5e6",
+            "title": "GitHub Commit"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "Red Hat",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-11-27T21:40:17.490683Z"
+          },
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-10-20T01:10:31.056597Z"
+          }
+        ],
+        "description": "## Overview\n[minimatch](https://www.npmjs.com/package/minimatch) is a minimal matching utility.\n\nAffected versions of this package are vulnerable to Regular Expression Denial of Service (ReDoS) via the `braceExpand` function in `minimatch.js`.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `minimatch` to version 3.0.5 or higher.\n## References\n- [GitHub Commit](https://github.com/isaacs/minimatch/commit/a8763f4388e51956be62dc6025cec1126beeb5e6)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-3517"
+          ],
+          "CWE": [
+            "CWE-1333"
+          ]
+        },
+        "packageName": "minimatch",
+        "proprietary": false,
+        "creationTime": "2022-10-18T06:10:47.980262Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-10-18T06:00:25Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-10-18T06:29:18.078950Z",
+        "modificationTime": "2022-11-27T21:40:17.490683Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "medium",
+        "from": [
+          "buildandreleasetask@1.0.0",
+          "rimraf@2.6.3",
+          "glob@7.1.3",
+          "minimatch@3.0.4"
+        ],
+        "upgradePath": [
+          false,
+          "rimraf@2.6.3",
+          "glob@7.1.3",
+          "minimatch@3.0.5"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "minimatch",
+        "version": "3.0.4"
+      },
+      {
+        "id": "SNYK-JS-SHELLJS-2332187",
+        "title": "Improper Privilege Management",
+        "CVSSv3": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H/E:P",
+        "credit": [
+          "haxatron"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<0.8.5"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "0.8.5"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 7.1,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "shelljs",
+        "references": [
+          {
+            "url": "https://github.com/shelljs/shelljs/commit/d919d22dd6de385edaa9d90313075a77f74b338c",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/shelljs/shelljs/issues/1058",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://github.com/shelljs/shelljs/pull/1060",
+            "title": "GitHub PR"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:H",
+            "cvssV3BaseScore": 7.1,
+            "modificationTime": "2022-02-09T16:10:36.984666Z"
+          }
+        ],
+        "description": "## Overview\n[shelljs](None) is a wrapper for the Unix shell commands for Node.js.\n\nAffected versions of this package are vulnerable to Improper Privilege Management. When `ShellJS` is used to create shell scripts which may be running as `root`, users with low-level privileges on the system can leak sensitive information such as passwords (depending on implementation) from the standard output of the privileged process OR shutdown privileged `ShellJS` processes via the `exec` function when triggering EACCESS errors.\r\n\r\n**Note:** Thi only impacts the synchronous version of `shell.exec()`.\n## Remediation\nUpgrade `shelljs` to version 0.8.5 or higher.\n## References\n- [GitHub Commit](https://github.com/shelljs/shelljs/commit/d919d22dd6de385edaa9d90313075a77f74b338c)\n- [GitHub Issue](https://github.com/shelljs/shelljs/issues/1058)\n- [GitHub PR](https://github.com/shelljs/shelljs/pull/1060)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-0144"
+          ],
+          "CWE": [
+            "CWE-269"
+          ]
+        },
+        "packageName": "shelljs",
+        "proprietary": false,
+        "creationTime": "2022-01-11T12:52:23.829882Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-01-11T12:39:08Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-01-12T12:49:35.008405Z",
+        "modificationTime": "2022-02-09T16:10:36.984666Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "buildandreleasetask@1.0.0",
+          "azure-pipelines-task-lib@2.8.0",
+          "shelljs@0.3.0"
+        ],
+        "upgradePath": [
+          false,
+          "azure-pipelines-task-lib@3.1.0",
+          "shelljs@0.8.5"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "shelljs",
+        "version": "0.3.0"
+      },
+      {
+        "id": "SNYK-JS-SIMPLEGIT-2421199",
+        "title": "Command Injection",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H/E:P",
+        "credit": [
+          "Alessio Della Libera of Snyk Research Team"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<3.3.0"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "3.3.0"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 8.1,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "simple-git",
+        "references": [
+          {
+            "url": "https://github.com/steveukx/git-js/pull/767",
+            "title": "Github PR"
+          },
+          {
+            "url": "https://github.com/steveukx/git-js/releases/tag/simple-git%403.3.0",
+            "title": "Github Release"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 9.8,
+            "modificationTime": "2022-03-19T04:11:02.340923Z"
+          }
+        ],
+        "description": "## Overview\n[simple-git](https://www.npmjs.com/package/simple-git) is a light weight interface for running git commands in any node.js application.\n\nAffected versions of this package are vulnerable to Command Injection via argument injection. When calling the `.fetch(remote, branch, handlerFn)` function, both the `remote` and `branch` parameters are passed to the `git fetch` subcommand. By injecting some git options it was possible to get arbitrary command execution.\r\n\r\n\r\n## PoC\r\n```js\r\n// npm i simple-git\r\nconst simpleGit = require('simple-git');\r\nconst git = simpleGit();\r\n\r\nlet callback = () => {};\r\n\r\ngit.init(); // or git init\r\n\r\nlet origin1 = 'origin';\r\nlet ref1 = \"--upload-pack=touch ./HELLO1;\";\r\ngit.fetch(origin1, ref1,  callback); // git [ 'fetch', 'origin', '--upload-pack=touch ./HELLO1;' ]\r\n\r\nlet origin2 = \"--upload-pack=touch ./HELLO2;\";\r\nlet ref2 = \"foo\";\r\ngit.fetch(origin2, ref2,  callback); // git [ 'fetch', '--upload-pack=touch ./HELLO2;', 'foo' ]\r\n\r\n\r\nlet origin3 = 'origin';\r\nlet ref3 = \"--upload-pack=touch ./HELLO3;\";\r\ngit.fetch(origin3, ref3, { '--depth': '2' }, callback); // git [ 'fetch', '--depth=2', 'origin', '--upload-pack=touch ./HELLO3;' ]\r\n\r\n// ls -la\r\n```\n## Remediation\nUpgrade `simple-git` to version 3.3.0 or higher.\n## References\n- [Github PR](https://github.com/steveukx/git-js/pull/767)\n- [Github Release](https://github.com/steveukx/git-js/releases/tag/simple-git%403.3.0)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-24433"
+          ],
+          "CWE": [
+            "CWE-78"
+          ]
+        },
+        "packageName": "simple-git",
+        "proprietary": true,
+        "creationTime": "2022-03-11T10:50:55.057167Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-03-11T10:47:28Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-03-11T14:29:26Z",
+        "modificationTime": "2022-06-08T07:00:27.774927Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "buildandreleasetask@1.0.0",
+          "simple-git@1.110.0"
+        ],
+        "upgradePath": [
+          false,
+          "simple-git@3.3.0"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "simple-git",
+        "version": "1.110.0"
+      },
+      {
+        "id": "SNYK-JS-SIMPLEGIT-2434306",
+        "title": "Command Injection",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H/E:P",
+        "credit": [
+          "Liran Tal of Snyk"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<3.5.0"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "3.5.0"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 8.1,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "simple-git",
+        "references": [
+          {
+            "url": "https://github.com/steveukx/git-js/commit/2040de601c894363050fef9f28af367b169a56c5",
+            "title": "Github Commit"
+          },
+          {
+            "url": "https://gist.github.com/lirantal/a930d902294b833514e821102316426b",
+            "title": "GitHub Gist"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 9.8,
+            "modificationTime": "2022-04-09T13:11:55.632964Z"
+          }
+        ],
+        "description": "## Overview\n[simple-git](https://www.npmjs.com/package/simple-git) is a light weight interface for running git commands in any node.js application.\n\nAffected versions of this package are vulnerable to Command Injection due to an incomplete fix of [CVE-2022-24433](https://security.snyk.io/vuln/SNYK-JS-SIMPLEGIT-2421199) which only patches against the `git fetch` attack vector.\r\nA similar use of the `--upload-pack` feature of git is also supported for git clone, which the prior fix didn't cover.\r\n\r\n## PoC\r\n```js\r\nconst simpleGit = require('simple-git')\r\nconst git2 = simpleGit()\r\ngit2.clone('file:///tmp/zero123', '/tmp/example-new-repo', ['--upload-pack=touch /tmp/pwn']);\r\n```\n## Remediation\nUpgrade `simple-git` to version 3.5.0 or higher.\n## References\n- [Github Commit](https://github.com/steveukx/git-js/commit/2040de601c894363050fef9f28af367b169a56c5)\n- [GitHub Gist](https://gist.github.com/lirantal/a930d902294b833514e821102316426b)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-24066"
+          ],
+          "CWE": [
+            "CWE-78"
+          ]
+        },
+        "packageName": "simple-git",
+        "proprietary": true,
+        "creationTime": "2022-03-28T10:41:21.756066Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-03-28T10:40:04Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-03-29T14:24:08Z",
+        "modificationTime": "2022-05-26T11:44:39.370252Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "buildandreleasetask@1.0.0",
+          "simple-git@1.110.0"
+        ],
+        "upgradePath": [
+          false,
+          "simple-git@3.5.0"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "simple-git",
+        "version": "1.110.0"
+      },
+      {
+        "id": "SNYK-JS-SIMPLEGIT-3112221",
+        "title": "Remote Code Execution (RCE)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H/E:P",
+        "credit": [
+          "Sam Wheating"
+        ],
+        "semver": {
+          "vulnerable": [
+            "<3.15.0"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "3.15.0"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "js",
+        "severity": "high",
+        "cvssScore": 8.1,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "simple-git",
+        "references": [
+          {
+            "url": "https://github.com/steveukx/git-js/commit/774648049eb3e628379e292ea172dccaba610504",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/steveukx/git-js/releases/tag/simple-git%403.15.0",
+            "title": "GitHub Release"
+          },
+          {
+            "url": "https://github.com/steveukx/git-js/blob/main/docs/PLUGIN-UNSAFE-ACTIONS.md%23overriding-allowed-protocols",
+            "title": "Plugin-Unsafe-Actions Documentation"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "critical",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "cvssV3BaseScore": 9.8,
+            "modificationTime": "2022-12-08T01:11:45.128450Z"
+          }
+        ],
+        "description": "## Overview\n[simple-git](https://www.npmjs.com/package/simple-git) is a light weight interface for running git commands in any node.js application.\n\nAffected versions of this package are vulnerable to Remote Code Execution (RCE) when enabling the `ext` transport protocol, which makes it exploitable via `clone()` method.\r\nThis vulnerability exists due to an incomplete fix of [CVE-2022-24066](https://security.snyk.io/vuln/SNYK-JS-SIMPLEGIT-2434306).\r\n\r\n## PoC\r\n\r\n```js\r\nconst simpleGit = require('simple-git')\r\nconst git2 = simpleGit()\r\ngit2.clone('ext::sh -c touch% /tmp/pwn% >&2', '/tmp/example-new-repo', [\"-c\", \"protocol.ext.allow=always\"]);\r\n```\n## Remediation\nUpgrade `simple-git` to version 3.15.0 or higher.\n## References\n- [GitHub Commit](https://github.com/steveukx/git-js/commit/774648049eb3e628379e292ea172dccaba610504)\n- [GitHub Release](https://github.com/steveukx/git-js/releases/tag/simple-git%403.15.0)\n- [Plugin-Unsafe-Actions Documentation](https://github.com/steveukx/git-js/blob/main/docs/PLUGIN-UNSAFE-ACTIONS.md#overriding-allowed-protocols)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2022-25912"
+          ],
+          "CWE": [
+            "CWE-94"
+          ]
+        },
+        "packageName": "simple-git",
+        "proprietary": true,
+        "creationTime": "2022-11-10T14:54:09.297840Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-11-10T13:55:14Z",
+        "packageManager": "npm",
+        "publicationTime": "2022-12-05T15:30:04.792034Z",
+        "modificationTime": "2022-12-11T10:17:47.000853Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "buildandreleasetask@1.0.0",
+          "simple-git@1.110.0"
+        ],
+        "upgradePath": [
+          false,
+          "simple-git@3.15.0"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "simple-git",
+        "version": "1.110.0"
+      }
+    ],
+    "ok": false,
+    "dependencyCount": 21,
+    "org": "global-devops-bootcamp",
+    "policy": "# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.25.0\nignore: {}\npatch: {}\n",
+    "isPrivate": true,
+    "licensesPolicy": {
+      "severities": {},
+      "orgLicenseRules": {
+        "AGPL-1.0": {
+          "licenseType": "AGPL-1.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "AGPL-3.0": {
+          "licenseType": "AGPL-3.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "Artistic-1.0": {
+          "licenseType": "Artistic-1.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "Artistic-2.0": {
+          "licenseType": "Artistic-2.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "CDDL-1.0": {
+          "licenseType": "CDDL-1.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "CPOL-1.02": {
+          "licenseType": "CPOL-1.02",
+          "severity": "high",
+          "instructions": ""
+        },
+        "EPL-1.0": {
+          "licenseType": "EPL-1.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "GPL-2.0": {
+          "licenseType": "GPL-2.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "GPL-3.0": {
+          "licenseType": "GPL-3.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "LGPL-2.0": {
+          "licenseType": "LGPL-2.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-2.1": {
+          "licenseType": "LGPL-2.1",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-2.1+": {
+          "licenseType": "LGPL-2.1+",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-3.0": {
+          "licenseType": "LGPL-3.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-3.0+": {
+          "licenseType": "LGPL-3.0+",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "MPL-1.1": {
+          "licenseType": "MPL-1.1",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "MPL-2.0": {
+          "licenseType": "MPL-2.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "MS-RL": {
+          "licenseType": "MS-RL",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "SimPL-2.0": {
+          "licenseType": "SimPL-2.0",
+          "severity": "high",
+          "instructions": ""
+        }
+      }
+    },
+    "packageManager": "npm",
+    "ignoreSettings": {
+      "adminOnly": false,
+      "reasonRequired": false,
+      "disregardFilesystemIgnores": false
+    },
+    "summary": "6 vulnerable dependency paths",
+    "remediation": {
+      "unresolved": [],
+      "upgrade": {
+        "azure-pipelines-task-lib@2.8.0": {
+          "upgradeTo": "azure-pipelines-task-lib@3.3.1",
+          "upgrades": [
+            "minimatch@3.0.4",
+            "shelljs@0.3.0"
+          ],
+          "vulns": [
+            "SNYK-JS-MINIMATCH-3050818",
+            "SNYK-JS-SHELLJS-2332187"
+          ]
+        },
+        "simple-git@1.110.0": {
+          "upgradeTo": "simple-git@3.15.0",
+          "upgrades": [
+            "simple-git@1.110.0",
+            "simple-git@1.110.0",
+            "simple-git@1.110.0"
+          ],
+          "vulns": [
+            "SNYK-JS-SIMPLEGIT-3112221",
+            "SNYK-JS-SIMPLEGIT-2434306",
+            "SNYK-JS-SIMPLEGIT-2421199"
+          ]
+        }
+      },
+      "patch": {},
+      "ignore": {},
+      "pin": {}
+    },
+    "filesystemPolicy": false,
+    "filtered": {
+      "ignore": [],
+      "patch": []
+    },
+    "uniqueCount": 5,
+    "projectName": "buildandreleasetask",
+    "displayTargetFile": "buildAndReleaseTask\\package-lock.json",
+    "hasUnknownVersions": false,
+    "path": "C:\\Users\\JesseHouwing\\source\\extension-securiry\\vsixs\\GoatWranglers\\build-release-task\\0.0.30"
+  },
+  {
+    "vulnerabilities": [
+      {
+        "id": "SNYK-DOTNET-MICROSOFTNETCOREAPP-1728400",
+        "title": "Denial of Service (DoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "[5.0.0, 5.0.7)",
+            "[,3.1.16)"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "5.0.7",
+          "3.1.16"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "dotnet",
+        "severity": "medium",
+        "cvssScore": 5.9,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "microsoft.netcore.app",
+        "references": [
+          {
+            "url": "https://github.com/dotnet/aspnetcore/issues/33369",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://msrc.microsoft.com/update-guide/en-US/vulnerability/CVE-2021-31957",
+            "title": "Microsoft Security Advisory"
+          },
+          {
+            "url": "https://github.com/dotnet/announcements/issues/189",
+            "title": "Microsoft Security Announcement"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "Red Hat",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 5.9,
+            "modificationTime": "2022-09-01T22:00:23.069354Z"
+          },
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-01-03T16:41:22.139085Z"
+          }
+        ],
+        "description": "## Overview\n[Microsoft.NETCore.App](https://www.nuget.org/packages/Microsoft.NETCore.App) is a set of .NET API's that are included in the default .NET Core application model.\n\nAffected versions of this package are vulnerable to Denial of Service (DoS). It exists when `ASP.NET Core` improperly handles client disconnect.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `Microsoft.NETCore.App` to version 5.0.7, 3.1.16 or higher.\n## References\n- [GitHub Issue](https://github.com/dotnet/aspnetcore/issues/33369)\n- [Microsoft Security Advisory](https://msrc.microsoft.com/update-guide/en-US/vulnerability/CVE-2021-31957)\n- [Microsoft Security Announcement](https://github.com/dotnet/announcements/issues/189)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2021-31957"
+          ],
+          "CWE": [
+            "CWE-400"
+          ],
+          "GHSA": [
+            "GHSA-mcwm-2wmc-6hv4"
+          ]
+        },
+        "packageName": "Microsoft.NETCore.App",
+        "proprietary": false,
+        "creationTime": "2021-10-06T10:01:24.679601Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2021-10-05T20:25:00Z",
+        "packageManager": "nuget",
+        "publicationTime": "2021-10-06T13:37:35.807001Z",
+        "modificationTime": "2022-09-01T22:00:23.069354Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "medium",
+        "from": [
+          "0.0.30@1.0.0",
+          "Microsoft.NETCore.App@2.2.0"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "name": "Microsoft.NETCore.App",
+        "version": "2.2.0"
+      },
+      {
+        "id": "SNYK-DOTNET-MICROSOFTNETCOREAPP-173754",
+        "title": "Authentication Bypass by Spoofing",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N/RL:O",
+        "credit": [
+          "Jonathan Birch of Microsoft Corporation"
+        ],
+        "semver": {
+          "vulnerable": [
+            "[2.1.0,2.1.8)",
+            "[2.2.0,2.2.2)"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "2.1.8",
+          "2.2.2"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "dotnet",
+        "severity": "high",
+        "cvssScore": 7.4,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "microsoft.netcore.app",
+        "references": [
+          {
+            "url": "https://github.com/dotnet/announcements/issues/97",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2019-0657",
+            "title": "Microsoft Security Portal"
+          },
+          {
+            "url": "https://bugzilla.redhat.com/show_bug.cgi?id=1673891",
+            "title": "RedHat Bugzilla Bug"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.0/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:H/A:N",
+            "cvssV3BaseScore": 5.9,
+            "modificationTime": "2022-01-03T17:53:21.172659Z"
+          },
+          {
+            "assigner": "Red Hat",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-09-01T20:36:35.278803Z"
+          }
+        ],
+        "description": "## Overview\n[Microsoft.NETCore.App](https://www.nuget.org/packages/Microsoft.NETCore.App) is a set of .NET API's that are included in the default .NET Core application model.\n\nAffected versions of this package are vulnerable to Authentication Bypass by Spoofing due to the way they parse URL's. An attacker could use it to bypass security logic intended to ensure that a user-provided URL belonged to a specific hostname or a subdomain of that hostname. \r\nTo exploit the vulnerability, an attacker must provide a URL string to an application that attempts to verify that the URL belongs to a specific hostname or to a subdomain of that hostname. The application must then make an HTTP request to the attacker-provided URL either directly or by sending a processed version of the attacker-provided URL to a web browser.\n## Remediation\nUpgrade `Microsoft.NETCore.App` to version 2.1.8, 2.2.2 or higher.\n## References\n- [GitHub Issue](https://github.com/dotnet/announcements/issues/97)\n- [Microsoft Security Portal](https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2019-0657)\n- [RedHat Bugzilla Bug](https://bugzilla.redhat.com/show_bug.cgi?id=1673891)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2019-0657"
+          ],
+          "CWE": [
+            "CWE-290"
+          ]
+        },
+        "packageName": "Microsoft.NETCore.App",
+        "proprietary": false,
+        "creationTime": "2019-03-07T12:44:14.822656Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2019-02-12T00:00:00Z",
+        "packageManager": "nuget",
+        "publicationTime": "2019-03-06T00:18:35Z",
+        "modificationTime": "2022-09-01T20:36:35.278803Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "0.0.30@1.0.0",
+          "Microsoft.NETCore.App@2.2.0"
+        ],
+        "upgradePath": [
+          false,
+          "Microsoft.NETCore.App@2.2.2"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "Microsoft.NETCore.App",
+        "version": "2.2.0"
+      },
+      {
+        "id": "SNYK-DOTNET-MICROSOFTNETCOREAPP-174710",
+        "title": "Denial of Service (DoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "credit": [
+          "Unknown"
+        ],
+        "semver": {
+          "vulnerable": [
+            "[2.1.0, 2.1.11)",
+            "[2.2.0, 2.2.5)"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "2.1.11",
+          "2.2.5"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "dotnet",
+        "severity": "high",
+        "cvssScore": 7.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "microsoft.netcore.app",
+        "references": [
+          {
+            "url": "https://github.com/dotnet/core/blob/master/release-notes/2.2/2.2.5/2.2.5.md",
+            "title": "Microsoft Release Notes"
+          },
+          {
+            "url": "https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2019-0982",
+            "title": "Microsoft Security Advisory"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-01-03T17:53:18.296238Z"
+          }
+        ],
+        "description": "## Overview\n\n[Microsoft.NETCore.App](https://www.nuget.org/packages/Microsoft.NETCore.App) is a set of .NET API's that are included in the default .NET Core application model.\n\n\nAffected versions of this package are vulnerable to Denial of Service (DoS).\n\n## Details\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\r\n\r\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\r\n\r\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\r\n\r\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\r\n\r\nTwo common types of DoS vulnerabilities:\r\n\r\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\r\n\r\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](npm:ws:20171108)\n\n## Remediation\n\nUpgrade `Microsoft.NETCore.App` to version 2.1.11, 2.2.5 or higher.\n\n\n## References\n\n- [Microsoft Release Notes](https://github.com/dotnet/core/blob/master/release-notes/2.2/2.2.5/2.2.5.md)\n\n- [Microsoft Security Advisory](https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2019-0982)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2019-0982"
+          ],
+          "CWE": [
+            "CWE-400"
+          ]
+        },
+        "packageName": "Microsoft.NETCore.App",
+        "proprietary": false,
+        "creationTime": "2019-05-15T16:27:39.878053Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2019-05-14T07:00:00Z",
+        "packageManager": "nuget",
+        "publicationTime": "2019-05-15T16:27:51Z",
+        "modificationTime": "2022-01-03T17:53:18.296238Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "0.0.30@1.0.0",
+          "Microsoft.NETCore.App@2.2.0"
+        ],
+        "upgradePath": [
+          false,
+          "Microsoft.NETCore.App@2.2.5"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "Microsoft.NETCore.App",
+        "version": "2.2.0"
+      },
+      {
+        "id": "SNYK-DOTNET-MICROSOFTNETCOREAPP-451559",
+        "title": "Open Redirect",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:L/A:N",
+        "credit": [
+          "Datalust"
+        ],
+        "semver": {
+          "vulnerable": [
+            "[2.1.0 ,2.1.12)",
+            "[2.2.0,2.2.6)"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "2.1.12",
+          "2.2.6"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "dotnet",
+        "severity": "medium",
+        "cvssScore": 5.4,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "microsoft.netcore.app",
+        "references": [
+          {
+            "url": "https://github.com/aspnet/AspNetCore/commit/b9c8f3491937c5c756cfc244d1da5a956faca19e",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/aspnet/Announcements/issues/373",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2019-1075",
+            "title": "Microsoft Advisory"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+            "cvssV3BaseScore": 6.1,
+            "modificationTime": "2022-01-03T17:53:51.732412Z"
+          }
+        ],
+        "description": "## Overview\n[Microsoft.NETCore.App](https://www.nuget.org/packages/Microsoft.NETCore.App) is a set of .NET API's that are included in the default .NET Core application model.\n\nAffected versions of this package are vulnerable to Open Redirect. A spoofing vulnerability exists that could lead to an redirection. An attacker who successfully exploits this vulnerability could redirect a targeted user to a malicious website.\n## Remediation\nUpgrade `Microsoft.NETCore.App` to version 2.1.12, 2.2.6 or higher.\n## References\n- [GitHub Commit](https://github.com/aspnet/AspNetCore/commit/b9c8f3491937c5c756cfc244d1da5a956faca19e)\n- [GitHub Issue](https://github.com/aspnet/Announcements/issues/373)\n- [Microsoft Advisory](https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2019-1075)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2019-1075"
+          ],
+          "CWE": [
+            "CWE-601"
+          ]
+        },
+        "packageName": "Microsoft.NETCore.App",
+        "proprietary": false,
+        "creationTime": "2019-07-10T12:46:11.368301Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2019-07-09T07:00:00Z",
+        "packageManager": "nuget",
+        "publicationTime": "2019-07-10T12:46:32Z",
+        "modificationTime": "2022-01-03T17:53:51.732412Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "medium",
+        "from": [
+          "0.0.30@1.0.0",
+          "Microsoft.NETCore.App@2.2.0"
+        ],
+        "upgradePath": [
+          false,
+          "Microsoft.NETCore.App@2.2.6"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "Microsoft.NETCore.App",
+        "version": "2.2.0"
+      },
+      {
+        "id": "SNYK-DOTNET-MICROSOFTNETCOREAPP-72895",
+        "title": "Denial of Service (DoS)",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H/RL:O",
+        "credit": [
+          "Barry Dorrans"
+        ],
+        "semver": {
+          "vulnerable": [
+            "[2.2.0,2.2.1)",
+            "[2.1.0,2.1.7)"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "2.2.1",
+          "2.1.7"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "dotnet",
+        "severity": "medium",
+        "cvssScore": 5.9,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "microsoft.netcore.app",
+        "references": [
+          {
+            "url": "https://github.com/aspnet/Announcements/issues/334",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2019-0564",
+            "title": "Microsoft Security Guidance"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "Red Hat",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.0/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 5.9,
+            "modificationTime": "2022-09-01T20:36:32.015799Z"
+          },
+          {
+            "assigner": "NVD",
+            "severity": "high",
+            "cvssV3Vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvssV3BaseScore": 7.5,
+            "modificationTime": "2022-01-03T17:53:02.782464Z"
+          }
+        ],
+        "description": "## Overview\n[Microsoft.NETCore.App](https://www.nuget.org/packages/Microsoft.NETCore.App) is a set of .NET API's that are included in the default .NET Core application model.\n\nAffected versions of this package are vulnerable to Denial of Service (DoS). An unauthenticated attacker can cause a denial of service remotely, by issuing specially crafted requests to the .NET Core application. This is caused by an improper handling of a web request in ASP.NET Core. This CVE ID is unique from CVE-2019-0548.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its original and legitimate users. There are many types of DoS attacks, ranging from trying to clog the network pipes to the system by generating a large volume of traffic from many machines (a Distributed Denial of Service - DDoS - attack) to sending crafted requests that cause a system to crash or take a disproportional amount of time to process.\n\nThe Regular expression Denial of Service (ReDoS) is a type of Denial of Service attack. Regular expressions are incredibly powerful, but they aren't very intuitive and can ultimately end up making it easy for attackers to take your site down.\n\nLet’s take the following regular expression as an example:\n```js\nregex = /A(B|C+)+D/\n```\n\nThis regular expression accomplishes the following:\n- `A` The string must start with the letter 'A'\n- `(B|C+)+` The string must then follow the letter A with either the letter 'B' or some number of occurrences of the letter 'C' (the `+` matches one or more times). The `+` at the end of this section states that we can look for one or more matches of this section.\n- `D` Finally, we ensure this section of the string ends with a 'D'\n\nThe expression would match inputs such as `ABBD`, `ABCCCCD`, `ABCBCCCD` and `ACCCCCD`\n\nIt most cases, it doesn't take very long for a regex engine to find a match:\n\n```bash\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCD\")'\n0.04s user 0.01s system 95% cpu 0.052 total\n\n$ time node -e '/A(B|C+)+D/.test(\"ACCCCCCCCCCCCCCCCCCCCCCCCCCCCX\")'\n1.79s user 0.02s system 99% cpu 1.812 total\n```\n\nThe entire process of testing it against a 30 characters long string takes around ~52ms. But when given an invalid string, it takes nearly two seconds to complete the test, over ten times as long as it took to test a valid string. The dramatic difference is due to the way regular expressions get evaluated.\n\nMost Regex engines will work very similarly (with minor differences). The engine will match the first possible way to accept the current character and proceed to the next one. If it then fails to match the next one, it will backtrack and see if there was another way to digest the previous character. If it goes too far down the rabbit hole only to find out the string doesn’t match in the end, and if many characters have multiple valid regex paths, the number of backtracking steps can become very large, resulting in what is known as _catastrophic backtracking_.\n\nLet's look at how our expression runs into this problem, using a shorter string: \"ACCCX\". While it seems fairly straightforward, there are still four different ways that the engine could match those three C's:\n1. CCC\n2. CC+C\n3. C+CC\n4. C+C+C.\n\nThe engine has to try each of those combinations to see if any of them potentially match against the expression. When you combine that with the other steps the engine must take, we can use [RegEx 101 debugger](https://regex101.com/debugger) to see the engine has to take a total of 38 steps before it can determine the string doesn't match.\n\nFrom there, the number of steps the engine must use to validate a string just continues to grow.\n\n| String | Number of C's | Number of steps |\n| -------|-------------:| -----:|\n| ACCCX | 3 | 38\n| ACCCCX | 4 | 71\n| ACCCCCX | 5 | 136\n| ACCCCCCCCCCCCCCX | 14 | 65,553\n\n\nBy the time the string includes 14 C's, the engine has to take over 65,000 steps just to see if the string is valid. These extreme situations can cause them to work very slowly (exponentially related to input size, as shown above), allowing an attacker to exploit this and can cause the service to excessively consume CPU, resulting in a Denial of Service.\n\n## Remediation\nUpgrade `Microsoft.NETCore.App` to version 2.2.1, 2.1.7 or higher.\n## References\n- [GitHub Issue](https://github.com/aspnet/Announcements/issues/334)\n- [Microsoft Security Guidance](https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2019-0564)\n",
+        "identifiers": {
+          "CVE": [
+            "CVE-2019-0564"
+          ],
+          "CWE": [
+            "CWE-400"
+          ]
+        },
+        "packageName": "Microsoft.NETCore.App",
+        "proprietary": false,
+        "creationTime": "2019-01-09T13:00:30.826174Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2019-01-08T20:32:39Z",
+        "packageManager": "nuget",
+        "publicationTime": "2019-01-10T09:27:21.069255Z",
+        "modificationTime": "2022-09-01T20:36:32.015799Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "medium",
+        "from": [
+          "0.0.30@1.0.0",
+          "Microsoft.NETCore.App@2.2.0"
+        ],
+        "upgradePath": [
+          false,
+          "Microsoft.NETCore.App@2.2.1"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "Microsoft.NETCore.App",
+        "version": "2.2.0"
+      },
+      {
+        "id": "SNYK-DOTNET-NEWTONSOFTJSON-2774678",
+        "title": "Insecure Defaults",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H/E:P",
+        "credit": [
+          "Gil Mirmovitch"
+        ],
+        "semver": {
+          "vulnerable": [
+            "[,13.0.1)"
+          ]
+        },
+        "exploit": "Proof of Concept",
+        "fixedIn": [
+          "13.0.1"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": "This vulnerability is only applicable on systems deployed on IIS (Internet Information Services) web-server"
+        },
+        "language": "dotnet",
+        "severity": "high",
+        "cvssScore": 7.5,
+        "functions": [],
+        "malicious": false,
+        "moduleName": "newtonsoft.json",
+        "references": [
+          {
+            "url": "https://github.com/JamesNK/Newtonsoft.Json/commit/7e77bbe1beccceac4fc7b174b53abfefac278b66",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/JamesNK/Newtonsoft.Json/issues/2457",
+            "title": "GitHub Issue"
+          },
+          {
+            "url": "https://github.com/JamesNK/Newtonsoft.Json/pull/2462",
+            "title": "GitHub PR"
+          },
+          {
+            "url": "https://alephsecurity.com/vulns/aleph-2018004",
+            "title": "Security Advisory"
+          },
+          {
+            "url": "https://alephsecurity.com/2018/10/22/StackOverflowException/",
+            "title": "Security Article"
+          }
+        ],
+        "cvssDetails": [],
+        "description": "## Overview\n\nAffected versions of this package are vulnerable to Insecure Defaults due to improper handling of StackOverFlow exception (SOE) whenever nested expressions are being processed. Exploiting this vulnerability results in Denial Of Service (DoS), and it is exploitable when an attacker sends 5 requests that cause SOE in time frame of 5 minutes.\r\n\r\n**Note:**\r\nThis vulnerability is only applicable to systems deployed on IIS (Internet Information Services) web-server\r\n\r\n## PoC:\r\n\r\n```js\r\n\r\nusing System;\r\n\r\nusing System.IO;\r\n\r\nusing System.Linq;\r\n\r\nusing Newtonsoft.Json;\r\n\r\nusing Newtonsoft.Json.Linq;\r\n\r\n\r\nnamespace JsonTests\r\n{\r\n    class Program\r\n    {\r\n        static void Main(string[] args)\r\n        {\r\n            //Create a string representation of an highly nested object (JSON serialized)\r\n            int nRep = 24000;\r\n            string json = string.Concat(Enumerable.Repeat(\"{a:\", nRep)) + \"1\" +\r\n                          string.Concat(Enumerable.Repeat(\"}\", nRep));\r\n\r\n            //Parse this object (Parsing works well - no exception is being thrown)\r\n            var parsedJson = JObject.Parse(json);\r\n            \r\n            using (var ms = new MemoryStream())\r\n            using (var sWriter = new StreamWriter(ms))\r\n            using (var jWriter = new JsonTextWriter(sWriter))\r\n            {\r\n                //Trying to serialize the object will result in StackOverflowException !!!\r\n                parsedJson.WriteTo(jWriter);\r\n            }\r\n\r\n            //ToString throws StackOverflowException as well  (ToString is very unefficient - even for smaller payloads, it will occupy a lot of CPU & Memory)\r\n            //parsedJson.ToString();\r\n\r\n            //JsonConvert.SerializeObject throws StackOverflowException as well\r\n            //string a = JsonConvert.SerializeObject(parsedJson);\r\n\r\n        }\r\n    }\r\n}\r\n\r\n```\n## Remediation\nUpgrade `Newtonsoft.Json` to version 13.0.1 or higher.\n## References\n- [GitHub Commit](https://github.com/JamesNK/Newtonsoft.Json/commit/7e77bbe1beccceac4fc7b174b53abfefac278b66)\n- [GitHub Issue](https://github.com/JamesNK/Newtonsoft.Json/issues/2457)\n- [GitHub PR](https://github.com/JamesNK/Newtonsoft.Json/pull/2462)\n- [Security Advisory](https://alephsecurity.com/vulns/aleph-2018004)\n- [Security Article](https://alephsecurity.com/2018/10/22/StackOverflowException/)\n",
+        "identifiers": {
+          "CVE": [],
+          "CWE": [
+            "CWE-755"
+          ],
+          "GHSA": [
+            "GHSA-5crp-9r3c-p9vr"
+          ]
+        },
+        "packageName": "Newtonsoft.Json",
+        "proprietary": false,
+        "creationTime": "2022-04-24T08:33:35.726602Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2022-04-24T08:33:33Z",
+        "packageManager": "nuget",
+        "publicationTime": "2022-04-24T10:58:25Z",
+        "modificationTime": "2022-08-08T07:46:17.314095Z",
+        "socialTrendAlert": false,
+        "severityWithCritical": "high",
+        "from": [
+          "0.0.30@1.0.0",
+          "Newtonsoft.Json@12.0.1"
+        ],
+        "upgradePath": [
+          false,
+          "Newtonsoft.Json@13.0.1"
+        ],
+        "isUpgradable": true,
+        "isPatchable": false,
+        "name": "Newtonsoft.Json",
+        "version": "12.0.1"
+      }
+    ],
+    "ok": false,
+    "dependencyCount": 17,
+    "org": "global-devops-bootcamp",
+    "policy": "# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.25.0\nignore: {}\npatch: {}\n",
+    "isPrivate": true,
+    "licensesPolicy": {
+      "severities": {},
+      "orgLicenseRules": {
+        "AGPL-1.0": {
+          "licenseType": "AGPL-1.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "AGPL-3.0": {
+          "licenseType": "AGPL-3.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "Artistic-1.0": {
+          "licenseType": "Artistic-1.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "Artistic-2.0": {
+          "licenseType": "Artistic-2.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "CDDL-1.0": {
+          "licenseType": "CDDL-1.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "CPOL-1.02": {
+          "licenseType": "CPOL-1.02",
+          "severity": "high",
+          "instructions": ""
+        },
+        "EPL-1.0": {
+          "licenseType": "EPL-1.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "GPL-2.0": {
+          "licenseType": "GPL-2.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "GPL-3.0": {
+          "licenseType": "GPL-3.0",
+          "severity": "high",
+          "instructions": ""
+        },
+        "LGPL-2.0": {
+          "licenseType": "LGPL-2.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-2.1": {
+          "licenseType": "LGPL-2.1",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-2.1+": {
+          "licenseType": "LGPL-2.1+",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-3.0": {
+          "licenseType": "LGPL-3.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "LGPL-3.0+": {
+          "licenseType": "LGPL-3.0+",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "MPL-1.1": {
+          "licenseType": "MPL-1.1",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "MPL-2.0": {
+          "licenseType": "MPL-2.0",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "MS-RL": {
+          "licenseType": "MS-RL",
+          "severity": "medium",
+          "instructions": ""
+        },
+        "SimPL-2.0": {
+          "licenseType": "SimPL-2.0",
+          "severity": "high",
+          "instructions": ""
+        }
+      }
+    },
+    "packageManager": "nuget",
+    "ignoreSettings": {
+      "adminOnly": false,
+      "reasonRequired": false,
+      "disregardFilesystemIgnores": false
+    },
+    "summary": "6 vulnerable dependency paths",
+    "remediation": {
+      "unresolved": [
+        {
+          "id": "SNYK-DOTNET-MICROSOFTNETCOREAPP-1728400",
+          "title": "Denial of Service (DoS)",
+          "CVSSv3": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "credit": [
+            "Unknown"
+          ],
+          "semver": {
+            "vulnerable": [
+              "[5.0.0, 5.0.7)",
+              "[,3.1.16)"
+            ]
+          },
+          "exploit": "Not Defined",
+          "fixedIn": [
+            "5.0.7",
+            "3.1.16"
+          ],
+          "patches": [],
+          "insights": {
+            "triageAdvice": null
+          },
+          "language": "dotnet",
+          "severity": "medium",
+          "cvssScore": 5.9,
+          "functions": [],
+          "malicious": false,
+          "moduleName": "microsoft.netcore.app",
+          "references": [
+            {
+              "url": "https://github.com/dotnet/aspnetcore/issues/33369",
+              "title": "GitHub Issue"
+            },
+            {
+              "url": "https://msrc.microsoft.com/update-guide/en-US/vulnerability/CVE-2021-31957",
+              "title": "Microsoft Security Advisory"
+            },
+            {
+              "url": "https://github.com/dotnet/announcements/issues/189",
+              "title": "Microsoft Security Announcement"
+            }
+          ],
+          "cvssDetails": [
+            {
+              "assigner": "Red Hat",
+              "severity": "medium",
+              "cvssV3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "cvssV3BaseScore": 5.9,
+              "modificationTime": "2022-09-01T22:00:23.069354Z"
+            },
+            {
+              "assigner": "NVD",
+              "severity": "high",
+              "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "cvssV3BaseScore": 7.5,
+              "modificationTime": "2022-01-03T16:41:22.139085Z"
+            }
+          ],
+          "description": "## Overview\n[Microsoft.NETCore.App](https://www.nuget.org/packages/Microsoft.NETCore.App) is a set of .NET API's that are included in the default .NET Core application model.\n\nAffected versions of this package are vulnerable to Denial of Service (DoS). It exists when `ASP.NET Core` improperly handles client disconnect.\n\n## Details\n\nDenial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.\n\nUnlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.\n\nOne popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.\n\nWhen it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.\n\nTwo common types of DoS vulnerabilities:\n\n* High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, [commons-fileupload:commons-fileupload](SNYK-JAVA-COMMONSFILEUPLOAD-30082).\n\n* Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  [npm `ws` package](https://snyk.io/vuln/npm:ws:20171108)\n\n## Remediation\nUpgrade `Microsoft.NETCore.App` to version 5.0.7, 3.1.16 or higher.\n## References\n- [GitHub Issue](https://github.com/dotnet/aspnetcore/issues/33369)\n- [Microsoft Security Advisory](https://msrc.microsoft.com/update-guide/en-US/vulnerability/CVE-2021-31957)\n- [Microsoft Security Announcement](https://github.com/dotnet/announcements/issues/189)\n",
+          "identifiers": {
+            "CVE": [
+              "CVE-2021-31957"
+            ],
+            "CWE": [
+              "CWE-400"
+            ],
+            "GHSA": [
+              "GHSA-mcwm-2wmc-6hv4"
+            ]
+          },
+          "packageName": "Microsoft.NETCore.App",
+          "proprietary": false,
+          "creationTime": "2021-10-06T10:01:24.679601Z",
+          "functions_new": [],
+          "alternativeIds": [],
+          "disclosureTime": "2021-10-05T20:25:00Z",
+          "packageManager": "nuget",
+          "publicationTime": "2021-10-06T13:37:35.807001Z",
+          "modificationTime": "2022-09-01T22:00:23.069354Z",
+          "socialTrendAlert": false,
+          "from": [
+            "0.0.30@1.0.0",
+            "Microsoft.NETCore.App@2.2.0"
+          ],
+          "upgradePath": [],
+          "isUpgradable": false,
+          "isPatchable": false,
+          "isPinnable": false,
+          "isRuntime": true,
+          "name": "Microsoft.NETCore.App",
+          "version": "2.2.0",
+          "severityWithCritical": "medium"
+        }
+      ],
+      "upgrade": {
+        "Microsoft.NETCore.App@2.2.0": {
+          "upgradeTo": "Microsoft.NETCore.App@2.2.6",
+          "upgrades": [
+            "Microsoft.NETCore.App@2.2.0",
+            "Microsoft.NETCore.App@2.2.0",
+            "Microsoft.NETCore.App@2.2.0",
+            "Microsoft.NETCore.App@2.2.0"
+          ],
+          "vulns": [
+            "SNYK-DOTNET-MICROSOFTNETCOREAPP-451559",
+            "SNYK-DOTNET-MICROSOFTNETCOREAPP-174710",
+            "SNYK-DOTNET-MICROSOFTNETCOREAPP-173754",
+            "SNYK-DOTNET-MICROSOFTNETCOREAPP-72895"
+          ]
+        },
+        "Newtonsoft.Json@12.0.1": {
+          "upgradeTo": "Newtonsoft.Json@13.0.1",
+          "upgrades": [
+            "Newtonsoft.Json@12.0.1"
+          ],
+          "vulns": [
+            "SNYK-DOTNET-NEWTONSOFTJSON-2774678"
+          ]
+        }
+      },
+      "patch": {},
+      "ignore": {},
+      "pin": {}
+    },
+    "filesystemPolicy": false,
+    "filtered": {
+      "ignore": [],
+      "patch": []
+    },
+    "uniqueCount": 6,
+    "targetFile": "buildAndReleaseTask\\TestCaseAssociation\\TestCaseAssociation\\obj\\project.assets.json",
+    "projectName": "0.0.30",
+    "displayTargetFile": "buildAndReleaseTask\\TestCaseAssociation\\TestCaseAssociation\\obj\\project.assets.json",
+    "hasUnknownVersions": false,
+    "path": "C:\\Users\\JesseHouwing\\source\\extension-securiry\\vsixs\\GoatWranglers\\build-release-task\\0.0.30"
+  }
+]
