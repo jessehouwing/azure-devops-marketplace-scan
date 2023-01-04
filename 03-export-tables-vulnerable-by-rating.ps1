@@ -9,6 +9,15 @@ $byRating = @()
 
 foreach ($extension in $report.extensions)
 {
+    if ( -not (
+        ($extension.executionHandlers -contains "Node") -or
+        ($extension.executionHandlers -contains "Node10") -or
+        ($extension.executionHandlers -contains "Node16")
+    ))
+    {
+        continue;
+    }
+    
     $vulnerable = $false
     foreach ($task in $extension.tasks)
     {
