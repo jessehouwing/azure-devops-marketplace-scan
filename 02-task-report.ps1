@@ -1,8 +1,6 @@
 $cacheFile = "Extensions.json"
 $extensions = Get-Content -raw -Path $cacheFile | ConvertFrom-Json
 
-$depedencyResults = Get-Content -raw -Path "result.json" | ConvertFrom-Json
-
 $consolidatedExtensions = @()
 $currentDirectory =  Resolve-Path -path "."
 
@@ -63,6 +61,10 @@ write-host "Reading tasks"
 foreach ($extension in $consolidatedExtensions)
 {
     write-host " - $($extension.publisher)/$($extension.extensionId)"
+
+    $depedencyResultsPath = join-path -path "vsixs/$publisherId/$extensionId/" -childpath "deps.json"
+    $depedencyResults = Get-Content -raw -Path $depedencyResultsPath | ConvertFrom-Json
+
 
     if ($null -ne $extension.vsoManifest)
     {
