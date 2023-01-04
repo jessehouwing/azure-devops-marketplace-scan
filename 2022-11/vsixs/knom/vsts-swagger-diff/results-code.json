@@ -1,0 +1,262 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "SnykCode",
+          "semanticVersion": "1.0.0",
+          "version": "1.0.0",
+          "rules": [
+            {
+              "id": "javascript/InsecureTLSConfig",
+              "name": "InsecureTLSConfig",
+              "shortDescription": {
+                "text": "Insecure TLS Configuration"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "help": {
+                "markdown": "\n## Details\n\nImplementing encryption for the transmission and storage of sensitive information is essential. But encryption standards are constantly changing since attackers have more and more powerful resources at their disposal-along with more sophisticated attack algorithms. This means that encryption is only useful if it meets current standards appropriate for the type of data being transmitted or stored.\nWhen organizations use weakly encoded passwords or weak hashes (especially when they also utilize single-factor authentication, which places too much emphasis on passwords), attackers can potentially gain unauthorized access through a brute-force attack.\n\n### Best practices for prevention\n* Use TLS instead of SSL\n* Be aware of outdated algorithms; recognize and implement current cryptographic standards instead.\n* Never use custom or DIY security and cryptographic methods; instead, use methods that are part of an accepted library or framework.\n* Ensure that code dealing with cryptographic methods is highly modular and can be easily replaced as security standards change.\n* Increase developer awareness of proper encryption key management and protection to ensure best practices throughout the application.",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [],
+                "exampleCommitDescriptions": [],
+                "precision": "very-high",
+                "repoDatasetSize": 0,
+                "cwe": [
+                  "CWE-327"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "javascript/InsecureTLSConfig",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Setting the 'NODE_TLS_REJECT_UNAUTHORIZED' to '0' makes TLS connections and HTTPS requests insecure.",
+            "markdown": "Setting the '{0}' to '{1}' makes TLS connections and HTTPS requests insecure.",
+            "arguments": [
+              "[NODE_TLS_REJECT_UNAUTHORIZED](0)",
+              "[0](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "swagger-diff/swagger-diff-v1/task.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 2,
+                  "endLine": 2,
+                  "startColumn": 1,
+                  "endColumn": 46
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "95b93784f38c35e859ec0817e527ea26a55f8ce84439f54e11b66075f56b4ff8",
+            "1": "ae77ea27.7d8d7fe0.a5cb6912.431a86ae.bb6bc4ed.5fce695c.92405ed5.83183368.ae77ea27.7d8d7fe0.a5cb6912.fb509508.bb6bc4ed.5fce695c.92405ed5.83183368"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "swagger-diff/swagger-diff-v1/task.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 2,
+                            "endLine": 2,
+                            "startColumn": 13,
+                            "endColumn": 40
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "swagger-diff/swagger-diff-v1/task.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 2,
+                            "endLine": 2,
+                            "startColumn": 44,
+                            "endColumn": 46
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 650,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileCodeFlow"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureTLSConfig",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Setting the 'NODE_TLS_REJECT_UNAUTHORIZED' to '0' makes TLS connections and HTTPS requests insecure.",
+            "markdown": "Setting the '{0}' to '{1}' makes TLS connections and HTTPS requests insecure.",
+            "arguments": [
+              "[NODE_TLS_REJECT_UNAUTHORIZED](0)",
+              "[0](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "swagger-diff/swagger-diff-v2/task.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 2,
+                  "endLine": 2,
+                  "startColumn": 1,
+                  "endColumn": 46
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "916623f464be99a5b0f8485b5c6c88e261c34fc35e5286a3111a9d05fd90a9c6",
+            "1": "ae77ea27.7d8d7fe0.a5cb6912.431a86ae.bb6bc4ed.5fce695c.92405ed5.83183368.ae77ea27.7d8d7fe0.a5cb6912.fb509508.bb6bc4ed.5fce695c.92405ed5.83183368"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "swagger-diff/swagger-diff-v2/task.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 2,
+                            "endLine": 2,
+                            "startColumn": 13,
+                            "endColumn": 40
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "swagger-diff/swagger-diff-v2/task.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 2,
+                            "endLine": 2,
+                            "startColumn": 44,
+                            "endColumn": 46
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 650,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileCodeFlow"
+              }
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "coverage": [
+          {
+            "files": 3,
+            "isSupported": true,
+            "lang": "XML"
+          },
+          {
+            "files": 348,
+            "isSupported": true,
+            "lang": "TypeScript"
+          },
+          {
+            "files": 2,
+            "isSupported": false,
+            "lang": "Roff Manpage"
+          },
+          {
+            "files": 7090,
+            "isSupported": true,
+            "lang": "JavaScript"
+          },
+          {
+            "files": 91,
+            "isSupported": false,
+            "lang": "Unknown"
+          },
+          {
+            "files": 3,
+            "isSupported": true,
+            "lang": "HTML"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -166,8 +166,8 @@
             "markdown": "Unsanitized input from {0} {1} into {2}, where it is used to build a shell command. Forwarding command-line arguments or file paths from the local environment to a function that executes a system command can change the meaning of the command unexpectedly due to unescaped special characters, which may result in a Indirect Command Injection vulnerability.",
             "arguments": [
               "[a command line argument](0)",
-              "[flows](1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11)",
-              "[child_process.exec](12)"
+              "[flows](1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12)",
+              "[child_process.exec](13)"
             ]
           },
           "locations": [
@@ -181,7 +181,7 @@
                   "startLine": 19,
                   "endLine": 19,
                   "startColumn": 9,
-                  "endColumn": 57
+                  "endColumn": 26
                 }
               }
             }
@@ -206,8 +206,8 @@
                           "region": {
                             "startLine": 8,
                             "endLine": 8,
-                            "startColumn": 21,
-                            "endColumn": 32
+                            "startColumn": 29,
+                            "endColumn": 33
                           }
                         }
                       }
@@ -223,8 +223,8 @@
                           "region": {
                             "startLine": 8,
                             "endLine": 8,
-                            "startColumn": 21,
-                            "endColumn": 32
+                            "startColumn": 29,
+                            "endColumn": 33
                           }
                         }
                       }
@@ -240,8 +240,8 @@
                           "region": {
                             "startLine": 8,
                             "endLine": 8,
-                            "startColumn": 5,
-                            "endColumn": 17
+                            "startColumn": 21,
+                            "endColumn": 33
                           }
                         }
                       }
@@ -255,10 +255,10 @@
                             "uriBaseId": "%SRCROOT%"
                           },
                           "region": {
-                            "startLine": 10,
-                            "endLine": 10,
-                            "startColumn": 40,
-                            "endColumn": 52
+                            "startLine": 8,
+                            "endLine": 8,
+                            "startColumn": 5,
+                            "endColumn": 18
                           }
                         }
                       }
@@ -274,8 +274,8 @@
                           "region": {
                             "startLine": 10,
                             "endLine": 10,
-                            "startColumn": 24,
-                            "endColumn": 61
+                            "startColumn": 40,
+                            "endColumn": 53
                           }
                         }
                       }
@@ -291,8 +291,8 @@
                           "region": {
                             "startLine": 10,
                             "endLine": 10,
-                            "startColumn": 5,
-                            "endColumn": 20
+                            "startColumn": 24,
+                            "endColumn": 39
                           }
                         }
                       }
@@ -306,10 +306,10 @@
                             "uriBaseId": "%SRCROOT%"
                           },
                           "region": {
-                            "startLine": 11,
-                            "endLine": 11,
-                            "startColumn": 25,
-                            "endColumn": 40
+                            "startLine": 10,
+                            "endLine": 10,
+                            "startColumn": 5,
+                            "endColumn": 21
                           }
                         }
                       }
@@ -325,8 +325,8 @@
                           "region": {
                             "startLine": 11,
                             "endLine": 11,
-                            "startColumn": 14,
-                            "endColumn": 23
+                            "startColumn": 25,
+                            "endColumn": 41
                           }
                         }
                       }
@@ -342,8 +342,8 @@
                           "region": {
                             "startLine": 11,
                             "endLine": 11,
-                            "startColumn": 5,
-                            "endColumn": 10
+                            "startColumn": 19,
+                            "endColumn": 24
                           }
                         }
                       }
@@ -357,10 +357,10 @@
                             "uriBaseId": "%SRCROOT%"
                           },
                           "region": {
-                            "startLine": 13,
-                            "endLine": 13,
-                            "startColumn": 11,
-                            "endColumn": 16
+                            "startLine": 11,
+                            "endLine": 11,
+                            "startColumn": 5,
+                            "endColumn": 11
                           }
                         }
                       }
@@ -376,8 +376,8 @@
                           "region": {
                             "startLine": 13,
                             "endLine": 13,
-                            "startColumn": 5,
-                            "endColumn": 7
+                            "startColumn": 11,
+                            "endColumn": 17
                           }
                         }
                       }
@@ -391,10 +391,10 @@
                             "uriBaseId": "%SRCROOT%"
                           },
                           "region": {
-                            "startLine": 19,
-                            "endLine": 19,
-                            "startColumn": 27,
-                            "endColumn": 29
+                            "startLine": 13,
+                            "endLine": 13,
+                            "startColumn": 5,
+                            "endColumn": 8
                           }
                         }
                       }
@@ -410,8 +410,25 @@
                           "region": {
                             "startLine": 19,
                             "endLine": 19,
+                            "startColumn": 27,
+                            "endColumn": 30
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 13,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "task/exec-child.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 19,
+                            "endLine": 19,
                             "startColumn": 9,
-                            "endColumn": 57
+                            "endColumn": 26
                           }
                         }
                       }

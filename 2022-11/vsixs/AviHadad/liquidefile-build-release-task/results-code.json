@@ -1,0 +1,1335 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "SnykCode",
+          "semanticVersion": "1.0.0",
+          "version": "1.0.0",
+          "rules": [
+            {
+              "id": "javascript/InsecureHash",
+              "name": "InsecureHash",
+              "shortDescription": {
+                "text": "Use of Password Hash With Insufficient Computational Effort"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "markdown": "\n## Details\n\nSensitive information should never be stored in plain text, since this makes it very easy for unauthorized users, whether malicious insiders or outside attackers, to access. Hashing methods are used to make stored passwords and other sensitive data unreadable to users. For example, when a password is defined for the first time, it is hashed and then stored. The next time that user attempts to log on, the password they enter is hashed following the same procedure and compared with the stored value. In this way, the original password never needs to be stored in the system.\n\nHashing is a one-way scheme, meaning a hashed password cannot be reverse engineered. However, if an outdated or custom programmed hashing scheme is used, it becomes simple for an attacker with powerful modern computing power to gain access to the hashes used. This opens up access to all stored password information, leading to breached security. Therefore, it is essential for developers to understand modern, secure password hashing techniques.\n\n### Best practices for prevention\n* Use strong standard algorithms for hashing rather than simpler but outdated methods or DIY hashing schemes, which may have inherent weaknesses.\n* Use modular design for all code dealing with hashing so it can be swapped out as security standards change over time.\n* Use salting in combination with hashing (While this places more demands on resources, it is an essential step for tighter security.).\n* Implement zero-trust architecture to ensure that access to password data is granted only for legitimate business purposes.\n* Increase developer awareness of current standards in data security and cryptography.",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [
+                  {
+                    "commitURL": "https://github.com/feup-infolab/dendro/commit/af4689bf0d26af0607567c46922251ac07922dea?diff=split#diff-3ee957c630ef81dd1016237f56c05e070eff7d84460f45ae3c25ab0441fa79b9L25",
+                    "lines": [
+                      {
+                        "line": "var crypto = require('crypto'),",
+                        "lineNumber": 24,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    shasum = crypto.createHash('sha1');",
+                        "lineNumber": 25,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "shasum.update(req.body.password);",
+                        "lineNumber": 27,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "var encodedPassword = shasum.digest('hex');",
+                        "lineNumber": 28,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "var crypto = require('crypto');",
+                        "lineNumber": 24,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "const key = crypto.pbkdf2Sync(req.body.password, user.ddr.salt, 100000, 512, 'sha512');",
+                        "lineNumber": 25,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "var encodedPassword = key.toString('hex');",
+                        "lineNumber": 26,
+                        "lineChange": "added"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/coderaiser/cloudcmd/commit/1c3a97fbad9c22f94000e89384321642affbf80d?diff=split#diff-0502e5ba15e6b2caa99bf88e97eb4fef9994e885299ee3df4efd1b51a59e13f0L104",
+                    "lines": [
+                      {
+                        "line": "sha     = crypto.createHash('sha1');",
+                        "lineNumber": 103,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "sha     = crypto.createHash('sha512WithRSAEncryption');",
+                        "lineNumber": 103,
+                        "lineChange": "added"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/Swizec/node-unshortener/commit/e9a84efd37b3d65ff14f44e11297b28b8987d38e?diff=split#diff-d94bcce9e1b6dc29137c2d0fe590e001ef186ba13f7ed1322296e70e7e0196b8L75",
+                    "lines": [
+                      {
+                        "line": "memclient.set( md5(url.href), JSON.stringify(result), 1000);",
+                        "lineNumber": 74,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "memclient.set( hash.sha256(url.href), JSON.stringify(result), 1000);",
+                        "lineNumber": 74,
+                        "lineChange": "added"
+                      }
+                    ]
+                  }
+                ],
+                "exampleCommitDescriptions": [
+                  "switch to sha256",
+                  "Files are now hashed with SHA512 instead of SHA1"
+                ],
+                "precision": "very-high",
+                "repoDatasetSize": 101,
+                "cwe": [
+                  "CWE-916"
+                ]
+              }
+            },
+            {
+              "id": "javascript/InsecureTLSConfig",
+              "name": "InsecureTLSConfig",
+              "shortDescription": {
+                "text": "Insecure TLS Configuration"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "help": {
+                "markdown": "\n## Details\n\nImplementing encryption for the transmission and storage of sensitive information is essential. But encryption standards are constantly changing since attackers have more and more powerful resources at their disposal-along with more sophisticated attack algorithms. This means that encryption is only useful if it meets current standards appropriate for the type of data being transmitted or stored.\nWhen organizations use weakly encoded passwords or weak hashes (especially when they also utilize single-factor authentication, which places too much emphasis on passwords), attackers can potentially gain unauthorized access through a brute-force attack.\n\n### Best practices for prevention\n* Use TLS instead of SSL\n* Be aware of outdated algorithms; recognize and implement current cryptographic standards instead.\n* Never use custom or DIY security and cryptographic methods; instead, use methods that are part of an accepted library or framework.\n* Ensure that code dealing with cryptographic methods is highly modular and can be easily replaced as security standards change.\n* Increase developer awareness of proper encryption key management and protection to ensure best practices throughout the application.",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [],
+                "exampleCommitDescriptions": [],
+                "precision": "very-high",
+                "repoDatasetSize": 0,
+                "cwe": [
+                  "CWE-327"
+                ]
+              }
+            },
+            {
+              "id": "javascript/PT",
+              "name": "PT",
+              "shortDescription": {
+                "text": "Path Traversal"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "markdown": "## Details\n\nA Directory Traversal attack (also known as path traversal) aims to access files and directories that are stored outside the intended folder. By manipulating files with \"dot-dot-slash (../)\" sequences and its variations, or by using absolute file paths, it may be possible to access arbitrary files and directories stored on file system, including application source code, configuration, and other critical system files.\n\nBeing able to access and manipulate an arbitrary path leads to vulnerabilities when a program is being run with privileges that the user providing the path should not have. A website with a path traversal vulnerability would allow users access to sensitive files on the server hosting it. CLI programs may also be vulnerable to path traversal if they are being ran with elevated privileges (such as with the setuid or setgid flags in Unix systems).\n\nDirectory Traversal vulnerabilities can be generally divided into two types:\n\n- **Information Disclosure**: Allows the attacker to gain information about the folder structure or read the contents of sensitive files on the system.\n\n`st` is a module for serving static files on web pages, and contains a [vulnerability of this type](https://snyk.io/vuln/npm:st:20140206). In our example, we will serve files from the `public` route.\n\nIf an attacker requests the following URL from our server, it will in turn leak the sensitive private key of the root user.\n\n```\ncurl http://localhost:8080/public/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/root/.ssh/id_rsa\n```\n**Note** `%2e` is the URL encoded version of `.` (dot).\n\n- **Writing arbitrary files**: Allows the attacker to create or replace existing files. This type of vulnerability is also known as `Zip-Slip`.\n\nOne way to achieve this is by using a malicious `zip` archive that holds path traversal filenames. When each filename in the zip archive gets concatenated to the target extraction folder, without validation, the final path ends up outside of the target folder. If an executable or a configuration file is overwritten with a file containing malicious code, the problem can turn into an arbitrary code execution issue quite easily.\n\nThe following is an example of a `zip` archive with one benign file and one malicious file. Extracting the malicious file will result in traversing out of the target folder, ending up in `/root/.ssh/` overwriting the `authorized_keys` file:\n\n```\n2018-04-15 22:04:29 .....           19           19  good.txt\n2018-04-15 22:04:42 .....           20           20  ../../../../../../root/.ssh/authorized_keys\n```",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [
+                  {
+                    "commitURL": "https://github.com/how-to-firebase/fogo/commit/a3d5054fa9e7da0201e2709d847102a00a525067?diff=split#diff-ef1bae33e98527602bd4e6bfe2fe6c04747d71e6655a5c718f7100b844c9bb6eL158",
+                    "lines": [
+                      {
+                        "line": "  return `/tmp/${path.parse(filename).base}`;",
+                        "lineNumber": 157,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "  return `/tmp/${Date.now()}`;",
+                        "lineNumber": 157,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 158,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "function convertLocalFile(localFilename, versionName) {",
+                        "lineNumber": 160,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  const cmd = getCmd(localFilename, versionName);",
+                        "lineNumber": 161,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  return execPromise(cmd);",
+                        "lineNumber": 162,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 163,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "function getCmd(localFilename, versionName) {",
+                        "lineNumber": 165,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  return `convert ${localFilename} -resize ${versionName}\\\\> ${localFilename}`;",
+                        "lineNumber": 166,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 167,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "function execPromise(cmd) {",
+                        "lineNumber": 169,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  return new Promise((resolve, reject) =>",
+                        "lineNumber": 170,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    exec(cmd, (error, stdout) => (error ? reject(error) : resolve(stdout)))",
+                        "lineNumber": 171,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  );",
+                        "lineNumber": 172,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 173,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "function getDestination(filename, versionName) {",
+                        "lineNumber": 175,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  const filenameParts = filename.split('/');",
+                        "lineNumber": 176,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  filenameParts[filenameParts.length - 2] = versionName;",
+                        "lineNumber": 177,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  return filenameParts.join('/');",
+                        "lineNumber": 178,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 179,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "function getFile(admin, filename) {",
+                        "lineNumber": 181,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  return admin",
+                        "lineNumber": 182,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    .storage()",
+                        "lineNumber": 183,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    .bucket()",
+                        "lineNumber": 184,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    .file(filename);",
+                        "lineNumber": 185,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 186,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "function unlinkPromise(localFilename) {",
+                        "lineNumber": 188,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  return new Promise(",
+                        "lineNumber": 189,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    (resolve, reject) => fs.unlink(localFilename, err => err && reject(err)) || resolve()",
+                        "lineNumber": 190,
+                        "lineChange": "none"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/zhoukekestar/modules/commit/b6c2fc78dc8679080b982124a24771f1466b2fb2?diff=split#diff-7347edae6e14bc50ee18f048e29145ce21cf3bb679d0391605c283ec246942bcL20",
+                    "lines": [
+                      {
+                        "line": "res.sendFile(dir + '/' + req.params.id);",
+                        "lineNumber": 19,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "// Test ok on winodws. Not sure that linux will be work ok.",
+                        "lineNumber": 20,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "res.sendFile((dir + '/' + req.params.id).replace(/\\//g, '\\\\\\\\'));",
+                        "lineNumber": 21,
+                        "lineChange": "added"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/NodeBB/NodeBB/commit/cacc732015c64bba55a6ab45510086febccfb1b2?diff=split#diff-300f765b568b38163933bfcd40c75fe91709a35e9a7522bca2f8c5fe4b19195aL102",
+                    "lines": [
+                      {
+                        "line": "\t\t\tuploadUserPicture(req.user.uid, req.files.userPhoto.name, req.files.userPhoto.path, res);",
+                        "lineNumber": 101,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "\t\t\tuploadUserPicture(req.user.uid, path.extname(req.files.userPhoto.name), req.files.userPhoto.path, res);",
+                        "lineNumber": 101,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "\t\t\treturn;",
+                        "lineNumber": 102,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t}",
+                        "lineNumber": 103,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t",
+                        "lineNumber": 104,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\tvar absolutePath = path.join(global.configuration['ROOT_DIRECTORY'], global.nconf.get('upload_path'), path.basename(oldpicture));",
+                        "lineNumber": 105,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t",
+                        "lineNumber": 106,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\tfs.unlink(absolutePath, function(err) {",
+                        "lineNumber": 107,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t\tif(err) {\t\t\t\t",
+                        "lineNumber": 108,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t\t\tconsole.error('[%d] %s', Date.now(), + err);",
+                        "lineNumber": 109,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t\t}",
+                        "lineNumber": 110,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t\t",
+                        "lineNumber": 111,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t\tuploadUserPicture(req.user.uid, path.extname(req.files.userPhoto.name), req.files.userPhoto.path, res);",
+                        "lineNumber": 112,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t\t",
+                        "lineNumber": 113,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t});",
+                        "lineNumber": 114,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t});",
+                        "lineNumber": 115,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "});",
+                        "lineNumber": 116,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "function uploadUserPicture(uid, extension, tempPath, res) {",
+                        "lineNumber": 118,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\tif(!extension) {",
+                        "lineNumber": 119,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\tres.send({",
+                        "lineNumber": 120,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t\terror: 'Error uploading file! Error : Invalid extension!'",
+                        "lineNumber": 121,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\t});",
+                        "lineNumber": 122,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t\treturn;",
+                        "lineNumber": 123,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t}",
+                        "lineNumber": 124,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\tvar filename = uid + '-profileimg' + extension;",
+                        "lineNumber": 126,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\tvar uploadPath = path.join(global.configuration['ROOT_DIRECTORY'], global.nconf.get('upload_path'), filename);",
+                        "lineNumber": 127,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t",
+                        "lineNumber": 128,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t// @todo move to proper logging code - this should only be temporary",
+                        "lineNumber": 129,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\tconsole.log('Info: Attempting upload to: '+ uploadPath);",
+                        "lineNumber": 130,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\t",
+                        "lineNumber": 131,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\tvar is = fs.createReadStream(tempPath);",
+                        "lineNumber": 132,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\tvar os = fs.createWriteStream(uploadPath);",
+                        "lineNumber": 133,
+                        "lineChange": "none"
+                      }
+                    ]
+                  }
+                ],
+                "exampleCommitDescriptions": [
+                  "- only tested with files",
+                  "add integer support, and failing tests"
+                ],
+                "precision": "very-high",
+                "repoDatasetSize": 760,
+                "cwe": [
+                  "CWE-23"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "javascript/InsecureHash",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "md5 hash (used in createHash) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "markdown": "{0} hash (used in {1}) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "arguments": [
+              "[md5](0)",
+              "[createHash](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "buildAndReleaseTask/LiquidFileUploader.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 343,
+                  "endLine": 343,
+                  "startColumn": 20,
+                  "endColumn": 36
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "66dff39c09cbf75782b52f8328ce9b9905cd74de302a85522d8ccae9b2ef4a95",
+            "1": "37bc1bfe.4773f344.191eaf2b.d7919eeb.f55c7ab4.c7fba419.24e58b06.71520ffe.37bc1bfe.4773f344.191eaf2b.d7919eeb.f55c7ab4.c7fba419.24e58b06.71520ffe"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 343,
+                            "endLine": 343,
+                            "startColumn": 38,
+                            "endColumn": 42
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 343,
+                            "endLine": 343,
+                            "startColumn": 20,
+                            "endColumn": 36
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 560,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureHash",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "md5 hash (used in crypto.createHash) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "markdown": "{0} hash (used in {1}) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "arguments": [
+              "[md5](0)",
+              "[crypto.createHash](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 353,
+                  "endLine": 353,
+                  "startColumn": 24,
+                  "endColumn": 47
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "9ec33fbc8d360876ed17cd3a1ad15551441820ed439ca418f117379978e2f221",
+            "1": "37bc1bfe.883ce888.191eaf2b.d7919eeb.ef9f7d82.8020cfdf.24e58b06.71520ffe.37bc1bfe.4773f344.191eaf2b.d7919eeb.ef9f7d82.8020cfdf.24e58b06.71520ffe"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 353,
+                            "endLine": 353,
+                            "startColumn": 42,
+                            "endColumn": 46
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 353,
+                            "endLine": 353,
+                            "startColumn": 24,
+                            "endColumn": 47
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 560,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureTLSConfig",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Setting the 'NODE_TLS_REJECT_UNAUTHORIZED' to '0' makes TLS connections and HTTPS requests insecure.",
+            "markdown": "Setting the '{0}' to '{1}' makes TLS connections and HTTPS requests insecure.",
+            "arguments": [
+              "[NODE_TLS_REJECT_UNAUTHORIZED](0)",
+              "[0](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 42,
+                  "endLine": 42,
+                  "startColumn": 9,
+                  "endColumn": 54
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "8ff294d373aa05beb7c9d78ff32a70016ec7903e9d3e9a13370c4c00bc1c8be4",
+            "1": "cbabde2c.7d8d7fe0.a5cb6912.431a86ae.bb6bc4ed.3a6b6627.92405ed5.83183368.cbabde2c.7d8d7fe0.a5cb6912.fb509508.bb6bc4ed.3a6b6627.92405ed5.83183368"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 42,
+                            "endLine": 42,
+                            "startColumn": 21,
+                            "endColumn": 48
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 42,
+                            "endLine": 42,
+                            "startColumn": 52,
+                            "endColumn": 54
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 610,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureTLSConfig",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Setting the 'NODE_TLS_REJECT_UNAUTHORIZED' to '0' makes TLS connections and HTTPS requests insecure.",
+            "markdown": "Setting the '{0}' to '{1}' makes TLS connections and HTTPS requests insecure.",
+            "arguments": [
+              "[NODE_TLS_REJECT_UNAUTHORIZED](0)",
+              "[0](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "buildAndReleaseTask/LiquidFileUploader.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 48,
+                  "endLine": 48,
+                  "startColumn": 9,
+                  "endColumn": 54
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "eb0470229bf3584174251c7d8d0e501875ec0ab6775affc8e31573067a17a73f",
+            "1": "cbabde2c.7d8d7fe0.a5cb6912.431a86ae.bb6bc4ed.3a6b6627.92405ed5.83183368.cbabde2c.7d8d7fe0.a5cb6912.fb509508.bb6bc4ed.3a6b6627.92405ed5.83183368"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 48,
+                            "endLine": 48,
+                            "startColumn": 21,
+                            "endColumn": 48
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 48,
+                            "endLine": 48,
+                            "startColumn": 52,
+                            "endColumn": 54
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 610,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/PT",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Unsanitized input from a local file flows into fs.createReadStream, where it is used as a path. This may result in a Path Traversal vulnerability and allow an attacker to read arbitrary files.",
+            "markdown": "Unsanitized input from {0} {1} into {2}, where it is used as a path. This may result in a Path Traversal vulnerability and allow an attacker to read arbitrary files.",
+            "arguments": [
+              "[a local file](0)",
+              "[flows](1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12),(13),(14),(15),(16),(17),(18),(19)",
+              "[fs.createReadStream](20)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 354,
+                  "endLine": 354,
+                  "startColumn": 30,
+                  "endColumn": 85
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "fdfd4604b14baa5c757859a1ee848157768e9650b960f9b0e81664e2678acb78",
+            "1": "099c30d7.4773f344.f37d641a.d7919eeb.04258a25.8020cfdf.6f89b54d.3ae8aa35.6fbd4153.4773f344.3811fc52.df3c423f.04258a25.5fce695c.83265159.d5de5421"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 126,
+                            "endLine": 126,
+                            "startColumn": 41,
+                            "endColumn": 49
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 126,
+                            "endLine": 126,
+                            "startColumn": 41,
+                            "endColumn": 49
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 2,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 127,
+                            "endLine": 127,
+                            "startColumn": 13,
+                            "endColumn": 21
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 3,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 128,
+                            "endLine": 128,
+                            "startColumn": 38,
+                            "endColumn": 46
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 4,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 371,
+                            "endLine": 371,
+                            "startColumn": 27,
+                            "endColumn": 35
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 5,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 366,
+                            "endLine": 366,
+                            "startColumn": 30,
+                            "endColumn": 34
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 6,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 367,
+                            "endLine": 367,
+                            "startColumn": 30,
+                            "endColumn": 34
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 7,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 367,
+                            "endLine": 367,
+                            "startColumn": 22,
+                            "endColumn": 25
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 8,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 368,
+                            "endLine": 368,
+                            "startColumn": 34,
+                            "endColumn": 37
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 9,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 351,
+                            "endLine": 351,
+                            "startColumn": 29,
+                            "endColumn": 36
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 10,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 352,
+                            "endLine": 352,
+                            "startColumn": 71,
+                            "endColumn": 78
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 11,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 354,
+                            "endLine": 354,
+                            "startColumn": 77,
+                            "endColumn": 84
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 12,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 359,
+                            "endLine": 359,
+                            "startColumn": 50,
+                            "endColumn": 57
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 13,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 306,
+                            "endLine": 306,
+                            "startColumn": 20,
+                            "endColumn": 27
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 14,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 309,
+                            "endLine": 309,
+                            "startColumn": 40,
+                            "endColumn": 47
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 15,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 322,
+                            "endLine": 322,
+                            "startColumn": 41,
+                            "endColumn": 48
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 16,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 333,
+                            "endLine": 333,
+                            "startColumn": 33,
+                            "endColumn": 40
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 17,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 250,
+                            "endLine": 250,
+                            "startColumn": 22,
+                            "endColumn": 29
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 18,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 251,
+                            "endLine": 251,
+                            "startColumn": 37,
+                            "endColumn": 44
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 19,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 354,
+                            "endLine": 354,
+                            "startColumn": 50,
+                            "endColumn": 84
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 20,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/LiquidFileUploader.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 354,
+                            "endLine": 354,
+                            "startColumn": 30,
+                            "endColumn": 85
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 555,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "coverage": [
+          {
+            "files": 3,
+            "isSupported": true,
+            "lang": "XML"
+          },
+          {
+            "files": 510,
+            "isSupported": true,
+            "lang": "JavaScript"
+          },
+          {
+            "files": 230,
+            "isSupported": true,
+            "lang": "TypeScript"
+          },
+          {
+            "files": 3,
+            "isSupported": false,
+            "lang": "Roff Manpage"
+          },
+          {
+            "files": 1,
+            "isSupported": false,
+            "lang": "Unknown"
+          },
+          {
+            "files": 1,
+            "isSupported": true,
+            "lang": "HTML"
+          }
+        ]
+      }
+    }
+  ]
+}

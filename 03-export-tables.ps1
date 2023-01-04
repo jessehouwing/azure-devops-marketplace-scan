@@ -57,6 +57,14 @@ foreach ($extension in $report.extensions)
 {
     $vulnerable = $false
     $tasklibvulnerable = $false
+    if ($extension.rating -lt 4.5)
+    {
+        continue
+    }
+    if ($extension.installCount -lt 100)
+    {
+        continue
+    }
     foreach ($task in $extension.tasks)
     {
         foreach ($version in $task.versions) {

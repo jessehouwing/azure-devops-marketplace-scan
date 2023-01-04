@@ -58,96 +58,6 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "tasks/iac-scan/iacScan.js",
-                  "uriBaseId": "%SRCROOT%"
-                },
-                "region": {
-                  "startLine": 67,
-                  "endLine": 67,
-                  "startColumn": 1,
-                  "endColumn": 46
-                }
-              }
-            }
-          ],
-          "fingerprints": {
-            "0": "8dfc989f0a84a401ff3d202ff5058cf88b2929b4c215f1d75583515b7b0e7fab",
-            "1": "ae77ea27.7d8d7fe0.a5cb6912.63ce7bd7.bb6bc4ed.5fce695c.92405ed5.83183368.ae77ea27.4773f344.a5cb6912.152d4968.bb6bc4ed.5fce695c.92405ed5.83183368"
-          },
-          "codeFlows": [
-            {
-              "threadFlows": [
-                {
-                  "locations": [
-                    {
-                      "location": {
-                        "id": 0,
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "tasks/iac-scan/iacScan.js",
-                            "uriBaseId": "%SRCROOT%"
-                          },
-                          "region": {
-                            "startLine": 67,
-                            "endLine": 67,
-                            "startColumn": 13,
-                            "endColumn": 40
-                          }
-                        }
-                      }
-                    },
-                    {
-                      "location": {
-                        "id": 1,
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "tasks/iac-scan/iacScan.js",
-                            "uriBaseId": "%SRCROOT%"
-                          },
-                          "region": {
-                            "startLine": 67,
-                            "endLine": 67,
-                            "startColumn": 44,
-                            "endColumn": 46
-                          }
-                        }
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          "properties": {
-            "priorityScore": 625,
-            "priorityScoreFactors": [
-              {
-                "label": true,
-                "type": "multipleOccurrence"
-              },
-              {
-                "label": true,
-                "type": "hotFileSource"
-              }
-            ]
-          }
-        },
-        {
-          "ruleId": "javascript/InsecureTLSConfig",
-          "ruleIndex": 0,
-          "level": "error",
-          "message": {
-            "text": "Setting the 'NODE_TLS_REJECT_UNAUTHORIZED' to '0' makes TLS connections and HTTPS requests insecure.",
-            "markdown": "Setting the '{0}' to '{1}' makes TLS connections and HTTPS requests insecure.",
-            "arguments": [
-              "[NODE_TLS_REJECT_UNAUTHORIZED](0)",
-              "[0](1)"
-            ]
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
                   "uri": "tasks/iac-scan/iacScan.ts",
                   "uriBaseId": "%SRCROOT%"
                 },
@@ -155,7 +65,7 @@
                   "startLine": 12,
                   "endLine": 12,
                   "startColumn": 1,
-                  "endColumn": 46
+                  "endColumn": 47
                 }
               }
             }
@@ -181,7 +91,7 @@
                             "startLine": 12,
                             "endLine": 12,
                             "startColumn": 13,
-                            "endColumn": 40
+                            "endColumn": 41
                           }
                         }
                       }
@@ -198,7 +108,7 @@
                             "startLine": 12,
                             "endLine": 12,
                             "startColumn": 44,
-                            "endColumn": 46
+                            "endColumn": 47
                           }
                         }
                       }
@@ -218,6 +128,96 @@
               {
                 "label": true,
                 "type": "hotFileCodeFlow"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureTLSConfig",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Setting the 'NODE_TLS_REJECT_UNAUTHORIZED' to '0' makes TLS connections and HTTPS requests insecure.",
+            "markdown": "Setting the '{0}' to '{1}' makes TLS connections and HTTPS requests insecure.",
+            "arguments": [
+              "[NODE_TLS_REJECT_UNAUTHORIZED](0)",
+              "[0](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "tasks/iac-scan/iacScan.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 67,
+                  "endLine": 67,
+                  "startColumn": 1,
+                  "endColumn": 47
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "8dfc989f0a84a401ff3d202ff5058cf88b2929b4c215f1d75583515b7b0e7fab",
+            "1": "ae77ea27.7d8d7fe0.a5cb6912.63ce7bd7.bb6bc4ed.5fce695c.92405ed5.83183368.ae77ea27.4773f344.a5cb6912.152d4968.bb6bc4ed.5fce695c.92405ed5.83183368"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "tasks/iac-scan/iacScan.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 67,
+                            "endLine": 67,
+                            "startColumn": 13,
+                            "endColumn": 41
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "tasks/iac-scan/iacScan.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 67,
+                            "endLine": 67,
+                            "startColumn": 44,
+                            "endColumn": 47
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 625,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
               }
             ]
           }

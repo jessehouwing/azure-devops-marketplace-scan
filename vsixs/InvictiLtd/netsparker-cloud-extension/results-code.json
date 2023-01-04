@@ -55,76 +55,6 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "lib/VSS.SDK.js",
-                  "uriBaseId": "%SRCROOT%"
-                },
-                "region": {
-                  "startLine": 655,
-                  "endLine": 655,
-                  "startColumn": 65,
-                  "endColumn": 69
-                }
-              }
-            }
-          ],
-          "fingerprints": {
-            "0": "9c99c033f97d57235420d334c8f492d95ee6e1540265e53c629490b7d4c82b81",
-            "1": "cbabde2c.4773f344.607187b5.c559ebce.d9bf5fbd.f681b7b7.83265159.3cee0341.9194119a.4773f344.607187b5.c559ebce.d9bf5fbd.f681b7b7.83265159.1db0a836"
-          },
-          "codeFlows": [
-            {
-              "threadFlows": [
-                {
-                  "locations": [
-                    {
-                      "location": {
-                        "id": 0,
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "lib/VSS.SDK.js",
-                            "uriBaseId": "%SRCROOT%"
-                          },
-                          "region": {
-                            "startLine": 655,
-                            "endLine": 655,
-                            "startColumn": 65,
-                            "endColumn": 69
-                          }
-                        }
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          "properties": {
-            "priorityScore": 209,
-            "priorityScoreFactors": [
-              {
-                "label": true,
-                "type": "multipleOccurrence"
-              },
-              {
-                "label": true,
-                "type": "hotFileSource"
-              }
-            ]
-          }
-        },
-        {
-          "ruleId": "javascript/InsufficientPostmessageValidation",
-          "ruleIndex": 0,
-          "level": "note",
-          "message": {
-            "text": "The origin of the received message is not checked. This means any site (even malicious) can send message to this window. If you don't expect this, consider checking the origin of sender.",
-            "markdown": "The origin of the received message is not checked. This means any site (even malicious) can send message to this window. If you don't expect this, consider checking the origin of sender.",
-            "arguments": []
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
                   "uri": "tasks/NetsparkerCloud/node_modules/vss-web-extension-sdk/lib/VSS.SDK.js",
                   "uriBaseId": "%SRCROOT%"
                 },
@@ -132,7 +62,7 @@
                   "startLine": 655,
                   "endLine": 655,
                   "startColumn": 65,
-                  "endColumn": 69
+                  "endColumn": 70
                 }
               }
             }
@@ -158,7 +88,7 @@
                             "startLine": 655,
                             "endLine": 655,
                             "startColumn": 65,
-                            "endColumn": 69
+                            "endColumn": 70
                           }
                         }
                       }
@@ -169,7 +99,77 @@
             }
           ],
           "properties": {
-            "priorityScore": 209,
+            "priorityScore": 208,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsufficientPostmessageValidation",
+          "ruleIndex": 0,
+          "level": "note",
+          "message": {
+            "text": "The origin of the received message is not checked. This means any site (even malicious) can send message to this window. If you don't expect this, consider checking the origin of sender.",
+            "markdown": "The origin of the received message is not checked. This means any site (even malicious) can send message to this window. If you don't expect this, consider checking the origin of sender.",
+            "arguments": []
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/VSS.SDK.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 655,
+                  "endLine": 655,
+                  "startColumn": 65,
+                  "endColumn": 70
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "9c99c033f97d57235420d334c8f492d95ee6e1540265e53c629490b7d4c82b81",
+            "1": "cbabde2c.4773f344.607187b5.c559ebce.d9bf5fbd.f681b7b7.83265159.3cee0341.9194119a.4773f344.607187b5.c559ebce.d9bf5fbd.f681b7b7.83265159.1db0a836"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "lib/VSS.SDK.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 655,
+                            "endLine": 655,
+                            "startColumn": 65,
+                            "endColumn": 70
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 208,
             "priorityScoreFactors": [
               {
                 "label": true,

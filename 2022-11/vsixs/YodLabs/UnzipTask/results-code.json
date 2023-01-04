@@ -1,0 +1,783 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "SnykCode",
+          "semanticVersion": "1.0.0",
+          "version": "1.0.0",
+          "rules": [
+            {
+              "id": "javascript/ZipSlip",
+              "name": "ZipSlip",
+              "shortDescription": {
+                "text": "Arbitrary File Write via Archive Extraction (Zip Slip)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "help": {
+                "markdown": "## Details\n\nZip Slip is a form of directory traversal that can be exploited by extracting files from an archive. The premise of the directory traversal vulnerability is that an attacker can gain access to parts of the file system outside of the target folder in which they should reside. The attacker can then overwrite executable files and either invoke them remotely or wait for the system or user to call them, thus achieving remote command execution on the victim’s machine. The vulnerability can also cause damage by overwriting configuration files or other sensitive resources, and can be exploited on both client (user) machines and servers.\n\n## Example\n\nThe following is an example of a `zip` archive with one benign file and one malicious file. Extracting the malicious file will result in traversing out of the target folder, ending up in `/root/.ssh/` overwriting the `authorized_keys` file:\n\n```\n2018-04-15 22:04:29 .....           19           19  good.txt\n2018-04-15 22:04:42 .....           20           20  ../../../../../../root/.ssh/authorized_keys\n```",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [
+                  {
+                    "commitURL": "https://github.com/TheDiveO/TW5FontAwesome/commit/34061b38a7d5a3b682bb4340c890207910d286ff?diff=split#diff-64acd67a4b548b26b47e325bec8a5f15L52",
+                    "lines": [
+                      {
+                        "line": "self.logger.log(\"updating plugin from local Font Awesome zip package...\");",
+                        "lineNumber": 49,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "self.logger.log(\"opening zip package:\", self.params[0]);",
+                        "lineNumber": 50,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "var fazip = new zip(self.params[0]);",
+                        "lineNumber": 51,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "// Autodetect the Font Awesome version...",
+                        "lineNumber": 53,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "var faroot = fazip.getEntries()[0].entryName.split(\"/\")[0];",
+                        "lineNumber": 54,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "if (!faroot.startsWith(\"fontawesome-\")) {",
+                        "lineNumber": 55,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  return \"invalid Font Awesome zip package: missing or invalid path root \" + faroot;",
+                        "lineNumber": 56,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 57,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "var match = /^fontawesome-.*-(\\d+\\.\\d+\\.\\d+)$/.exec(faroot);",
+                        "lineNumber": 58,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "if (match === null) {",
+                        "lineNumber": 59,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  return \"cannot autodetect Font Awesome version from path root \" + faroot;",
+                        "lineNumber": 60,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "], function(font) {",
+                        "lineNumber": 96,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  self.logger.log(\"extracting\", font.fontfile);",
+                        "lineNumber": 97,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  var woffname = faroot + \"/web-fonts-with-css/webfonts/\" + font.fontfile + \".woff\"",
+                        "lineNumber": 98,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  var woff = fazip.readFile(woffname);",
+                        "lineNumber": 93,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "  if (woff === null) {",
+                        "lineNumber": 94,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "  var woffb64 = fazip.readAsText(woffname, \"base64\");",
+                        "lineNumber": 99,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "  if (woffb64 === null) {",
+                        "lineNumber": 100,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    return \"missing WOFF web font file \" + woffname;",
+                        "lineNumber": 101,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "   }",
+                        "lineNumber": 102,
+                        "lineChange": "none"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/qddjs/qdd/commit/725c8390612f6825619dfd93c8802d5d72e20381?diff=split#diff-afe5f6abf23e157792a2ecc031ede915L14",
+                    "lines": [
+                      {
+                        "line": "debug(() => `untar ${cacheDir} ${destDir}`);",
+                        "lineNumber": 11,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "const gunzip = zlib.createGunzip();",
+                        "lineNumber": 12,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "const gunzip = new zlib.Gunzip();",
+                        "lineNumber": 12,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "const extractStream = tarStream.extract();",
+                        "lineNumber": 13,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "extractStream.on('entry', (header, stream, next) => {",
+                        "lineNumber": 14,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  if (header.type !== 'file') {",
+                        "lineNumber": 15,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    stream.resume();",
+                        "lineNumber": 16,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    stream.on('end', next);",
+                        "lineNumber": 17,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    return;",
+                        "lineNumber": 18,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  }",
+                        "lineNumber": 19,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  const name = header.name.slice(header.name.indexOf('/'));",
+                        "lineNumber": 20,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  if (!cacheDir) {",
+                        "lineNumber": 21,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    const filename = destDir + name;",
+                        "lineNumber": 22,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    mkdirp(dirname(filename), (err) => {",
+                        "lineNumber": 23,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "      if (err) {",
+                        "lineNumber": 24,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "        return next(err);",
+                        "lineNumber": 25,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "      }",
+                        "lineNumber": 26,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "      const writeStream = fs.createWriteStream(filename);",
+                        "lineNumber": 27,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "      const writeStream = new fs.WriteStream(filename);",
+                        "lineNumber": 27,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "      writeStream.on('close', next);",
+                        "lineNumber": 28,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "      stream.pipe(writeStream);",
+                        "lineNumber": 29,
+                        "lineChange": "none"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/dominickp/antfarm/commit/c0cbac2293f8a30441549e85a36f0a1e43bf74da?diff=split#diff-4f221eb51265db08112c2924e225fba2L160",
+                    "lines": [
+                      {
+                        "line": "}",
+                        "lineNumber": 157,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "// Open the zip in JSZip",
+                        "lineNumber": 158,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "JSZip.loadAsync(data).then((zip) => {",
+                        "lineNumber": 159,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    // Restore job ticket and create job",
+                        "lineNumber": 160,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    zip.folder(\"_ticket\").forEach((relativePath, file) => {",
+                        "lineNumber": 161,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "        zip.file(`_ticket${path.sep}${relativePath}`).async(\"string\")",
+                        "lineNumber": 162,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "            .then((content) => {",
+                        "lineNumber": 163,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "        .then((content) => {",
+                        "lineNumber": 163,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "let tempPath = tmpobj.name;",
+                        "lineNumber": 169,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "                    if (zip.folder(\"_asset\").length > 1) {",
+                        "lineNumber": 171,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "                        pj.e.log(2, `Restored job did not contain any file assets.`, pj, [job]);",
+                        "lineNumber": 172,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "                    }",
+                        "lineNumber": 173,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "                    zip.folder(\"_asset\").forEach((relativePath, file) => {",
+                        "lineNumber": 175,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "                        // console.log(\"iterating over\", relativePath);",
+                        "lineNumber": 176,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "// Check for valid pack format",
+                        "lineNumber": 184,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "if (zip.folder(\"_asset\").length > 1) {",
+                        "lineNumber": 185,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    pj.e.log(2, `Restored job did not contain any file assets.`, pj, [job]);",
+                        "lineNumber": 186,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 187,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "                        zip.file(`_asset${path.sep}${relativePath}`).async(\"nodebuffer\")",
+                        "lineNumber": 178,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "                            .then((content) => {",
+                        "lineNumber": 179,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "                                let filePath = tempPath + path.sep + relativePath;",
+                        "lineNumber": 180,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "                                fs.writeFileSync(filePath, content);",
+                        "lineNumber": 181,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "                                if (job.isFolder()) {",
+                        "lineNumber": 182,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "                                    console.log(\"gotta add file to job for folder\");",
+                        "lineNumber": 183,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "                                } else {",
+                        "lineNumber": 184,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "                                    job.setPath(filePath);",
+                        "lineNumber": 185,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "                                    job.rename(relativePath);",
+                        "lineNumber": 186,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "                                }",
+                        "lineNumber": 187,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "pj.extractFiles(zip, false, \"_asset/\", (filePath, folderName) => {",
+                        "lineNumber": 191,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    job.setPath(filePath);",
+                        "lineNumber": 192,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    job.rename(folderName);",
+                        "lineNumber": 193,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    callback(job);",
+                        "lineNumber": 194,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "});",
+                        "lineNumber": 195,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "} else {",
+                        "lineNumber": 233,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    console.log(\"EXTRACTING SINGLE\");",
+                        "lineNumber": 234,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    zip.file(newRelPath).async(\"nodebuffer\")",
+                        "lineNumber": 235,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "        .then((content) => {",
+                        "lineNumber": 236,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "            fileNumber++;",
+                        "lineNumber": 237,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "            let filePath = tempPath + path.sep + relativePath;",
+                        "lineNumber": 238,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "            fs.writeFileSync(filePath, content);",
+                        "lineNumber": 239,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "            callback(filePath, relativePath);",
+                        "lineNumber": 240,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "});",
+                        "lineNumber": 241,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "console.log(\"Extracting folder\");",
+                        "lineNumber": 247,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "zip.folder(zipPath).forEach((relativePath, asset) => {",
+                        "lineNumber": 249,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    let newRelPath = zipPath + relativePath;",
+                        "lineNumber": 250,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "console.log(\"EXTRACTING SINGLE FROM FOLDER\", totalFiles, fileNumber);",
+                        "lineNumber": 264,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "console.log(newRelPath, relativePath, typeof asset.dir);",
+                        "lineNumber": 266,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "fileNumber++;",
+                        "lineNumber": 269,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "let filePath = tempPath + path.sep + relativePath;",
+                        "lineNumber": 270,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "fs.writeFileSync(filePath, content);",
+                        "lineNumber": 271,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "if (totalFiles === fileNumber) {",
+                        "lineNumber": 273,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    console.log(\"relativePath.split(path.sep)\", relativePath.split(path.sep));",
+                        "lineNumber": 274,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    callback(tempPath, newRelPath.split(path.sep)[1]);",
+                        "lineNumber": 275,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 276,
+                        "lineChange": "added"
+                      }
+                    ]
+                  }
+                ],
+                "exampleCommitDescriptions": [
+                  "Use yauzl instead of unzip module.",
+                  "- Trying to import zip file kills server"
+                ],
+                "precision": "very-high",
+                "repoDatasetSize": 17,
+                "cwe": [
+                  "CWE-22"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "javascript/ZipSlip",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Unsanitized input from Unzip library flows into fs.createWriteStream, where it is used as a path after been extracted from a zip file. This may result in a Zip Slip vulnerability and allow an attacker to write to arbitrary files.",
+            "markdown": "Unsanitized input from {0} {1} into {2}, where it is used as a path after been extracted from a zip file. This may result in a Zip Slip vulnerability and allow an attacker to write to arbitrary files.",
+            "arguments": [
+              "[Unzip library](0)",
+              "[flows](1),(2),(3),(4),(5),(6),(7),(8)",
+              "[fs.createWriteStream](9)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "UnzipFile/UnzipFile.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 40,
+                  "endLine": 40,
+                  "startColumn": 32,
+                  "endColumn": 68
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "fe7a837c70fb680fdfae1d947038abf7b7708c49db6103c9b07b2c1057b1a89e",
+            "1": "bfc007a1.4773f344.607187b5.d7919eeb.ef9f7d82.8020cfdf.df7e59ba.6cc4d006.556a3f69.fbbdc376.4ce0c795.c8688b2b.3b9b65f7.5fce695c.83265159.ef6bffc1"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "UnzipFile/UnzipFile.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 24,
+                            "endLine": 24,
+                            "startColumn": 15,
+                            "endColumn": 27
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "UnzipFile/UnzipFile.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 24,
+                            "endLine": 24,
+                            "startColumn": 15,
+                            "endColumn": 27
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 2,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "UnzipFile/UnzipFile.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 23,
+                            "endLine": 23,
+                            "startColumn": 5,
+                            "endColumn": 32
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 3,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "UnzipFile/UnzipFile.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 25,
+                            "endLine": 25,
+                            "startColumn": 32,
+                            "endColumn": 36
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 4,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "UnzipFile/UnzipFile.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 27,
+                            "endLine": 27,
+                            "startColumn": 34,
+                            "endColumn": 38
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 5,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "UnzipFile/UnzipFile.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 34,
+                            "endLine": 34,
+                            "startColumn": 43,
+                            "endColumn": 82
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 6,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "UnzipFile/UnzipFile.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 34,
+                            "endLine": 34,
+                            "startColumn": 25,
+                            "endColumn": 39
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 7,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "UnzipFile/UnzipFile.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 36,
+                            "endLine": 36,
+                            "startColumn": 70,
+                            "endColumn": 84
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 8,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "UnzipFile/UnzipFile.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 40,
+                            "endLine": 40,
+                            "startColumn": 53,
+                            "endColumn": 67
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 9,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "UnzipFile/UnzipFile.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 40,
+                            "endLine": 40,
+                            "startColumn": 32,
+                            "endColumn": 68
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 850,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "hotFileCodeFlow"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "coverage": [
+          {
+            "files": 8,
+            "isSupported": true,
+            "lang": "XML"
+          },
+          {
+            "files": 144,
+            "isSupported": true,
+            "lang": "JavaScript"
+          }
+        ]
+      }
+    }
+  ]
+}

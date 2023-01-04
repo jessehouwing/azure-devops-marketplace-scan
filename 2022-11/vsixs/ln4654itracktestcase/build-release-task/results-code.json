@@ -1,0 +1,1035 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "SnykCode",
+          "semanticVersion": "1.0.0",
+          "version": "1.0.0",
+          "rules": [
+            {
+              "id": "javascript/NoHardcodedPasswords",
+              "name": "NoHardcodedPasswords",
+              "shortDescription": {
+                "text": "Use of Hardcoded Credentials"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "markdown": "\n## Details\n\nDevelopers may use hardcoded credentials for convenience when coding in order to simplify their workflow. While they are responsible for removing these before production, occasionally this task may fall through the cracks. This also becomes a maintenance challenge when credentials are re-used across multiple applications.\n\nOnce attackers gain access, they may take advantage of privilege level to remove or alter data, take down a site or app, or hold any of the above for ransom. The risk across multiple similar projects is even greater. If code containing the credentials is reused across multiple projects, they will all be compromised.\n\n### Best practices for prevention\n* Plan software architecture such that keys and passwords are always stored outside the code, wherever possible.\n* Plan encryption into software architecture for all credential information and ensure proper handling of keys, credentials, and passwords.\n* Prompt for a secure password on first login rather than hard-code a default password.\n* If a hardcoded password or credential must be used, limit its use, for example, to system console users rather than via the network.\n* Use strong hashes for inbound password authentication, ideally with randomly assigned salts to increase the difficulty level in case of brute-force attack.",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [
+                  {
+                    "commitURL": "https://github.com/csprance/MisRCON/commit/72964f54abde81f9f40d88ebe16b583ebfec8904?diff=split#diff-3733a6fa6d50cc4d78c76e60f128404eL11",
+                    "lines": [
+                      {
+                        "line": "ip: 'loading',",
+                        "lineNumber": 8,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "ip: '',",
+                        "lineNumber": 8,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "port: 0,",
+                        "lineNumber": 9,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "password: 'THisIsCool324HashMan',",
+                        "lineNumber": 10,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "password: '',",
+                        "lineNumber": 10,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "active: true,",
+                        "lineNumber": 11,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "selfHosted: false,",
+                        "lineNumber": 12,
+                        "lineChange": "none"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/bradwestfall/house-rules/commit/f96c3465d59030b2d853574e01f58d2d8fef4556?diff=split#diff-c90d23fc26d6eeec89e1d77807b6bbbbL21",
+                    "lines": [
+                      {
+                        "line": " ",
+                        "lineNumber": 17,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "let errors = loginFormSchema.validate({",
+                        "lineNumber": 18,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  email: 'test@test.com',",
+                        "lineNumber": 19,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "  password: 'somepassword'",
+                        "lineNumber": 20,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "  password: undefined",
+                        "lineNumber": 19,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "})",
+                        "lineNumber": 21,
+                        "lineChange": "none"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/Madmous/madClones/commit/31843ab238a5d3d988c360bc3b01b719cc588c9f?diff=split#diff-374c156c3cd1b9952bee7d8064382f69L26",
+                    "lines": [
+                      {
+                        "line": "  email: 'testEmail@email.com',",
+                        "lineNumber": 23,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "  email: 'test@email.com',",
+                        "lineNumber": 23,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "  application: 'test application',",
+                        "lineNumber": 24,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  password: 'testPassword'",
+                        "lineNumber": 25,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "  password: 'test'",
+                        "lineNumber": 25,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "});",
+                        "lineNumber": 26,
+                        "lineChange": "none"
+                      }
+                    ]
+                  }
+                ],
+                "exampleCommitDescriptions": [
+                  "Fixing type errors in tests",
+                  "This commit disables the password change tests.",
+                  "Mock api() tests"
+                ],
+                "precision": "very-high",
+                "repoDatasetSize": 522,
+                "cwe": [
+                  "CWE-798",
+                  "CWE-259"
+                ]
+              }
+            },
+            {
+              "id": "javascript/NoHardcodedCredentials",
+              "name": "NoHardcodedCredentials",
+              "shortDescription": {
+                "text": "Use of Hardcoded Credentials"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "markdown": "\n## Details\n\nDevelopers may use hardcoded credentials for convenience when coding in order to simplify their workflow. While they are responsible for removing these before production, occasionally this task may fall through the cracks. This also becomes a maintenance challenge when credentials are re-used across multiple applications.\n\nOnce attackers gain access, they may take advantage of privilege level to remove or alter data, take down a site or app, or hold any of the above for ransom. The risk across multiple similar projects is even greater. If code containing the credentials is reused across multiple projects, they will all be compromised.\n\n### Best practices for prevention\n* Plan software architecture such that keys and passwords are always stored outside the code, wherever possible.\n* Plan encryption into software architecture for all credential information and ensure proper handling of keys, credentials, and passwords.\n* Prompt for a secure password on first login rather than hard-code a default password.\n* If a hardcoded password or credential must be used, limit its use, for example, to system console users rather than via the network.\n* Use strong hashes for inbound password authentication, ideally with randomly assigned salts to increase the difficulty level in case of brute-force attack.",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [
+                  {
+                    "commitURL": "https://github.com/IBM/smart-email-support/commit/a21929524dc0906fc32369d65acfa417335822cc?diff=split#diff-0364f57fbff2fabbe941ed20c328ef1aL63",
+                    "lines": [
+                      {
+                        "line": "   }",
+                        "lineNumber": 60,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "   var config = require('./config.json');",
+                        "lineNumber": 61,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "   process.env.support_email_id = 'patternemailautomation@gmail.com';",
+                        "lineNumber": 62,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "   process.env.sendgrid_api_key = '';",
+                        "lineNumber": 62,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "   me = '';",
+                        "lineNumber": 63,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "   password = ''",
+                        "lineNumber": 64,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "   process.env.sendgrid_api_key = config.sendgrid_api_key;",
+                        "lineNumber": 63,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "   me = config.me;",
+                        "lineNumber": 64,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "   password = config.password",
+                        "lineNumber": 65,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    //process.exit(1);",
+                        "lineNumber": 66,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 67,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "const sgMail = require('@sendgrid/mail');",
+                        "lineNumber": 402,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "sgMail.setApiKey(sendgrid_api_key);",
+                        "lineNumber": 403,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "const msg = {",
+                        "lineNumber": 404,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  to: emailDetails.emailSection.from,",
+                        "lineNumber": 405,
+                        "lineChange": "none"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/readium/readium-desktop/commit/2bedb5b474ba0a485a9f981aea8ffa43abad164a?diff=split#diff-78b4461ec5c61ac524f5719113995d00L183",
+                    "lines": [
+                      {
+                        "line": "private downloadCatalog (user?: User) {",
+                        "lineNumber": 186,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    let username = \"\";",
+                        "lineNumber": 182,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    let password = \"\";",
+                        "lineNumber": 183,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 188,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "request.get(this.props.opds.url, (error: any, response: any, body: any) => {",
+                        "lineNumber": 190,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "let req = request.get(this.props.opds.url, (error: any, response: any, body: any) => {",
+                        "lineNumber": 187,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    if (response && response.statusCode === 401) {",
+                        "lineNumber": 191,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "        this.props.openDialog(",
+                        "lineNumber": 192,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "});",
+                        "lineNumber": 229,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "if (user) {",
+                        "lineNumber": 230,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "    req.auth(user.username, user.password);",
+                        "lineNumber": 231,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 232,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "}",
+                        "lineNumber": 233,
+                        "lineChange": "none"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/dfoderick/fullcyclereact/commit/a6abd97bd776ce56da8ac321ad0e1b500f67721d?diff=split#diff-ca64812ac15b141271f726a5a95a3402L22",
+                    "lines": [
+                      {
+                        "line": "const redis_port = 6379",
+                        "lineNumber": 19,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "const redis_host = serverhost",
+                        "lineNumber": 20,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "const redis_password = ''",
+                        "lineNumber": 21,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "//Message envelope for putting messages on the bus",
+                        "lineNumber": 23,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "function redisclient(){",
+                        "lineNumber": 98,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  var client = redis.createClient(redis_port, redis_host, {no_ready_check: true});",
+                        "lineNumber": 99,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "  client.auth(redis_password, function (err) {",
+                        "lineNumber": 100,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "  var client = redis.createClient(services.redis.port, services.redis.host, {no_ready_check: true});",
+                        "lineNumber": 54,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "  client.auth(services.redis.password, function (err) {",
+                        "lineNumber": 55,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "     if (err) throw err;",
+                        "lineNumber": 101,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  });",
+                        "lineNumber": 102,
+                        "lineChange": "none"
+                      }
+                    ]
+                  }
+                ],
+                "exampleCommitDescriptions": [
+                  "* Update test dependencies",
+                  "* Migrate user tests to frisby2",
+                  "added get user for id test"
+                ],
+                "precision": "very-high",
+                "repoDatasetSize": 210,
+                "cwe": [
+                  "CWE-798"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "javascript/NoHardcodedPasswords",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Do not hardcode passwords in code. Found hardcoded password used in create.",
+            "markdown": "Do not hardcode passwords in code. Found hardcoded password used in {0}.",
+            "arguments": [
+              "[create](0)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "buildAndReleaseTask/maven.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 160,
+                  "endLine": 160,
+                  "startColumn": 41,
+                  "endColumn": 48
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "35bcf63ec13fc6133224a338ed00484d85ab87e5f90ba724936ef8d93a287c63",
+            "1": "12567ef6.4773f344.bd65d204.e052b9a9.79a7d027.fcf3002d.be533233.3cee0341.a3c051e6.4773f344.bd65d204.2270ebb8.79a7d027.f3803489.a08d3f2a.d0323570"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/maven.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 157,
+                            "endLine": 157,
+                            "startColumn": 37,
+                            "endColumn": 59
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 569,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/NoHardcodedPasswords",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Do not hardcode passwords in code. Found hardcoded password used in create.",
+            "markdown": "Do not hardcode passwords in code. Found hardcoded password used in {0}.",
+            "arguments": [
+              "[create](0)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "buildAndReleaseTask/maven.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 514,
+                  "endLine": 514,
+                  "startColumn": 9,
+                  "endColumn": 16
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "e830c7fe765a0d9df61b0dc8f5e7879c227322b22d7b69783a5944012aa399f9",
+            "1": "12567ef6.4773f344.bd65d204.e052b9a9.79a7d027.fcf3002d.be533233.3cee0341.a3c051e6.4773f344.bd65d204.2270ebb8.79a7d027.f3803489.be533233.d0323570"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/maven.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 511,
+                            "endLine": 511,
+                            "startColumn": 12,
+                            "endColumn": 30
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 569,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/NoHardcodedPasswords",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Do not hardcode passwords in code. Found hardcoded password used in create.",
+            "markdown": "Do not hardcode passwords in code. Found hardcoded password used in {0}.",
+            "arguments": [
+              "[create](0)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "buildAndReleaseTask/maven.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 125,
+                  "endLine": 125,
+                  "startColumn": 13,
+                  "endColumn": 20
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "a1ae6299384430d940c3bde994bcf175450759a4234c5e787bad419ed3e488da",
+            "1": "12567ef6.4773f344.bd65d204.e052b9a9.79a7d027.fcf3002d.be533233.3cee0341.a3c051e6.4773f344.bd65d204.2270ebb8.79a7d027.f3803489.a08d3f2a.d0323570"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/maven.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 122,
+                            "endLine": 122,
+                            "startColumn": 9,
+                            "endColumn": 31
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 569,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/NoHardcodedPasswords",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Do not hardcode passwords in code. Found hardcoded password used in create.",
+            "markdown": "Do not hardcode passwords in code. Found hardcoded password used in {0}.",
+            "arguments": [
+              "[create](0)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "buildAndReleaseTask/maven.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 428,
+                  "endLine": 428,
+                  "startColumn": 13,
+                  "endColumn": 20
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "b6c758b3ca365596d148c293b61672c13e99595db994d50b5cd52d6aebb68f56",
+            "1": "12567ef6.4773f344.bd65d204.e052b9a9.79a7d027.fcf3002d.be533233.3cee0341.a3c051e6.4773f344.bd65d204.2270ebb8.79a7d027.f3803489.be533233.d0323570"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/maven.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 425,
+                            "endLine": 425,
+                            "startColumn": 18,
+                            "endColumn": 36
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 569,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/NoHardcodedCredentials",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Do not hardcode credentials in code. Found hardcoded credential used in create.",
+            "markdown": "Do not hardcode credentials in code. Found hardcoded credential used in {0}.",
+            "arguments": [
+              "[create](0)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "buildAndReleaseTask/maven.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 159,
+                  "endLine": 159,
+                  "startColumn": 41,
+                  "endColumn": 48
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "010029234f5346cbaf73c6eb82dbc5e570d96836003366de8393631cbf16a131",
+            "1": "12567ef6.4773f344.607187b5.e052b9a9.79a7d027.fcf3002d.ce4a9d89.d0323570.a3c051e6.4773f344.bd65d204.2270ebb8.79a7d027.f3803489.a08d3f2a.d0323570"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/maven.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 157,
+                            "endLine": 157,
+                            "startColumn": 37,
+                            "endColumn": 59
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 569,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/NoHardcodedCredentials",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Do not hardcode credentials in code. Found hardcoded credential used in create.",
+            "markdown": "Do not hardcode credentials in code. Found hardcoded credential used in {0}.",
+            "arguments": [
+              "[create](0)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "buildAndReleaseTask/maven.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 513,
+                  "endLine": 513,
+                  "startColumn": 9,
+                  "endColumn": 16
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "0c312a502993f5e9cdc8fc2ddbf8e1d606e374c84ccc581b6d91d9b9ac5cefe9",
+            "1": "12567ef6.4773f344.607187b5.e052b9a9.79a7d027.fcf3002d.ce4a9d89.d0323570.a3c051e6.4773f344.bd65d204.2270ebb8.79a7d027.f3803489.be533233.d0323570"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/maven.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 511,
+                            "endLine": 511,
+                            "startColumn": 12,
+                            "endColumn": 30
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 569,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/NoHardcodedCredentials",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Do not hardcode credentials in code. Found hardcoded credential used in create.",
+            "markdown": "Do not hardcode credentials in code. Found hardcoded credential used in {0}.",
+            "arguments": [
+              "[create](0)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "buildAndReleaseTask/maven.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 124,
+                  "endLine": 124,
+                  "startColumn": 13,
+                  "endColumn": 20
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "6e2d0d958aa839c4e7af4a38da1ad6e6f2f3d479c391a863cbf0527d04b6d37a",
+            "1": "12567ef6.4773f344.607187b5.e052b9a9.79a7d027.fcf3002d.ce4a9d89.d0323570.a3c051e6.4773f344.bd65d204.2270ebb8.79a7d027.f3803489.a08d3f2a.d0323570"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/maven.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 122,
+                            "endLine": 122,
+                            "startColumn": 9,
+                            "endColumn": 31
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 569,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/NoHardcodedCredentials",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Do not hardcode credentials in code. Found hardcoded credential used in create.",
+            "markdown": "Do not hardcode credentials in code. Found hardcoded credential used in {0}.",
+            "arguments": [
+              "[create](0)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "buildAndReleaseTask/maven.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 427,
+                  "endLine": 427,
+                  "startColumn": 13,
+                  "endColumn": 20
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "bea0585a38c87e96a94e64cec7d811b8aa9a31f9026d6789a4968289f1b679e7",
+            "1": "12567ef6.4773f344.607187b5.e052b9a9.79a7d027.fcf3002d.ce4a9d89.d0323570.a3c051e6.4773f344.bd65d204.2270ebb8.79a7d027.f3803489.be533233.d0323570"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "buildAndReleaseTask/maven.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 425,
+                            "endLine": 425,
+                            "startColumn": 18,
+                            "endColumn": 36
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 569,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "coverage": [
+          {
+            "files": 1,
+            "isSupported": true,
+            "lang": "XML"
+          },
+          {
+            "files": 3,
+            "isSupported": true,
+            "lang": "JavaScript"
+          },
+          {
+            "files": 3,
+            "isSupported": true,
+            "lang": "TypeScript"
+          }
+        ]
+      }
+    }
+  ]
+}

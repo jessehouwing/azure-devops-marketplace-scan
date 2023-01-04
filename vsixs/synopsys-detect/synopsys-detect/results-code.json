@@ -62,7 +62,7 @@
                   "startLine": 665,
                   "endLine": 665,
                   "startColumn": 65,
-                  "endColumn": 69
+                  "endColumn": 70
                 }
               }
             }
@@ -88,7 +88,7 @@
                             "startLine": 665,
                             "endLine": 665,
                             "startColumn": 65,
-                            "endColumn": 69
+                            "endColumn": 70
                           }
                         }
                       }
@@ -122,12 +122,12 @@
             "lang": "JavaScript"
           },
           {
-            "files": 304,
+            "files": 342,
             "isSupported": true,
             "lang": "TypeScript"
           },
           {
-            "files": 4,
+            "files": 3,
             "isSupported": false,
             "lang": "Roff Manpage"
           },

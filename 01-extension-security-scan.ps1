@@ -61,7 +61,7 @@ if ($max -eq 0)
     $max = $extensions.Count
 }
 
-$token = ""
+$token = $env:AZURE_DEVOPS_PAT
 $marketplace = "https://marketplace.visualstudio.com"
 & tfx login --auth-type pat --token $token --service-url $marketplace --no-color --no-prompt
 mkdir "vsixs" -force
@@ -78,7 +78,15 @@ foreach ($extension in $extensions)
     {
         $extensionData = (& tfx extension show --auth-type pat --token $token --service-url $marketplace --publisher $publisherId --extension-id $extensionId --json --no-color --no-prompt) | ConvertFrom-Json
         $vsixUrl = $extensionData.versions[0].files | ?{ $_.assetType -eq "Microsoft.VisualStudio.Services.VSIXPackage" } | select -ExpandProperty source
-        Invoke-WebRequest -Uri $vsixUrl -OutFile $savePath
+        
+        if (Test-Path -Path "2022-11/$savePath" -PathType Leaf)
+        {
+            copy-item "2022-11/vsixs/$publisherId/$extensionId/*" "vsixs/$publisherId/$extensionId/" -Force
+        }
+        else
+        {
+            Invoke-WebRequest -Uri $vsixUrl -OutFile $savePath
+        }
     }
 
     $vsixManifestFile = Join-Path -Path $extractedPath -ChildPath "extension.vsixmanifest"
@@ -117,3 +125,7 @@ foreach ($extension in $extensions)
     $count += 1
 }
 
+if (-not (Test-Path -Path "./result.json" -PathType Leaf))
+{
+    & snyk test --all-projects --detection-depth=25 --json-file-output=result.json
+}

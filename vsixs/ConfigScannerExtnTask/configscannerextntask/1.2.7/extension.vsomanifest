@@ -1,0 +1,25 @@
+{
+    "manifestVersion": 1,
+    "contributions": [
+        {
+            "id": "custom-configscannerextntask",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "ConfigScannerExtnTask"
+            }
+        }
+    ],
+    "licensing": {
+        "overrides": [
+            {
+                "id": "configscannerextntask",
+                "behavior": " AlwaysInclude"
+            }
+        ]
+    },
+    "scopes": [],
+    "contributionTypes": []
+}
