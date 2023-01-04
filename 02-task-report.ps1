@@ -39,6 +39,7 @@ foreach ($extension in $extensions) {
         downloadCount = 0+$downloadCount
         rating = 0+$rating
         lastUpdated = $extension.lastUpdated
+        publisherDomainVerified = $extension.publisher.isDomainVerified
     }
 
     $scanResultPath = join-path -path "vsixs/$publisherId/$extensionId/" -childpath "results-code.json"
@@ -239,6 +240,9 @@ foreach ($extension in $consolidatedExtensions)
             $task.isDeprecated = ($task.versions | ?{ $_.taskManifest.deprecated -eq $true }).Count -gt 0
             (@($task.versions | Sort-Object -Property version))[-1].isLatest = $true
             
+            $extension.executionHandlers += @($task.executionHandlers)
+            $extension.executionHandlers = @($extension.executionHandlers | Select-Object -Unique )
+
             $extension.tasks += $task
         }
     }
