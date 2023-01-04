@@ -4,6 +4,7 @@
 $cacheFile = "report.json"
 $report = (Get-Content -raw -Path $cacheFile) | ConvertFrom-Json -AsHashtable
 
+$vulnerableByRating = @()
 $byRating = @()
 
 foreach ($extension in $report.extensions)
@@ -12,22 +13,25 @@ foreach ($extension in $report.extensions)
     foreach ($task in $extension.tasks)
     {
         foreach ($version in $task.versions) {
-            if (($version.vulnerableDependencies -gt 0) -or 
+            if (($version.vulnerableDependencies) -or 
                 ($version.codescanResults))
-                {
-                    $vulnerable = $true
-                }
-            }        
+            {
+                $vulnerable = $true
+            }
         }
     }
 
-    write-host $extension.rating
-
     if ($vulnerable)
     {
-        $byRating += [Math]::Round( 1*$extension.rating, [MidpointRounding]'AwayFromZero' )
+        $vulnerableByRating += [Math]::Round($extension.rating, [System.MidpointRounding]::AwayFromZero)
     }
+    $byRating += [Math]::Round($extension.rating, [System.MidpointRounding]::AwayFromZero)
 }
+
+write-host "by rating"
 $byRating | Group-Object | Sort-Object -Property Name -Descending
+
+write-host "vulnerable-by-rating"
+$vulnerableByRating | Group-Object | Sort-Object -Property Name -Descending
 
 write-host "of $($report.extensions.count)"

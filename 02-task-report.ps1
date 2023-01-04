@@ -22,7 +22,7 @@ foreach ($extension in $extensions) {
 
     $installCount = $extension.statistics | ?{ $_.statisticName -eq "install" } | %{ $_.value }
     $downloadCount = $extension.statistics | ?{ $_.statisticName -eq "onpremDownloads" } | %{ $_.value }
-    $rating = 0 + ($extension.statistics | ?{ $_.statisticName -eq "averagerating" } | %{ $_.value })
+    $rating = $extension.statistics | ?{ $_.statisticName -eq "averagerating" } | %{ $_.value }
 
     $consolidatedExtension = [PSCustomObject]@{
         publisher = $publisherId
@@ -35,9 +35,10 @@ foreach ($extension in $extensions) {
         scanResults = $null
         dependencyResults = $null
         executionHandlers = @()
-        installCount = $installCount
-        downloadCount = $downloadCount
-        rating = $rating
+        installCount = 0+$installCount
+        downloadCount = 0+$downloadCount
+        rating = 0+$rating
+        lastUpdated = $extension.lastUpdated
     }
 
     $scanResultPath = join-path -path "vsixs/$publisherId/$extensionId/" -childpath "results-code.json"
