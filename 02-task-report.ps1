@@ -26,6 +26,7 @@ foreach ($extension in $extensions) {
 
     $consolidatedExtension = [PSCustomObject]@{
         publisher = $publisherId
+        publisherDisplayName = $extension.Publisher.displayName
         extensionId = $extensionId
         version = $version
         tasks = @()
@@ -40,6 +41,8 @@ foreach ($extension in $extensions) {
         rating = 0+$rating
         lastUpdated = $extension.lastUpdated
         publisherDomainVerified = $extension.publisher.isDomainVerified
+        topPublisher = ($extension.publisher.flags -match ".*certified.*")
+        microsoftPublisher = ($extension.publisher.displayName -in @("Microsoft", "Microsoft DevLabs", "Micsosoft Flow", "Microsoft- EAS BuildTeam", "MS App Center"))
     }
 
     $scanResultPath = join-path -path "vsixs/$publisherId/$extensionId/" -childpath "results-code.json"

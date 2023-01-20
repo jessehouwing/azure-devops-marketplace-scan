@@ -1,0 +1,749 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "SnykCode",
+          "semanticVersion": "1.0.0",
+          "version": "1.0.0",
+          "rules": [
+            {
+              "id": "javascript/InsecureHash",
+              "name": "InsecureHash",
+              "shortDescription": {
+                "text": "Use of Password Hash With Insufficient Computational Effort"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "markdown": "\n## Details\n\nSensitive information should never be stored in plain text, since this makes it very easy for unauthorized users, whether malicious insiders or outside attackers, to access. Hashing methods are used to make stored passwords and other sensitive data unreadable to users. For example, when a password is defined for the first time, it is hashed and then stored. The next time that user attempts to log on, the password they enter is hashed following the same procedure and compared with the stored value. In this way, the original password never needs to be stored in the system.\n\nHashing is a one-way scheme, meaning a hashed password cannot be reverse engineered. However, if an outdated or custom programmed hashing scheme is used, it becomes simple for an attacker with powerful modern computing power to gain access to the hashes used. This opens up access to all stored password information, leading to breached security. Therefore, it is essential for developers to understand modern, secure password hashing techniques.\n\n### Best practices for prevention\n* Use strong standard algorithms for hashing rather than simpler but outdated methods or DIY hashing schemes, which may have inherent weaknesses.\n* Use modular design for all code dealing with hashing so it can be swapped out as security standards change over time.\n* Use salting in combination with hashing (While this places more demands on resources, it is an essential step for tighter security.).\n* Implement zero-trust architecture to ensure that access to password data is granted only for legitimate business purposes.\n* Increase developer awareness of current standards in data security and cryptography.",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [
+                  {
+                    "commitURL": "https://github.com/feup-infolab/dendro/commit/af4689bf0d26af0607567c46922251ac07922dea?diff=split#diff-3ee957c630ef81dd1016237f56c05e070eff7d84460f45ae3c25ab0441fa79b9L25",
+                    "lines": [
+                      {
+                        "line": "var crypto = require('crypto'),",
+                        "lineNumber": 24,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    shasum = crypto.createHash('sha1');",
+                        "lineNumber": 25,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "shasum.update(req.body.password);",
+                        "lineNumber": 27,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "var encodedPassword = shasum.digest('hex');",
+                        "lineNumber": 28,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "var crypto = require('crypto');",
+                        "lineNumber": 24,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "const key = crypto.pbkdf2Sync(req.body.password, user.ddr.salt, 100000, 512, 'sha512');",
+                        "lineNumber": 25,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "var encodedPassword = key.toString('hex');",
+                        "lineNumber": 26,
+                        "lineChange": "added"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/coderaiser/cloudcmd/commit/1c3a97fbad9c22f94000e89384321642affbf80d?diff=split#diff-0502e5ba15e6b2caa99bf88e97eb4fef9994e885299ee3df4efd1b51a59e13f0L104",
+                    "lines": [
+                      {
+                        "line": "sha     = crypto.createHash('sha1');",
+                        "lineNumber": 103,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "sha     = crypto.createHash('sha512WithRSAEncryption');",
+                        "lineNumber": 103,
+                        "lineChange": "added"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/Swizec/node-unshortener/commit/e9a84efd37b3d65ff14f44e11297b28b8987d38e?diff=split#diff-d94bcce9e1b6dc29137c2d0fe590e001ef186ba13f7ed1322296e70e7e0196b8L75",
+                    "lines": [
+                      {
+                        "line": "memclient.set( md5(url.href), JSON.stringify(result), 1000);",
+                        "lineNumber": 74,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "memclient.set( hash.sha256(url.href), JSON.stringify(result), 1000);",
+                        "lineNumber": 74,
+                        "lineChange": "added"
+                      }
+                    ]
+                  }
+                ],
+                "exampleCommitDescriptions": [
+                  "switch to sha256",
+                  "Files are now hashed with SHA512 instead of SHA1"
+                ],
+                "precision": "very-high",
+                "repoDatasetSize": 101,
+                "cwe": [
+                  "CWE-916"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "javascript/InsecureHash",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "MD5 hash (used in raw_md5) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "markdown": "MD5 hash (used in {0}) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "arguments": [
+              "[raw_md5](0)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "dist/IpynbRenderer/IpynbRenderer.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 13367,
+                  "endLine": 13367,
+                  "startColumn": 25,
+                  "endColumn": 32
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "2bb13f099d5e328e0f944cc260ca166e7fb56c369d1b51051443faa6c3ab8733",
+            "1": "be47043f.e21642e6.873108e7.291a2933.a2612107.625fe4a2.27e5a043.fb9e23fc.be47043f.e21642e6.873108e7.291a2933.a2612107.625fe4a2.27e5a043.fb9e23fc"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "dist/IpynbRenderer/IpynbRenderer.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 13367,
+                            "endLine": 13367,
+                            "startColumn": 25,
+                            "endColumn": 32
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 558,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureHash",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "MD5 hash (used in raw_md5) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "markdown": "MD5 hash (used in {0}) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "arguments": [
+              "[raw_md5](0)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "dist/IpynbRenderer/IpynbRenderer.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 13381,
+                  "endLine": 13381,
+                  "startColumn": 20,
+                  "endColumn": 27
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "fd379072062d262b4dca07b15b0a0454240f0814df8742e2e6284dca75642d07",
+            "1": "be47043f.e21642e6.873108e7.291a2933.025a7c46.625fe4a2.27e5a043.fb9e23fc.be47043f.e21642e6.873108e7.291a2933.025a7c46.625fe4a2.27e5a043.fb9e23fc"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "dist/IpynbRenderer/IpynbRenderer.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 13381,
+                            "endLine": 13381,
+                            "startColumn": 20,
+                            "endColumn": 27
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 558,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureHash",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "MD5 hash (used in raw_md5) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "markdown": "MD5 hash (used in {0}) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "arguments": [
+              "[raw_md5](0)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "dist/Export/Export.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 6857,
+                  "endLine": 6857,
+                  "startColumn": 25,
+                  "endColumn": 32
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "09f8da7a5fbaf3cb3d79fe268a1c3069d72130cccd9135178636daf46cb44d62",
+            "1": "be47043f.e21642e6.873108e7.291a2933.a2612107.625fe4a2.27e5a043.fb9e23fc.be47043f.e21642e6.873108e7.291a2933.a2612107.625fe4a2.27e5a043.fb9e23fc"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "dist/Export/Export.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 6857,
+                            "endLine": 6857,
+                            "startColumn": 25,
+                            "endColumn": 32
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 558,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureHash",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "MD5 hash (used in raw_md5) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "markdown": "MD5 hash (used in {0}) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "arguments": [
+              "[raw_md5](0)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "dist/Export/Export.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 6871,
+                  "endLine": 6871,
+                  "startColumn": 20,
+                  "endColumn": 27
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "6dddb420fca11ad07c52a8f5b4b16c5646095084afb3b3f32812442035464e62",
+            "1": "be47043f.e21642e6.873108e7.291a2933.025a7c46.625fe4a2.27e5a043.fb9e23fc.be47043f.e21642e6.873108e7.291a2933.025a7c46.625fe4a2.27e5a043.fb9e23fc"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "dist/Export/Export.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 6871,
+                            "endLine": 6871,
+                            "startColumn": 20,
+                            "endColumn": 27
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 558,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureHash",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "MD5 hash (used in hex_md5) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "markdown": "MD5 hash (used in {0}) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "arguments": [
+              "[hex_md5](0)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "dist/IpynbRenderer/IpynbRenderer.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 13379,
+                  "endLine": 13379,
+                  "startColumn": 24,
+                  "endColumn": 31
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "56023458d0d03f9e4ee14839df3f5d084b71ed8aa51e4c0365149fe2872474de",
+            "1": "41e4e72f.4773f344.92af2a1b.291a2933.a2612107.625fe4a2.83265159.fb9e23fc.41e4e72f.4773f344.92af2a1b.291a2933.a2612107.625fe4a2.83265159.fb9e23fc"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "dist/IpynbRenderer/IpynbRenderer.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 13379,
+                            "endLine": 13379,
+                            "startColumn": 24,
+                            "endColumn": 31
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 558,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureHash",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "MD5 hash (used in hex_md5) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "markdown": "MD5 hash (used in {0}) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "arguments": [
+              "[hex_md5](0)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "dist/Export/Export.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 6869,
+                  "endLine": 6869,
+                  "startColumn": 24,
+                  "endColumn": 31
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "86dc5eda5ebe574058e7f27bfe43b342042cb9e2e2ac29e3f7098e3571d84b13",
+            "1": "41e4e72f.4773f344.92af2a1b.291a2933.a2612107.625fe4a2.83265159.fb9e23fc.41e4e72f.4773f344.92af2a1b.291a2933.a2612107.625fe4a2.83265159.fb9e23fc"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "dist/Export/Export.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 6869,
+                            "endLine": 6869,
+                            "startColumn": 24,
+                            "endColumn": 31
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 558,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureHash",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "MD5 hash (used in hex_hmac_md5) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "markdown": "MD5 hash (used in {0}) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "arguments": [
+              "[hex_hmac_md5](0)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "dist/IpynbRenderer/IpynbRenderer.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 13384,
+                  "endLine": 13384,
+                  "startColumn": 20,
+                  "endColumn": 32
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "b85856ff3d41bcaabeaad0de7298cbc8ba5699db834f1e5ca9592f9a4d932609",
+            "1": "41e4e72f.4773f344.9bd862c8.4fa4f6af.eb13ee66.0c17bcdd.83265159.fb9e23fc.41e4e72f.4773f344.9bd862c8.4fa4f6af.eb13ee66.0c17bcdd.83265159.fb9e23fc"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "dist/IpynbRenderer/IpynbRenderer.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 13384,
+                            "endLine": 13384,
+                            "startColumn": 20,
+                            "endColumn": 32
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 558,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureHash",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "MD5 hash (used in hex_hmac_md5) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "markdown": "MD5 hash (used in {0}) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "arguments": [
+              "[hex_hmac_md5](0)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "dist/Export/Export.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 6874,
+                  "endLine": 6874,
+                  "startColumn": 20,
+                  "endColumn": 32
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "a4653999bfd3d2aba1a28b56637323b464ae9e5cb87ef039b51f0d0a95a46d39",
+            "1": "41e4e72f.4773f344.9bd862c8.4fa4f6af.eb13ee66.0c17bcdd.83265159.fb9e23fc.41e4e72f.4773f344.9bd862c8.4fa4f6af.eb13ee66.0c17bcdd.83265159.fb9e23fc"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "dist/Export/Export.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 6874,
+                            "endLine": 6874,
+                            "startColumn": 20,
+                            "endColumn": 32
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 558,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "coverage": [
+          {
+            "files": 1,
+            "isSupported": true,
+            "lang": "XML"
+          },
+          {
+            "files": 2,
+            "isSupported": true,
+            "lang": "HTML"
+          },
+          {
+            "files": 2,
+            "isSupported": true,
+            "lang": "JavaScript"
+          }
+        ]
+      }
+    }
+  ]
+}

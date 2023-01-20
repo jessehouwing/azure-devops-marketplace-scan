@@ -1,0 +1,87 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+  "id": "4fe20549-3f80-44fd-91b4-fdbc0660e942",
+  "name": "CommitMessageValidator",
+  "friendlyName": "Commit Comment Validator",
+  "description": "Pass or fail based on whether all detected commits have messages which match 1 or more provided regular expression patterns.",
+  "helpMarkDown": "This task uses the Irregexp flavor of Regular Expressions - the same that is used in the Chrome V8 JavaScript engine.",
+  "category": "Azure Pipelines",
+  "author": "Casey Boyle",
+  "version": {
+    "Major": 1,
+    "Minor": 2,
+    "Patch": 15
+  },
+  "instanceNameFormat": "Validate Commit Messages",
+  "inputs": [
+    {
+      "name": "regExPattern",
+      "type": "string",
+      "label": "Regular Expression",
+      "defaultValue": "^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test){1}(\\([\\w\\.\\-\\p{Extended_Pictographic}]+\\))?(!)?: ([\\w \\p{Extended_Pictographic}])+([\\s\\S]*)",
+      "required": true,
+      "helpMarkDown": "The regular expression pattern (Irregexp flavor) to match commit messages against.\n\nA match means the commit message is valid.\n\nThe default pattern will match comments that are valid based on the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification",
+      "properties": {
+        "PopulateDefaultValue": "True"
+      }
+    },
+    {
+      "name": "regExFlags",
+      "type": "string",
+      "label": "RegExp Flags",
+      "defaultValue": "um",
+      "required": true,
+      "helpMarkDown": "Regular expression flags to use.\n\nOptions: g, m, i, y, u, s, d\n\nSimply type a string of characters (no slashes or anything needed).\n\nThe default 'um' allows matching unicode and multiline.\n\nWith the 'u' flag, \\p{Extended_Pictographic} will match an emoji character",
+      "properties": {
+        "PopulateDefaultValue": "True"
+      }
+    },
+    {
+      "name": "allCommitsMustMatch",
+      "type": "boolean",
+      "label": "All Commits Must Match",
+      "defaultValue": true,
+      "required": true,
+      "helpMarkDown": "If true, all commit messages must match the regular expression for the task to succeed.\n\nOtherwise, at least 1 commit message must match the regular expression",
+      "properties": {
+        "PopulateDefaultValue": "True"
+      }
+    },
+    {
+      "name": "prMode",
+      "type": "boolean",
+      "label": "PR Mode",
+      "defaultValue": false,
+      "required": true,
+      "helpMarkDown": "If true, validation will be run against all commits in a PR.\n\nThis will only work if the task is run in a pipeline that is triggered as a result of branch policy for pull requests",
+      "properties": {
+        "PopulateDefaultValue": "True"
+      }
+    },
+    {
+      "name": "diffBranch",
+      "type": "string",
+      "label": "Diff Branch",
+      "defaultValue": "origin/main",
+      "required": false,
+      "helpMarkDown": "When PR Mode is off, the task will assume that the branch that the build is running against is ahead of the diff branch specified here.\n\nIt will diff the history of the two branches in order to come up with the list of new commits to validate against.\n\n(Commits in the current branch that are not in the diff branch)",
+      "properties": {
+        "PopulateDefaultValue": "True"
+      },
+      "visibleRule": "prMode = false"
+    }
+  ],
+  "groups": [],
+  "execution": {
+    "Node16": {
+      "target": "index.js"
+    }
+  },
+  "runsOn": ["Agent"],
+  "visibility": ["Build"],
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    }
+  }
+}

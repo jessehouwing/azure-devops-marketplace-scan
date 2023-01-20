@@ -1,0 +1,824 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "SnykCode",
+          "semanticVersion": "1.0.0",
+          "version": "1.0.0",
+          "rules": [
+            {
+              "id": "javascript/InsufficientPostmessageValidation",
+              "name": "InsufficientPostmessageValidation",
+              "shortDescription": {
+                "text": "Insufficient postMessage Validation"
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "help": {
+                "markdown": "\n## Details\n\npostMessage is a feature to perform cross-origin communication between JavaScript Window objects. This can be done by:\n\n* The sender using the `targetWindow.postMessage(message, targetOrigin)` to send a message to the `targetWindow` but only if the origin in that window matches `targetOrigin` (or if targetOrigin is set to the special value `*`);\n\n* The receiver listening for the message event in the window object.\n\nHowever, if no validation is done by the receiver, this could allow any window to send arbitrary data to the handler. This vulnerability could be leveraged by an attacker to disclose sensitive data to a malicious origin, or perform actions on a vicitim's behalf.\n\nExample:\n\n```\n\nwindow.addEventListener(\"message\", (event) => {\n    // DANGEROUS: No validation of origin\n    doStuff(event.data);\n});\n\n```\n\n### Best practices for prevention\n* Adopt a zero-trust model in which all input is considered potentially suspect.\n* Specify the targetOrigin instead of designating a wildcard `*`.\n\nExample:\n\n```\nwindow.addEventListener(\"message\", (event) => {\n    if (event.origin !== \"http://example.org\") // SAFE: origin checked\n        return;\n\n    console.log(event.data)\n});\n```\n\n### References\n\n* [Introduction to postMessage() Vulnerabilities](https://blog.yeswehack.com/yeswerhackers/introduction-postmessage-vulnerabilities/)",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [],
+                "exampleCommitDescriptions": [],
+                "precision": "very-high",
+                "repoDatasetSize": 0,
+                "cwe": [
+                  "CWE-20"
+                ]
+              }
+            },
+            {
+              "id": "javascript/TooPermissiveCorsPostMessage",
+              "name": "TooPermissiveCorsPostMessage",
+              "shortDescription": {
+                "text": "Permissive Cross-domain Policy"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "markdown": "\n## Details\n\nAs a legacy of early web design and site limitations, most web applications default, for security reasons, to a \"same origin policy\". This means that browsers can only retrieve data from another site if the two sites share the same domain. In today's complex online environment, however, sites and applications often need to retrieve data from other domains. This is done under fairly limited conditions through an exception to the same origin policy known as \"cross-origin resource sharing\".\n\nDevelopers may create definitions of trusted domains that are broader than absolutely necessary, inadvertently opening up wider access than intended. This weakness could result in data exposure or loss, or even allow an attacker to take over the site or application.\n\n### Best practices for prevention\n* Avoid using wildcards for cross-origin resource sharing. Instead, define intended domains explicitly.\n* Ensure that your site or app is well defended against cross-site scripting attacks (XSS), which could lead to takeover via an overly permissive cross-domain policy.\n* Do not mix secure and insecure protocols when defining cross-domain policies.\n* Consider defining a clear approved list to specify which domains will be given resource-level access; use this approved list to validate all domain access requests.\n* Clearly define which methods (view, read, and update) are permitted for each resource and domain to avoid abuse.",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [
+                  {
+                    "commitURL": "https://github.com/forcedotcom/lightning-inspector/commit/697229f70d25918ddaa6781f17352f8c6c405acb?diff=split#diff-d0a0aa4e363885883dfee990b26a1c5bL139",
+                    "lines": [
+                      {
+                        "line": "if(!key) { return; }",
+                        "lineNumber": 136,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "window.postMessage({",
+                        "lineNumber": 138,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    action : PUBLISH_KEY, ",
+                        "lineNumber": 139,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    key: key,",
+                        "lineNumber": 140,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    data : data",
+                        "lineNumber": 141,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "}, '*');",
+                        "lineNumber": 142,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "};",
+                        "lineNumber": 143,
+                        "lineChange": "none"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/mulesoft/api-notebook/commit/9538d77c3ad54e2523d086181ee14bd0a4af5541?diff=split#diff-18777a8519fcf790b96c13e671f7a1f3L267",
+                    "lines": [
+                      {
+                        "line": "  args = Array.prototype.slice.call(arguments, 0);",
+                        "lineNumber": 268,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  this.frame.contentWindow.postMessage(args, '*');",
+                        "lineNumber": 266,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "  this.frame.contentWindow.postMessage(args, NOTEBOOK_URL);",
+                        "lineNumber": 269,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "  return this;",
+                        "lineNumber": 270,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "};",
+                        "lineNumber": 271,
+                        "lineChange": "none"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/mozilla-b2g/gaia/commit/5a688ac70764254c9f6e6e45fb6797254023b58d?diff=split#diff-99702784ebcd78b24b517f4bb5edbb12L498",
+                    "lines": [
+                      {
+                        "line": "call.addEventListener('statechange', function callState() {",
+                        "lineNumber": 496,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "  app.contentWindow.postMessage(call.state, '*');",
+                        "lineNumber": 497,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "  app.contentWindow.postMessage(call.state, url);",
+                        "lineNumber": 496,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "});",
+                        "lineNumber": 498,
+                        "lineChange": "none"
+                      }
+                    ]
+                  }
+                ],
+                "exampleCommitDescriptions": [
+                  "Set postMessage target for file:",
+                  "This change also changes the name of the 'source' property in messages to\n'origin'."
+                ],
+                "precision": "very-high",
+                "repoDatasetSize": 56,
+                "cwe": [
+                  "CWE-942"
+                ]
+              }
+            },
+            {
+              "id": "javascript/InsecureHash",
+              "name": "InsecureHash",
+              "shortDescription": {
+                "text": "Use of Password Hash With Insufficient Computational Effort"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "markdown": "\n## Details\n\nSensitive information should never be stored in plain text, since this makes it very easy for unauthorized users, whether malicious insiders or outside attackers, to access. Hashing methods are used to make stored passwords and other sensitive data unreadable to users. For example, when a password is defined for the first time, it is hashed and then stored. The next time that user attempts to log on, the password they enter is hashed following the same procedure and compared with the stored value. In this way, the original password never needs to be stored in the system.\n\nHashing is a one-way scheme, meaning a hashed password cannot be reverse engineered. However, if an outdated or custom programmed hashing scheme is used, it becomes simple for an attacker with powerful modern computing power to gain access to the hashes used. This opens up access to all stored password information, leading to breached security. Therefore, it is essential for developers to understand modern, secure password hashing techniques.\n\n### Best practices for prevention\n* Use strong standard algorithms for hashing rather than simpler but outdated methods or DIY hashing schemes, which may have inherent weaknesses.\n* Use modular design for all code dealing with hashing so it can be swapped out as security standards change over time.\n* Use salting in combination with hashing (While this places more demands on resources, it is an essential step for tighter security.).\n* Implement zero-trust architecture to ensure that access to password data is granted only for legitimate business purposes.\n* Increase developer awareness of current standards in data security and cryptography.",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "javascript"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [
+                  {
+                    "commitURL": "https://github.com/feup-infolab/dendro/commit/af4689bf0d26af0607567c46922251ac07922dea?diff=split#diff-3ee957c630ef81dd1016237f56c05e070eff7d84460f45ae3c25ab0441fa79b9L25",
+                    "lines": [
+                      {
+                        "line": "var crypto = require('crypto'),",
+                        "lineNumber": 24,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    shasum = crypto.createHash('sha1');",
+                        "lineNumber": 25,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "shasum.update(req.body.password);",
+                        "lineNumber": 27,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "var encodedPassword = shasum.digest('hex');",
+                        "lineNumber": 28,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "var crypto = require('crypto');",
+                        "lineNumber": 24,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "const key = crypto.pbkdf2Sync(req.body.password, user.ddr.salt, 100000, 512, 'sha512');",
+                        "lineNumber": 25,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "var encodedPassword = key.toString('hex');",
+                        "lineNumber": 26,
+                        "lineChange": "added"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/coderaiser/cloudcmd/commit/1c3a97fbad9c22f94000e89384321642affbf80d?diff=split#diff-0502e5ba15e6b2caa99bf88e97eb4fef9994e885299ee3df4efd1b51a59e13f0L104",
+                    "lines": [
+                      {
+                        "line": "sha     = crypto.createHash('sha1');",
+                        "lineNumber": 103,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "sha     = crypto.createHash('sha512WithRSAEncryption');",
+                        "lineNumber": 103,
+                        "lineChange": "added"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/Swizec/node-unshortener/commit/e9a84efd37b3d65ff14f44e11297b28b8987d38e?diff=split#diff-d94bcce9e1b6dc29137c2d0fe590e001ef186ba13f7ed1322296e70e7e0196b8L75",
+                    "lines": [
+                      {
+                        "line": "memclient.set( md5(url.href), JSON.stringify(result), 1000);",
+                        "lineNumber": 74,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "memclient.set( hash.sha256(url.href), JSON.stringify(result), 1000);",
+                        "lineNumber": 74,
+                        "lineChange": "added"
+                      }
+                    ]
+                  }
+                ],
+                "exampleCommitDescriptions": [
+                  "switch to sha256",
+                  "Files are now hashed with SHA512 instead of SHA1"
+                ],
+                "precision": "very-high",
+                "repoDatasetSize": 101,
+                "cwe": [
+                  "CWE-916"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "javascript/InsufficientPostmessageValidation",
+          "ruleIndex": 0,
+          "level": "note",
+          "message": {
+            "text": "The origin of the received message is not checked. This means any site (even malicious) can send message to this window. If you don't expect this, consider checking the origin of sender.",
+            "markdown": "The origin of the received message is not checked. This means any site (even malicious) can send message to this window. If you don't expect this, consider checking the origin of sender.",
+            "arguments": []
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/Hubs/lib/VSS.SDK.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 665,
+                  "endLine": 665,
+                  "startColumn": 65,
+                  "endColumn": 70
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "055d66527aa86cc1686abd42d2b43991798b83509ad7a3405a281695bd9e4f63",
+            "1": "cbabde2c.4773f344.607187b5.c559ebce.d9bf5fbd.f681b7b7.83265159.3cee0341.9194119a.4773f344.607187b5.c559ebce.d9bf5fbd.f681b7b7.83265159.1db0a836"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "src/Hubs/lib/VSS.SDK.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 665,
+                            "endLine": 665,
+                            "startColumn": 65,
+                            "endColumn": 70
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 201,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsufficientPostmessageValidation",
+          "ruleIndex": 0,
+          "level": "note",
+          "message": {
+            "text": "The origin of the received message is not checked. This means any site (even malicious) can send message to this window. If you don't expect this, consider checking the origin of sender.",
+            "markdown": "The origin of the received message is not checked. This means any site (even malicious) can send message to this window. If you don't expect this, consider checking the origin of sender.",
+            "arguments": []
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/Hubs/lib/js/VSS.SDK.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 651,
+                  "endLine": 651,
+                  "startColumn": 65,
+                  "endColumn": 70
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "f1ed4f79f9a3dd76d971f40e40956f5a3471d5cd16c587ffdd2ae767516f869d",
+            "1": "cbabde2c.4773f344.607187b5.c559ebce.d9bf5fbd.f681b7b7.83265159.3cee0341.9194119a.4773f344.607187b5.c559ebce.d9bf5fbd.f681b7b7.83265159.1db0a836"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "src/Hubs/lib/js/VSS.SDK.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 651,
+                            "endLine": 651,
+                            "startColumn": 65,
+                            "endColumn": 70
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 201,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/TooPermissiveCorsPostMessage",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Setting targetOrigin to \"*\" in postMessage may enable malicious parties to intercept the message. Consider using an exact target origin instead.",
+            "markdown": "Setting targetOrigin to {0} in {1} may enable malicious parties to intercept the message. Consider using an exact target origin instead.",
+            "arguments": [
+              "[\"*\"](0)",
+              "[postMessage](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/Hubs/lib/js/react.development.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1119,
+                  "endLine": 1119,
+                  "startColumn": 14,
+                  "endColumn": 25
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "f73e68888f796c63486ff6817a7a690de20e47473b4ad4b854b508b9a6733f92",
+            "1": "4553bb72.4773f344.607187b5.0083fa25.29dafbde.8020cfdf.cd61fc56.873b05a8.4553bb72.a17c4800.607187b5.0083fa25.29dafbde.b9c617ac.cd61fc56.873b05a8"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "src/Hubs/lib/js/react.development.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 1119,
+                            "endLine": 1119,
+                            "startColumn": 38,
+                            "endColumn": 41
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "src/Hubs/lib/js/react.development.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 1119,
+                            "endLine": 1119,
+                            "startColumn": 14,
+                            "endColumn": 25
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 551,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/TooPermissiveCorsPostMessage",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Setting targetOrigin to \"*\" in postMessage may enable malicious parties to intercept the message. Consider using an exact target origin instead.",
+            "markdown": "Setting targetOrigin to {0} in {1} may enable malicious parties to intercept the message. Consider using an exact target origin instead.",
+            "arguments": [
+              "[\"*\"](0)",
+              "[postMessage](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/Hubs/lib/js/react.development.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1128,
+                  "endLine": 1128,
+                  "startColumn": 14,
+                  "endColumn": 25
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "b429bb75762e74fa047e1699e0d403bc89aad92e377ab91a75744b429e15acb2",
+            "1": "4553bb72.4773f344.607187b5.0083fa25.29dafbde.8020cfdf.cd61fc56.873b05a8.4553bb72.a17c4800.607187b5.0083fa25.29dafbde.b9c617ac.cd61fc56.873b05a8"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "src/Hubs/lib/js/react.development.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 1128,
+                            "endLine": 1128,
+                            "startColumn": 38,
+                            "endColumn": 41
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "src/Hubs/lib/js/react.development.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 1128,
+                            "endLine": 1128,
+                            "startColumn": 14,
+                            "endColumn": 25
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 551,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureHash",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "sha1 hash (used in createHash) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "markdown": "{0} hash (used in {1}) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "arguments": [
+              "[sha1](0)",
+              "[createHash](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/BuildTasks/publishResult.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 55,
+                  "endLine": 55,
+                  "startColumn": 37,
+                  "endColumn": 47
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "423bff7798f55f522ab140e745958e5a3fc643656b9d1a75d3f475767767c2c5",
+            "1": "8696f993.4773f344.26fd0881.d7919eeb.ef9f7d82.82ca542b.735da61b.1487f201.8696f993.4773f344.26fd0881.d7919eeb.ef9f7d82.82ca542b.735da61b.1487f201"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "src/BuildTasks/publishResult.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 55,
+                            "endLine": 55,
+                            "startColumn": 48,
+                            "endColumn": 54
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "src/BuildTasks/publishResult.js",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 55,
+                            "endLine": 55,
+                            "startColumn": 37,
+                            "endColumn": 47
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 551,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        },
+        {
+          "ruleId": "javascript/InsecureHash",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "sha1 hash (used in crypto.#default.createHash) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "markdown": "{0} hash (used in {1}) is insecure. Consider changing it to a secure hashing algorithm (e.g. SHA256).",
+            "arguments": [
+              "[sha1](0)",
+              "[crypto.#default.createHash](1)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/BuildTasks/publishResult.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 35,
+                  "endLine": 35,
+                  "startColumn": 29,
+                  "endColumn": 39
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "ee3531fe574b7be4a1266b1766834cd9a0ebf9bc6ae07860150e40e1ff260ec8",
+            "1": "37bc1bfe.4773f344.191eaf2b.d7919eeb.8d63505f.82ca542b.735da61b.e7b6bbdb.37bc1bfe.4773f344.191eaf2b.d7919eeb.8d63505f.82ca542b.735da61b.e7b6bbdb"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "src/BuildTasks/publishResult.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 35,
+                            "endLine": 35,
+                            "startColumn": 40,
+                            "endColumn": 46
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "src/BuildTasks/publishResult.ts",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 35,
+                            "endLine": 35,
+                            "startColumn": 29,
+                            "endColumn": 39
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 551,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "coverage": [
+          {
+            "files": 14,
+            "isSupported": true,
+            "lang": "XML"
+          },
+          {
+            "files": 1136,
+            "isSupported": true,
+            "lang": "JavaScript"
+          },
+          {
+            "files": 334,
+            "isSupported": true,
+            "lang": "TypeScript"
+          },
+          {
+            "files": 1,
+            "isSupported": false,
+            "lang": "Roff Manpage"
+          },
+          {
+            "files": 1,
+            "isSupported": true,
+            "lang": "HTML"
+          }
+        ]
+      }
+    }
+  ]
+}

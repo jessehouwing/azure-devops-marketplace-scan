@@ -1,0 +1,48 @@
+{
+  "id": "a93140cf-a222-40bf-a585-68f23b8e200f",
+  "name": "ConnectMongoDb",
+  "friendlyName": "Connect MongoDB",
+  "description": "Connect to MongoDB Instance",
+  "helpUrl": "If you have any issues, please create an issue (https://github.com/PoshAdoTasks/ado-poshmongo/issues)",
+  "helpMarkDown": "Connect to a MongoDB Instance",
+  "author": "Jeffrey S. Patton",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "category": "Utility",
+  "minimumAgentVersion": "",
+  "version": {
+    "Major": 1,
+    "Minor": 33,
+    "Patch": 0
+  },
+  "instanceNameFormat": "ConnectMongoDb $(message)",
+  "inputs": [
+    {
+      "name": "ConnectionString",
+      "label": "Connection String",
+      "type": "string",
+      "required": true,
+      "helpMarkDown": "The connection string that is used to connect Mongo DB"
+    },
+    {
+      "name": "ForceTls12",
+      "label": "Force TLS12",
+      "type": "boolean",
+      "required": false,
+      "helpMarkDown": "Use this flag if MongoDB is hosted behind an Azure CosmosDB"
+    }
+  ],
+  "execution": {
+    "PowerShell3": {
+      "target": "launch.ps1"
+    }
+  },
+  "outputVariables": [
+    {
+      "name": "Client",
+      "description": "MongoDB Client Output"
+    }
+  ]
+}
